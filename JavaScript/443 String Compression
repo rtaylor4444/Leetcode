@@ -1,0 +1,26 @@
+var compress = function(chars) {
+    let editIndex = -1;
+    let curChar = '';
+    let charCount;
+    for(var i = 0; i < chars.length;) {
+        ++editIndex;
+        curChar = chars[i];
+        chars[editIndex] = curChar;
+        
+        //Count the number of times a specific character appears in string
+        charCount = 0;
+        while(i < chars.length && chars[i] == curChar) {
+            ++i;
+            ++charCount;
+        }
+        
+        charCount = charCount.toString();
+        if(charCount == "1") continue;
+        
+        for(var j = 0; j < charCount.length; ++j) {
+            ++editIndex;
+            chars[editIndex] = charCount[j];
+        }
+    }
+    return editIndex + 1;
+};
