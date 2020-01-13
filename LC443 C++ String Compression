@@ -1,0 +1,28 @@
+    int compress(vector<char>& chars) {
+        int editIndex = -1;
+        char curChar;
+        string charCount;
+        for(unsigned int i = 0; i < chars.size();) {
+            curChar = chars[i];
+            charCount = to_string(getCharCount(i, chars, curChar));
+            ++editIndex;
+            chars[editIndex] = curChar;
+            //cout << curChar << " count is: " << charCount << '\n';
+            if(charCount == "1") continue;
+            
+            for(unsigned int j = 0; j < charCount.size(); ++j) {
+                ++editIndex;
+                chars[editIndex] = charCount[j];
+            }
+        }
+        return editIndex + 1;
+    }
+    
+    int getCharCount(unsigned int& i, vector<char>& chars, char curChar) {
+        int charCount = 0;
+        while(i < chars.size() && chars[i] == curChar) {
+                ++i;
+                ++charCount;
+        }
+        return charCount;
+    }
