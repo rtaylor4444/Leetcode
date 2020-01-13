@@ -1,0 +1,18 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+     vector<int> indices;
+     map<int, int> hashMap;
+     int lookupTarget;   
+     for(int i = 0; i < nums.size(); i++) {
+         lookupTarget = target - nums[i];
+         if(hashMap.find(lookupTarget) != hashMap.end()) {
+             indices.push_back(hashMap[lookupTarget]);
+             indices.push_back(i);
+             break;
+         }
+         hashMap.emplace(nums[i], i);
+     }
+     return indices;
+    }
+};
