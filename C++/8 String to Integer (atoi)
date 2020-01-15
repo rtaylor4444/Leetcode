@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int myAtoi(string str) {
+        long result = 0;
+        int index = 0;
+        int sign = 1;
+        //Ignore whitespace and get first true value
+        while(index < str.length() && str[index] == ' ') {
+            ++index;
+        }
+        
+        //Check our sign value
+        if(str[index] == '-') { 
+            sign = -1;
+            ++index;
+        }
+        else if (str[index] == '+') ++index;
+        
+        //Get as many digits as we can
+        while(index < str.length() && isdigit(str[index])) {
+            result *= 10;
+            result += (str[index] - '0') * sign;
+            if(result > INT_MAX) return INT_MAX;
+            else if(result < INT_MIN) return INT_MIN;
+            ++index;
+        }
+        
+        return (int)result;
+    }
+};
