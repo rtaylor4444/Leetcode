@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int maxArea(vector<int>& heights) {
+        //Two Pointers
+        //Step 1: 
+        //[1,8,6,2,5,4,8,3,7]
+        //1 * 8 = 8 increment 1 until we find something greater
+        //7 * 7 = 49 increment 7 until we find something greater
+        // we try and increment 8 but we dont find anything greater so return
+        int maxArea = 0, leftHeight, rightHeight;
+        int l = 0, r = heights.size() - 1;
+        while(l < r) {
+            maxArea = max(maxArea, (r - l) * min(heights[l], heights[r]));
+            //cout << "max is: " << maxArea << " width: " << (r - l) << endl;
+            if(heights[l] < heights[r]) {
+                leftHeight = heights[l];
+                while(l < heights.size() && leftHeight >= heights[l]) l++;
+            }
+            else {
+                rightHeight = heights[r];
+                while(r >= 0 && rightHeight >= heights[r]) r--;
+            }
+        }
+        return maxArea;
+    }
+};
