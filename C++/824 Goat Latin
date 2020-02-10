@@ -1,0 +1,55 @@
+class Solution {
+public:
+    bool isVowel(char c) {
+        //Lower
+        if(c == 'a' || c == 'e' || c == 'i' ||
+          c == 'o' || c == 'u')
+            return true;
+        
+        //Upper
+        if(c == 'A' || c == 'E' || c == 'I' ||
+          c == 'O' || c == 'U')
+            return true;
+            
+        return false;
+    }
+    
+    string toGoatLatin(string S) {
+        //Step 1 - seperate our long string into a string of words
+        vector<string> wordList;
+        unsigned int startIndex = 0;
+        for(unsigned int i = 0; i < S.length(); ++i) {
+            if(S[i] == ' ') {
+                wordList.push_back(S.substr(startIndex, i - startIndex));
+                startIndex = i + 1;
+            }
+            
+            //End of string edge case
+            if(i == S.length() - 1) {
+                wordList.push_back(S.substr(startIndex, (i - startIndex) + 1));
+            }
+        }
+        
+        //Step 2 modify each word one by one
+        char firstLetter;
+        for(unsigned int i = 0; i < wordList.size(); ++i) {
+            firstLetter = wordList[i][0];
+            if(!isVowel(firstLetter)) {
+                wordList[i] = wordList[i].substr(1, wordList[i].length() - 1);
+                wordList[i] += firstLetter;
+            }
+            wordList[i] += "ma";
+            //Add trailing a's
+            for(unsigned int k = 0; k < i + 1; ++k)
+                wordList[i] += "a";
+        }
+        
+        //Step 3 Add the words together
+        string newString;
+        for(unsigned int i = 0; i < wordList.size(); ++i) {
+            newString += wordList[i];
+            if(i != wordList.size() - 1) newString += ' ';
+        }
+        return newString;
+    }
+};
