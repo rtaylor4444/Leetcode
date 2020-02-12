@@ -1,0 +1,53 @@
+class Solution {
+public:
+    string getRomanfromDigit(int n, string tens, string five, string one) {
+        switch(n) {
+            case 1: return one;
+                break;
+                
+            case 2: return one + one;
+                break;
+                
+            case 3: return one + one + one;
+                break;
+                
+            case 4: return one + five;
+                break;
+                
+            case 5: return five;
+                break;
+                
+            case 6: return five + one;
+                break;
+                
+            case 7: return five + one + one;
+                break;
+                
+            case 8: return five + one + one + one;
+                break;
+                
+            case 9: return one + tens;
+                break;
+                
+            default: return "";
+                break;
+        };
+    }
+    
+    string intToRoman(int num) {
+        string roman;
+        
+        //Thousand - max is 3999
+        roman += getRomanfromDigit(num / 1000, "", "", "M");
+        //Hundred
+        num %= 1000;
+        roman += getRomanfromDigit(num / 100, "M", "D", "C");
+        //Tens
+        num %= 100;
+        roman += getRomanfromDigit(num / 10, "C", "L", "X");
+        //0-9
+        num %= 10;
+        roman += getRomanfromDigit(num, "X", "V", "I");
+        return roman;
+    }
+};
