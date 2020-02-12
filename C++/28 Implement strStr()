@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle == "") return 0;
+        map<int, const char*> hashMap;
+        hashMap.emplace(stringSum(needle, 0, needle.length()), needle.c_str());
+        for(int i = 0; i < haystack.length(); i++) {
+            if(haystack.length() - i < needle.length()) break;
+            if(hashMap.find(stringSum(haystack, i, i + needle.length())) != hashMap.end() 
+               && compareString(needle, haystack, i))
+                return i;
+        }
+        return -1;
+    }
+    
+    int stringSum(string& str, int start, int finish) {
+        int sum = 0;
+        for(int i = start; i < finish; i++) 
+            sum += (int)str[i];
+
+        return sum; 
+    }
+    
+    bool compareString(string& needle, string& haystack, int start) {
+        for(int i = 0; i < needle.length(); i++) 
+            if(needle[i] != haystack[start + i]) return false;
+        
+        return true;
+    }
+};
