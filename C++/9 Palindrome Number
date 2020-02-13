@@ -1,0 +1,16 @@
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        //negative numbers cannot be palindromes
+        if(x < 0) return false;
+        int startingNum = x, reversedNum = 0;
+        while(x > 0) {
+            //Integer Overflow edge case
+            if(reversedNum > INT_MAX / 10) return false;
+            reversedNum *= 10;
+            reversedNum += x % 10;
+            x /= 10;
+        }
+        return (startingNum == reversedNum);
+    }
+};
