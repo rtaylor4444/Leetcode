@@ -1,0 +1,72 @@
+class Solution {
+    bool rows[9][9];
+    bool columns[9][9];
+    bool matrix[9][9];
+public:
+    void addNumber(int i, int k, int n) {
+        rows[i][n] = true;
+        columns[k][n] = true;
+        int m = (k / 3) + ((i / 3) * 3);
+        matrix[m][n] = true;
+    }
+    void removeNumber(int i, int k, int n) {
+        rows[i][n] = false;
+        columns[k][n] = false;
+        int m = (k / 3) + ((i / 3) * 3);
+        matrix[m][n] = false;
+    }
+    bool isValid(int i, int k, int n) {
+        if(rows[i][n]) return false;
+        if(columns[k][n]) return false;
+        int m = (k / 3) + ((i / 3) * 3);
+        if(matrix[m][n]) return false;
+        return true;
+    }
+    bool fillSudoku(int index, vector<vector<char>>& board) {
+        char value, possibleVal;
+        bool result;
+        int i, k;
+        for(index; index < 81; index++) {
+            i = index / 9;
+            k = index % 9;
+            value = board[i][k];
+            //skip already filled characters
+            if(value != '.') continue;
+            //test possibilities
+            for(unsigned int n = 0; n < 9; n++) {
+                if(!isValid(i, k, n)) continue;
+                //if valid update our board
+                //cout << "checking " << i << "," << k << " for possible ";
+                //cout << possibleVal << endl;
+                board[i][k] = '1' + n;
+                addNumber(i, k, n);
+                //if our result succeeds that means we must have filled our board!
+                if(fillSudoku(index, board)) return true;
+                //reset our board and try another possbility
+                //cout << possibleVal << " failed." << endl;
+                board[i][k] = '.';
+                removeNumber(i, k, n);
+            }
+            return false;
+        }
+        //if we already filled our board just return true
+        return true;
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        //Recursion - backtracking
+        //Backtracking is needed if we must gather information from a
+        //future node to determine if a current node is useful or not
+        //Step 1: Set up our hashsets for quick lookup this will reduce
+        //the runtime of our slow recursive function dramatically
+        //Step 2: Setup a recursive function to iterate through our board
+        //and test each possibility
+        //Step 3: For each possibly we check for an empty slot and check all
+        //possbilities; repeat until the board is filled
+        for(int i = 0; i < 9; i++) {
+            for(int k = 0; k < 9; k++) {
+                if(board[i][k] != '.') addNumber(i, k, (int)board[i][k] - '1');
+            }
+        }
+        fillSudoku(0, board);
+    }
+};
