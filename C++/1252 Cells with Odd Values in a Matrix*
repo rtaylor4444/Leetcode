@@ -1,6 +1,7 @@
 //Run Time: 8ms - 69.75%
 //Memory Usage: 8.2MB - 27.11%
 //Unoptimal Solution - Memory needs improvement
+//Time O(m * n) Memory(m * n)
 class Solution {
 public:
     void incrementRowCells(int row, vector<vector<int>>& indices) {
