@@ -1,0 +1,35 @@
+//Run Time: 8ms - 60.00%
+//Memory Usage: 7.5MB - 33.01%
+//Solution is fine but need cleaner code - Memory needs improvement
+//Time O( n) Memory(1)
+class Solution {
+public:
+    vector<vector<int>> largeGroupPositions(string S) {
+        int startIndex = 0;
+        int endIndex = 1;
+        char prevChar = S[0];
+        vector<vector<int>> answer;
+        for(int i = 1; i < S.size(); ++i) {
+            
+            //Check end of string
+            if(i == S.size() - 1 && prevChar == S[i]) {
+                //check length of our current string
+                if(i - startIndex >= 2) {
+                    answer.push_back({startIndex, i});
+                }
+            }
+            
+            //Check prevChar
+            if(prevChar != S[i]) {
+                //check length of our current string
+                if(endIndex - startIndex >= 2) {
+                    answer.push_back({startIndex, endIndex});
+                }
+                startIndex = i;
+            }
+            endIndex = i;
+            prevChar = S[i];
+        }
+        return answer;
+    }
+};
