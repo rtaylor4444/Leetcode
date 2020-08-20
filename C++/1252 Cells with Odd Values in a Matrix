@@ -1,0 +1,32 @@
+//Run Time: 8ms - 69.75%
+//Memory Usage: 8.2MB - 27.11%
+//Unoptimal Solution - Memory needs improvement
+class Solution {
+public:
+    void incrementRowCells(int row, vector<vector<int>>& indices) {
+        for(int i = 0; i < indices[row].size(); ++i) {
+            indices[row][i] += 1;
+        }
+    }
+    void incrementColCells(int col, vector<vector<int>>& indices) {
+        for(int i = 0; i < indices.size(); ++i) {
+            indices[i][col] += 1;
+        }
+    }
+    
+    int oddCells(int n, int m, vector<vector<int>>& indices) {
+        vector<vector<int>> matrix(n, vector<int>(m, 0));
+        //Apply changes to our matrix
+        for(int i = 0; i < indices.size(); ++i) {
+            incrementRowCells(indices[i][0], matrix); //+ m
+            incrementColCells(indices[i][1], matrix); //+ n - 1
+        }
+        //Count the odd values in our matrix
+        int numOdd = 0;
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[i].size(); ++j)
+                numOdd += matrix[i][j] % 2;
+        }
+        return numOdd;
+    }
+};
