@@ -1,0 +1,27 @@
+//Run Time: 0ms - 100%
+//Memory Usage: 7.5MB - 20.49%
+//Solved  with a hint =|
+//n = size of nums
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        //How to optimize?
+        //hashMap to store the frequency of each number
+        unordered_map<int, int> numFreq;
+        int numGoodPairs = 0;
+        //Full up hashmap with the frequency of each individual number
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numFreq.find(nums[i]) == numFreq.end())
+                numFreq.emplace(nums[i], 0);
+ 
+            ++numFreq[nums[i]];
+        }
+        //Calculate the number of pairs based on frequency
+        for(auto it = numFreq.begin(); it != numFreq.end(); ++it) {
+            //cout << "frequency is: " << it->second << endl;
+            numGoodPairs += ((it->second * (it->second - 1)) / 2);
+        }
+        return numGoodPairs;
+    }
+};
