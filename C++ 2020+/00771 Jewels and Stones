@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 60.49%
+//Solved =)
+//J = number of jewels
+//S = number of stones
+//Time O(J + S) Memory O(J)
+class Solution {
+public:
+    int numJewelsInStones(string J, string S) {
+        //Place all jewel in a hashset and count
+        //the number of matches we get
+        unordered_set<char> jewels;
+        for(int i = 0; i < J.size(); ++i) {
+            jewels.emplace(J[i]);
+        }
+        int numJewels = 0;
+        for(int i = 0; i < S.size(); ++i) {
+            if(jewels.find(S[i]) != jewels.end())
+            ++numJewels;
+        }
+        return numJewels;
+    }
+};
