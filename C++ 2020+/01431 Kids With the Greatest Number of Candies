@@ -1,0 +1,22 @@
+//Run Time: 4ms - 86.81%
+//Memory Usage: 9.1MB - 50.35%
+//Solved =)
+//Time O(n) Memory(n)
+class Solution {
+public:
+    vector<bool> kidsWithCandies(vector<int>& candies, int extraCandies) {
+        //Step 1: Loop through the array get the largest number of candies
+        //Step 2: determine if each child can reach the max amount
+        //with the extra candies
+        int maxCandies = INT_MIN;
+        for(int i = 0; i < candies.size(); ++i) {
+            maxCandies = max(maxCandies, candies[i]);
+        }
+        
+        vector<bool> canHaveGreatestCandies(candies.size(), false);
+        for(int i = 0; i < candies.size(); ++i) {
+            canHaveGreatestCandies[i] = (candies[i] + extraCandies >= maxCandies);
+        }
+        return canHaveGreatestCandies;
+    }
+};
