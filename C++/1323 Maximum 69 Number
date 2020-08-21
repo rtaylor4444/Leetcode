@@ -1,0 +1,44 @@
+//Run Time: 0ms - 100%
+//Memory Usage: 6.1MB - 21.14%
+//Solved =)
+//Time O(1) Memory(1)
+class Solution {
+public:
+    int swapDigit(int place, int num) {
+        //How do I change from 6 to 9 and vice-versa
+        //num = 9699 place = 2
+        //digit = 10^2 = 100
+        //bot = 99
+        //top = 9699 - 99 = 9600
+        //9600 / 1000 = 9
+        int digit = pow(10, place);
+        int botRemainder = num % digit;
+        //cout << "Our bottom remainder is: " << botRemainder << endl;
+        int topRemainder = num - (botRemainder);
+        topRemainder = (topRemainder / (digit * 10)) * (digit * 10);
+        //cout << "Our top remainder is: " << topRemainder << endl;
+        int mid = (num - (botRemainder + topRemainder)) / digit;
+        if(mid == 9) mid = 6 * digit;
+        mid = 9 * digit;
+        return topRemainder + mid + botRemainder;
+    }
+    int maximum69Number (int num) {
+        //Loop through our number counting the digits
+        //Loop through number of digits reverse(top to bottom) and swap one by one
+        //if we find number greater than num we exit our loop
+        int numDigit = 0;
+        int maxNumber = num;
+        while(num / 10) {
+            num /= 10;
+            ++numDigit;
+        }
+        for(int i = numDigit; i >= 0; --i) {
+            int newMax = swapDigit(i, maxNumber);
+            if(newMax > maxNumber) {
+                maxNumber = newMax;
+                break;
+            }
+        }
+        return maxNumber;
+    }
+};
