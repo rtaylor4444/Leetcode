@@ -1,0 +1,42 @@
+//Run Time: 52ms - 83.37%
+//Memory Usage: 29.8MB - 27.11%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory(n)
+//n = number of nodes
+class Solution {
+public:
+    int postOrder(TreeNode* root, int limit, int curSum) {
+        if(root == nullptr) return INT_MIN;
+        int newSum = curSum + root->val;
+        //If we are a leaf node return our total sum
+        if(root->left == nullptr && root->right == nullptr) {
+            return newSum;
+        }
+        int leftSum = postOrder(root->left, limit, newSum);
+        int rightSum = postOrder(root->right, limit, newSum);
+        
+        //If both sums are less then limit
+        if(leftSum < limit) {
+            //BUG - delete ourselves
+            if(root->left) {
+                delete root->left;
+                root->left = nullptr;
+            }
+        }
+        
+        if(rightSum < limit) {
+            if(root->right) {
+                delete root->right;
+                root->right = nullptr;
+            }
+        }
+        
+        return max(leftSum, rightSum);
+    }
+    TreeNode* sufficientSubset(TreeNode* root, int limit) {
+        //Step 1: Post Order Traversal
+        int totalSum = postOrder(root, limit, 0);
+        if(totalSum < limit) return nullptr;
+        return root;
+    }
+};
