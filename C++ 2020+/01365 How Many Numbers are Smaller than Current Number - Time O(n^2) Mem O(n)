@@ -1,0 +1,21 @@
+//Run Time: 120ms - 5.38%
+//Memory Usage: 10MB - 99.98%
+//Unoptimal Solution - Speed needs improvement
+//n = amount of numbers
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        //Brute Force we check every number against itself
+        vector<int> ans(nums.size(), 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            int numSmaller = 0;
+            for(int j = 0; j < nums.size(); ++j) {
+                if(j != i && nums[i] > nums[j])
+                    ++numSmaller;
+            }
+            ans[i] = numSmaller;
+        }
+        return ans;
+    }
+};
