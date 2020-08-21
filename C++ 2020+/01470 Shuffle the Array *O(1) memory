@@ -1,0 +1,45 @@
+//Run Time: 8ms - 93.75%
+//Memory Usage: 9.7MB - 91.11%
+//Solved =) but had to google answers
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getDesiredPosition(int i, int n) {
+        //[x1,x2,x3,y1,y2,y3]
+        //x1 wants to go to pos 0
+        //x2 wants to go to pos 2
+        //x3 wants to go to pos 4
+        if(i < n) return i * 2;
+        //[x1,x2,x3,y1,y2,y3] n = 3
+        //y1 wants to go to pos 1
+        //y2 wants to go to pos 3
+        //y3 wants to go to pos 6
+        else return ((i - n) * 2) + 1;        
+    }
+    vector<int> shuffle(vector<int>& nums, int n) { 
+        //Could use two pointers through each half of the array
+        //or we could just swap the numbers which is fastest
+        //array manipulation method
+        /*Each "nums[i]" has a "desired" index.
+        The target index of nums[i] is nums[i]'s "desired index".
+        We loop through all nums and swap each nums[i] into its "desired" index. As soon as         a number is placed into its "desired" place, we mark it as "negative", so that it           won't be processed again when we see it later (yes, because nums[i]'s desired index         might be after itself, we might see it agian later).
+        Now nums[i] is in its desired place, but how about another number that "is swapped"         by nums[i]? That number is currently in position "i" now because of the swap. We             recursively put that number into its "desired" place too, until all the "be-swapped"         numbers are also in their desired place.
+        After that, we can move to the next index "i" and do the same thing.
+        Don't forget to change all numbers back to positive value after all finsihed.*/
+        for(int i = 0; i < (2 * n); ++i) {
+            //While this number is not marked
+            int pos = i;
+            while(nums[i] > 0) {
+                pos = getDesiredPosition(pos, n);
+                swap(nums[i], nums[pos]);
+                nums[pos] *= -1;
+            }
+        }
+        
+        //Unmark all numbers
+        for(int i = 0; i < (2 *n); ++i)
+            nums[i] *= -1;
+        
+        return nums;
+    }
+};
