@@ -1,0 +1,19 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6MB - 40.78%
+//Solved =)
+//n = num digits of int n
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int subtractProductAndSum(int n) {
+        int sumDigits = 0;
+        int productDigits = 1;
+        while(n) {
+            int curDigit = n % 10;
+            sumDigits += curDigit;
+            productDigits *= curDigit;
+            n /= 10;
+        }
+        return productDigits - sumDigits;
+    }
+};
