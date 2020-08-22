@@ -1,0 +1,27 @@
+//Run Time: 16ms - 71.52%
+//Memory Usage: 10.8MB - 11.98%
+//Solved =) but can I do better?
+//n = amount of numbers
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        //Sort our numbers so we can easily get the number of smallest
+        vector<int> ans(nums);
+        sort(ans.begin(), ans.end());
+        //Use this sorted array to build our hashMap
+        unordered_map<int, int> numSmallest;
+        for(int i = 0; i < ans.size(); ++i) {
+            //Only fill out a specific number once to avoid dups
+            if(numSmallest.find(ans[i]) != numSmallest.end())
+                continue;
+            
+            numSmallest.emplace(ans[i], i);
+        }
+        //Fill out our answer based on our hashMap
+        for(int i = 0; i < nums.size(); ++i) {
+            ans[i] = numSmallest[nums[i]];
+        }
+        return ans;
+    }
+};
