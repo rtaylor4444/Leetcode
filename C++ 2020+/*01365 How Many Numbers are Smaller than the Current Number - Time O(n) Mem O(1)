@@ -1,0 +1,42 @@
+//Run Time: 8ms - 95.40%
+//Memory Usage: 10.5MB - 23.48%
+//Solved =) 
+//n = amount of numbers
+//r = the range of our numbers which is 1-100
+//Time O(n) Memory O(r)=O(1)
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        //Counting + Dynamic Programming
+        //Since we know our range 0-100 we can use that
+        //to count how many of each number is in the nums array
+        vector<int> countArray(101, 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            countArray[nums[i]]++;
+        }
+        //Now that we have our count we can use this to determine
+        //how many numbers are smaller than each number from 0-100
+        vector<int> resultsArray(101, 0);
+        for(int i = 1; i < resultsArray.size(); ++i) {
+            //current numbers greater than = amount of the previous count
+            // + our previous result
+            //[8,1,2,2,3]
+            //num => count
+            //1 => 1 => prevRes(0) + prevCount(0) = 0 + 0 = 0
+            //2 => 2 => prevRes(1) + prevCount(1) = 0 + 1 = 1
+            //3 => 1 => prevRes(2) + prevCount(2) = 1 + 2 = 3
+            //4 => 0 => prevRes(3) + prevCount(3) = 3 + 1 = 4
+            //5 => 0 => prevRes(4) + prevCount(4) = 4 + 0 = 4
+            //6 => 0 => prevRes(5) + prevCount(5) = 4 + 0 = 4
+            //7 => 0 => prevRes(6) + prevCount(6) = 4 + 0 = 4
+            //8 => 1 => prevRes(7) + prevCount(7) = 4 + 0 = 4
+            //9 => 0 => prevRes(8) + prevCount(8) = 4 + 1 = 5
+            resultsArray[i] = countArray[i - 1] + resultsArray[i - 1];
+        }
+        //Finally just map each number to our results array we calced above
+        for(int i = 0; i < nums.size(); ++i) { 
+            nums[i] = resultsArray[nums[i]];
+        }
+        return nums;
+    }
+};
