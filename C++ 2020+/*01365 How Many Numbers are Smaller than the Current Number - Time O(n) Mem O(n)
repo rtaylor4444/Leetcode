@@ -1,0 +1,44 @@
+//Run Time: 12ms - 81.90%
+//Memory Usage: 10.7MB - 14.34%
+//Solved =) but can we do better memory wise?
+//n = amount of numbers
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void countingSort(vector<int>& nums) {
+        //Since we know our range 0-100 we
+        //can use that for our sorting algorithm
+        vector<int> sortArray(101, 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            sortArray[nums[i]]++;
+        }
+        int curIndex = 0;
+        for(int i = 0; i < sortArray.size(); ++i) {
+            while(sortArray[i] > 0) {
+                nums[curIndex] = i;
+                --sortArray[i];
+                ++curIndex;
+            }
+        }
+    }
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        //Sort our numbers so we can easily get the number of smallest
+        vector<int> ans(nums);
+        countingSort(ans);
+        //sort(ans.begin(), ans.end());
+        //Use this sorted array to build our hashMap
+        unordered_map<int, int> numSmallest;
+        for(int i = 0; i < ans.size(); ++i) {
+            //Only fill out a specific number once to avoid dups
+            if(numSmallest.find(ans[i]) != numSmallest.end())
+                continue;
+            
+            numSmallest.emplace(ans[i], i);
+        }
+        //Fill out our answer based on our hashMap
+        for(int i = 0; i < nums.size(); ++i) {
+            ans[i] = numSmallest[nums[i]];
+        }
+        return ans;
+    }
+};
