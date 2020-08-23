@@ -1,0 +1,31 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.2MB - 69.80%
+//Solved =)
+//n = length of the list
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getDecimalValue(ListNode* head) {
+        //1 => 1
+        //1 * 2 + 0 => 2
+        //2 * 2 + 1 => 5
+        //Loop through the list using the above formula
+        int decValue = 0;
+        while(head) {
+            decValue *= 2;
+            decValue += head->val;
+            head = head->next;
+        }
+        return decValue;
+    }
+};
