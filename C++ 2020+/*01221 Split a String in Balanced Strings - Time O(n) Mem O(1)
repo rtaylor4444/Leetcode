@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.3MB - 30.15%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int balancedStringSplit(string s) {
+        //Loop through the array and maintain a count which increases with
+        //"L" and decreases with "R"
+        //A string is balanced when our count is 0
+       
+        int balanceCount = 0;
+        int numBalanced = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            char curChar = s[i];
+            if(s[i] == 'L') ++balanceCount;
+            else if(s[i] == 'R') --balanceCount; 
+            
+            if(balanceCount == 0) ++numBalanced;
+        }
+        return numBalanced;
+    }
+};
