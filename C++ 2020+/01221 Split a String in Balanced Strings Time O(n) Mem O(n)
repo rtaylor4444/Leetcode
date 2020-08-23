@@ -1,0 +1,53 @@
+//Run Time: 4ms - 30.32%
+//Memory Usage: 6.3MB - 30.15%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int balancedStringSplit(string s) {
+        //Loop through the array and push characters onto a stack
+        //A string is balanced when a letter is popped and the stack
+        //is empty count the number off occurances
+        //"RLRRLLRLRL"
+        //Stack:
+        // *
+        //"RLRRLLRLRL"
+        //Stack: R
+        //  *
+        //"RLRRLLRLRL"
+        //Stack: 
+        //numBal = 1
+        //    *
+        //"RLRRLLRLRL"
+        //Stack: RR 
+        //numBal = 1
+        //      *
+        //"RLRRLLRLRL"
+        //Stack:  
+        //numBal = 2
+        //       *
+        //"RLRRLLRLRL"
+        //Stack: R 
+        //numBal = 2
+        //        *
+        //"RLRRLLRLRL"
+        //Stack:  
+        //numBal = 3
+       
+        stack<char> chars;
+        chars.push(s[0]);
+        int numBalanced = 0;
+        for(int i = 1; i < s.size(); ++i) {
+            char curChar = s[i];
+            char topChar = chars.empty() ? ' ' : chars.top();
+            if((curChar == 'L' && topChar == 'R') ||
+               (curChar == 'R' && topChar == 'L')) {
+                chars.pop();
+                if(chars.empty()) ++numBalanced;
+                continue;
+            }
+            chars.push(s[i]);
+        }
+        return numBalanced;
+    }
+};
