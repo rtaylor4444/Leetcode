@@ -1,0 +1,25 @@
+//Run Time: 12ms - 75.57%
+//Memory Usage: 9.9MB - 56.81%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getNumDigits(int num) {
+        int numDigits = 0;
+        while(num > 0) {
+            num /= 10;
+            ++numDigits;
+        }
+        return numDigits;
+    }
+    int findNumbers(vector<int>& nums) {
+        //Loop through the array and count the digits
+        //for each number keep track of the amount of evens
+        int numEvenDigits = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(getNumDigits(nums[i]) % 2 == 0)
+                ++numEvenDigits;
+        }
+        return numEvenDigits;
+    }
+};
