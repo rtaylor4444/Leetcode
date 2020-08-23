@@ -1,0 +1,20 @@
+//Run Time: 16ms - 85.29%
+//Memory Usage: 10.5MB - 17.11%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getSecondsBetweenPoints(vector<int>& from, vector<int>& to) {
+        int xDiff = abs(from[0] - to[0]);
+        int yDiff = abs(from[1] - to[1]);
+        int seconds = min(xDiff, yDiff);
+        return seconds + (xDiff - seconds) + (yDiff - seconds);
+    }
+    int minTimeToVisitAllPoints(vector<vector<int>>& points) {
+        int totalSeconds = 0;
+        for(int i = 1; i < points.size(); ++i) {
+            totalSeconds += getSecondsBetweenPoints(points[i-1], points[i]);
+        }
+        return totalSeconds;
+    }
+};
