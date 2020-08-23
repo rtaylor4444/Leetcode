@@ -1,0 +1,27 @@
+//Run Time: 100ms - 5.42%
+//Memory Usage: 8.2MB - 31.41%
+//Unoptimal Solution - Speed needs improvement
+//Time O(n ^ 3) Memory O(1)
+
+class Solution {
+public:
+    int countGoodTriplets(vector<int>& arr, int a, int b, int c) {
+        //Brute Force check every possible combination of triplet
+        //*I am aware that hashing and sorting can speed things up
+        int numTriplets = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            for(int j = (i + 1); j < arr.size(); ++j) {
+                for(int k = (j + 1); k < arr.size(); ++k) {                
+                    if(abs(arr[i] - arr[j]) <= a &&
+                       abs(arr[j] - arr[k]) <= b &&
+                       abs(arr[i] - arr[k]) <= c) {
+                        ++numTriplets;
+                        //cout << "foudn triplet of " << arr[i] << " ";
+                        //cout << arr[j] << " " << arr[k] << endl;
+                    }
+                }
+            }
+        }
+        return numTriplets;
+    }
+};
