@@ -1,0 +1,23 @@
+//Run Time: 24ms - 85.07%
+//Memory Usage: 11.1MB - 45.93%
+//Unoptimal Solution - Memory needs improvement
+//n = number of paths in the graph
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string destCity(vector<vector<string>>& paths) {
+        //Place all cities and paths in a hashMap for quick look up
+        //Loop through our paths keeping track of the ones we have seen
+        //and when our line ends; which will be our destination 
+        unordered_map<string, string> lookUp;
+        for(int i = 0; i < paths.size(); ++i) {
+            lookUp.emplace(paths[i][0], paths[i][1]);
+        }
+        
+        string finalDest = paths[0][0];
+        while(lookUp.find(finalDest) != lookUp.end()) {
+            finalDest = lookUp[finalDest];
+        }
+        return finalDest;
+    }
+};
