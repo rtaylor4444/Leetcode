@@ -1,0 +1,24 @@
+//Run Time: 8ms - 95.70%
+//Memory Usage: 10.2MB - 26.95%
+//Solved = )
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        //Just maintain the greatest two numbers as I iterate through
+        //the array
+        int maxOne = INT_MIN;
+        int maxTwo = INT_MIN;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] > maxOne) {
+                maxTwo = maxOne;
+                maxOne = nums[i];
+            }
+            else if(nums[i] > maxTwo) {
+                maxTwo = nums[i];
+            }
+        }
+        
+        return (maxOne - 1) * (maxTwo - 1);
+    }
+};
