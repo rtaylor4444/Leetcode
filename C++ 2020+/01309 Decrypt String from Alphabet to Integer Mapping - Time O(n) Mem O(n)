@@ -1,0 +1,35 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 50.92%
+//Solved =) 
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string freqAlphabets(string s) {
+        //Has to be two digits and ends with # to be 10+
+        //read the string backwards?
+        //"10#11#12"
+        //2 => b
+        //1 => a
+        //# => 11 => k
+        //# => 10 => j
+        //bakj
+        char alphMap[27] = {' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
+                            'z'};
+        string newString = "";
+        for(int i = s.size() - 1; i >= 0; --i) {
+            if(s[i] == '#') {
+                //Get the value of the two digits
+                int intValue = (s[i - 1] - '0');
+                intValue += ((s[i - 2] - '0') * 10);
+                newString += alphMap[intValue];
+                //Advance our pointer since we processed these already
+                i -= 2;
+            }
+            else newString += alphMap[s[i] - '0'];
+        }
+        //Our string is backwards so we have to reverse it
+        reverse(newString.begin(), newString.end());
+        return newString;
+    }
+};
