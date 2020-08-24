@@ -1,0 +1,30 @@
+//Run Time: 8ms - 67.24%
+//Memory Usage: 8.6MB - 84.41%
+//Solved =)
+//n = number of words
+//m = length of the word
+//Time O(m * n) Memory O(n)
+class Solution {
+public:
+    int uniqueMorseRepresentations(vector<string>& words) {
+        string morseRep[26] = {".-","-...","-.-.","-..",".","..-.","--.","....","..",
+                               ".---","-.-",".-..","--","-.","---",".--.","--.-",".-.",
+                               "...","-","..-","...-",".--","-..-","-.--","--.."};
+        //Transform all of our words into morse strings and put
+        //them into a hashSet, only count the non duplicates
+        int numDiffTrans = 0;
+        unordered_set<string> dupCheck;
+        for(int i = 0; i < words.size(); ++i) {
+            string curWord = "";
+            for(int j = 0; j < words[i].size(); ++j) {
+                curWord += morseRep[ words[i][j] - 'a'];
+            }
+            if(dupCheck.find(curWord) != dupCheck.end())
+                continue;
+            
+            ++numDiffTrans;
+            dupCheck.emplace(curWord);
+        }
+        return numDiffTrans;
+    }
+};
