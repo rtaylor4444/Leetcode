@@ -1,0 +1,19 @@
+//Run Time: 68ms - 5.28%
+//Memory Usage: 8.2MB - 27.11%
+//Unoptimal Solution - Time needs improvement
+//Time O(n ^ 2) Memory O(1)
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        //Brute Force
+        //Just check all the product combinations and return
+        //the maximum one
+        int maxProductNum = INT_MIN;
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = (i + 1); j < nums.size(); ++j) {
+                maxProductNum = max(maxProductNum, (nums[i] - 1) * (nums[j] - 1));
+            }
+        }
+        return maxProductNum;
+    }
+};
