@@ -1,0 +1,17 @@
+//Run Time: 4ms - 86.89%
+//Memory Usage: 11.2MB - 17.13%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int busyStudent(vector<int>& startTime, vector<int>& endTime, int queryTime) {
+        //Loop through startTime and endTime as see if
+        //query time falls between the range
+        int numStudents = 0;
+        for(int i = 0; i < startTime.size(); ++i) {
+            if(startTime[i] <= queryTime && endTime[i] >= queryTime)
+                ++numStudents;
+        }
+        return numStudents;
+    }
+};
