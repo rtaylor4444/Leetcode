@@ -1,0 +1,27 @@
+//Run Time: 8ms - 83.31%
+//Memory Usage: 6.9MB - 33.85%
+//Solved =)
+//n = length of the string
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string removeOuterParentheses(string S) {
+        //iterate through the string and store
+        //all the decompositions
+        //Afterward just extract the first and last char
+        //and put the strings together
+        int parenthesisCount = 0;
+        int prevPos = 0;
+        string newString = "";
+        for(int i = 0; i < S.size(); ++i) {
+            if(S[i] == '(') ++parenthesisCount;
+            else if(S[i] == ')') --parenthesisCount;
+            
+            if(parenthesisCount == 0) {
+                newString += S.substr(prevPos + 1, i - prevPos - 1);
+                prevPos = i + 1;
+            }
+        }
+        return newString;
+    }
+};
