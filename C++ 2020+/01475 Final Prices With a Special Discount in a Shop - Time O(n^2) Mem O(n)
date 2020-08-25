@@ -1,0 +1,29 @@
+//Run Time: 12ms - 33.25%
+//Memory Usage: 9.9MB - 79.35%
+//Unoptimal Solution - Time needs improvement
+//n = size of the array
+//Time O(n ^ 2) Memory O(n)
+class Solution {
+public:
+    vector<int> finalPrices(vector<int>& prices) {
+        //[0,1,2,3,4]
+        //[8,4,6,2,3]
+        //Index to ref has to be greater than i
+        //and where that index value is less or equal to cur Value
+        //8 => 8 - (1 => 4) = 4
+        //4 => 4 - (3 => 2) = 2
+        //6 => 6 - (3 => 2) = 4
+        //2 => 2 - (fails) = 2
+        //3 => 3
+        vector<int> newPrices(prices);
+        for(int i = 0; i < prices.size(); ++i) {
+            for(int j = (i + 1); j < prices.size(); ++j) {
+                if(prices[j] <= prices[i]) {
+                    newPrices[i] -= prices[j]; 
+                    break;
+                }
+            }
+        }
+        return newPrices;
+    }
+};
