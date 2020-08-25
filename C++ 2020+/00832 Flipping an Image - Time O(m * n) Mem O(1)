@@ -1,0 +1,18 @@
+//Run Time: 12ms - 40.66%
+//Memory Usage: 8.8MB - 88.02%
+//Solved =)
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    vector<vector<int>> flipAndInvertImage(vector<vector<int>>& A) {
+        //Reverse each row
+        for(int i = 0; i < A.size(); ++i) {
+            reverse(A[i].begin(), A[i].end());
+            for(int j = 0; j < A[i].size(); ++j) {
+                //Toggle the first bit
+                A[i][j] = A[i][j] ^ 1;
+            }
+        }
+        return A;
+    }
+};
