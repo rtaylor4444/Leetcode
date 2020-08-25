@@ -1,0 +1,41 @@
+//Run Time: 20ms - 68.44%
+//Memory Usage: 7.4MB - 88.54%
+//Solved =)
+//n = size of the input string
+//m = number of duplicates 
+//Time O(m) Memory O(n)
+class Solution {
+public:
+    string sortString(string s) {
+        //Sort the string to make iteration easier
+        //leetcode => cdeeelot (sorted)
+        
+        //Build count array
+        char count[26];
+        memset(count, 0, 26);
+        for(int i = 0; i < s.size(); ++i) {
+            count[s[i] - 'a']++;
+        }
+        
+        string result  = "";
+        int numCharsSeen = 0;
+        while(numCharsSeen < s.size()) {
+            //Forward Iteration (smaller chars)
+            for(int i = 0; i < 26; ++i) {
+                if(count[i] == 0) continue;
+                result += (char)('a' + i);
+                --count[i];
+                ++numCharsSeen;
+            }
+            //Backwards Iteration (larger chars)
+            //BUG - Duplicate code needs cleaning
+            for(int i = 25; i >= 0; --i) {
+                if(count[i] == 0) continue;
+                result += (char)('a' + i);
+                --count[i];
+                ++numCharsSeen;
+            }
+        }
+        return result;
+    }
+};
