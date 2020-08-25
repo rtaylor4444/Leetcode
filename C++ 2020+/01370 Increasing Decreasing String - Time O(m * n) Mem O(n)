@@ -1,0 +1,43 @@
+//Run Time: 100ms - 9.46%
+//Memory Usage: 7.4MB - 88.54%
+//Unoptimal Solution - Time and Memory needs improvement
+//n = size of the input string
+//m = number of duplicates 
+//Time O(m * n) Memory O(n)
+class Solution {
+public:
+    string sortString(string s) {
+        //Sort the string to make iteration easier
+        //BUG - Optimize using count sort we know all chars are lowercase
+        //Use a boolean array to mark the indices we have been to
+        //so we dont keep adding characters
+        //leetcode => cdeeelot (sorted)
+        //
+        sort(s.begin(), s.end());
+        string result  = "";
+        vector<bool> seenIndices(s.size(), false);
+        int numCharsSeen = 0;
+        while(numCharsSeen < s.size()) {
+            //Forward Iteration (smaller chars)
+            char prevChar = '}';
+            for(int i = 0; i < s.size(); ++i) {
+                if(seenIndices[i] || prevChar == s[i]) continue;
+                prevChar = s[i];
+                result += s[i];
+                seenIndices[i] = true;
+                ++numCharsSeen;
+            }
+            //Backwards Iteration (larger chars)
+            //BUG - Duplicate code needs cleaning
+            prevChar = '}';
+            for(int i = s.size() - 1; i >= 0; --i) {
+                if(seenIndices[i] || prevChar == s[i]) continue;
+                prevChar = s[i];
+                result += s[i];
+                seenIndices[i] = true;
+                ++numCharsSeen;
+            }
+        }
+        return result;
+    }
+};
