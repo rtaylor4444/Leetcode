@@ -1,0 +1,26 @@
+//Run Time: 16ms - 91.51%
+//Memory Usage: 16.3MB - 58.72%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> sortArrayByParity(vector<int>& A) {
+        //Two Pointers + Array Swaps
+        //[3,1,2,4]
+        //l = 3 r = 4
+        //l is odd so we want to swap this
+        //r is even so we want to swap this
+        //perform swap
+        //[4,1,2,3]
+        //l is even so we incrment until we encounter an odd
+        //r is odd so we incrment until we encounter an even
+        int l = 0;
+        int r = A.size() - 1;
+        while(l < r) {
+            while(l < A.size() && A[l] % 2 == 0) ++l;
+            while(r >= 0 && A[r] % 2 == 1) --r;
+            if(l < r) swap(A[l], A[r]);
+        }
+        return A;
+    }
+};
