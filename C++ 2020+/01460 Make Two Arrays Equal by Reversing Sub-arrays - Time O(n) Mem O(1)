@@ -1,0 +1,22 @@
+//Run Time: 20ms - 96.94%
+//Memory Usage: 14.1MB - 69.80%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool canBeEqual(vector<int>& target, vector<int>& arr) {
+        //Possible if they have the same values and same size
+        if(arr.size() != target.size()) return false;
+        //Fill our count;
+        int count[1001] = {0};
+        for(int i = 0; i < target.size(); ++i) {
+            count[target[i]]++;
+            count[arr[i]]--;
+        }
+        //Check if all count values are 0
+        for(int i = 0; i < 1001; ++i) {
+            if(count[i]) return false;
+        }
+        return true;
+    }
+};
