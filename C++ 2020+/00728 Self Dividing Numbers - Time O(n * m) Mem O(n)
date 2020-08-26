@@ -1,0 +1,29 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.7MB - 15.13%
+//Solved =)
+//n = the size of our range
+//m = number of digits
+//Time O(n * m) Memory O(n)
+class Solution {
+public:
+    bool isSelfDivisable(int num) {
+        int startingNum = num;
+        while(num) {
+            int digit = num % 10;
+            if(!digit || startingNum % digit) return false;
+            num /= 10;
+        }
+        return true;
+    }
+    vector<int> selfDividingNumbers(int left, int right) {
+        //Loop through our range and check if each
+        //number is self-dividing
+        vector<int> nums;
+        nums.reserve(right - left);
+        for(int i = left; i <= right; ++i) {
+            if(isSelfDivisable(i))
+                nums.push_back(i);
+        }
+        return nums;
+    }
+};
