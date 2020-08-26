@@ -1,0 +1,55 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+//Run Time: 52ms - 48.15%
+//Memory Usage: 22.1MB - 46.49%
+//Unoptimal Solution - Memory needs improvement
+//n = depth of the tree
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+        if(t1 == nullptr) return t2;
+        else if(t2 == nullptr) return t1;
+        
+        TreeNode* root = t1;
+        stack<TreeNode*> preorder;
+        preorder.push(t1);
+        preorder.push(t2);
+        while(!preorder.empty()) {
+            t2 = preorder.top();
+            preorder.pop();
+            t1 = preorder.top();
+            preorder.pop();
+            
+            //If node overlap add values together
+            if(t1 && t2) t1->val += t2->val;
+            
+            //Left
+            //if we have no left append t2's nodes
+            if(!t1->left) t1->left = t2->left;
+            //Only push nodes if both t1 and t2 have them
+            //otherwise do nothing, t1's nodes remain the same
+            else if(t1->left && t2->left) {
+                preorder.push(t1->left);
+                preorder.push(t2->left);
+            }
+            
+            //Right
+            if(!t1->right) t1->right = t2->right;
+            else if(t1->right && t2->right) {
+                preorder.push(t1->right);
+                preorder.push(t2->right);
+            }
+        }
+        return root;
+    }
+};
