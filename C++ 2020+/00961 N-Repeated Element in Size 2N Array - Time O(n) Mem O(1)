@@ -1,0 +1,23 @@
+//Run Time: 60ms - 97.09%
+//Memory Usage: 24.7MB - 89.75%
+//Solved =)
+//n = size of the array
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int repeatedNTimes(vector<int>& A) {
+        //Get n
+        int numRepeated = 0;
+        int n = A.size() / 2;
+        //Count the elements
+        int count[10000];
+        memset(count, 0, 10000 * sizeof(int));
+        for(int i = 0; i < A.size(); ++i) {
+            if(++count[A[i]] > 1) {
+                numRepeated = A[i];
+                break;
+            }
+        }
+        return numRepeated;
+    }
+};
