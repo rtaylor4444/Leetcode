@@ -1,0 +1,16 @@
+//Run Time: 28ms - 92.90%
+//Memory Usage: 15MB - 15.85%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> replaceElements(vector<int>& arr) {
+        int greatestNumber =  -1;
+        for(int i = arr.size() - 1; i >= 0; --i) {
+            int curNumber = arr[i];
+            arr[i] = greatestNumber;
+            greatestNumber = max(greatestNumber, curNumber);
+        }
+        return arr;
+    }
+};
