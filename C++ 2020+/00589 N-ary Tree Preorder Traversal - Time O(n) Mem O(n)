@@ -1,0 +1,25 @@
+//Run Time: 44ms - 73.49%
+//Memory Usage: 11.2MB - 65.31%
+//Solved Iteratively
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> preorder(Node* root) {
+        vector<int> ans;
+        if(root == nullptr) return ans;
+        Node* curNode;
+        stack<Node*> preorder;
+        preorder.push(root);
+        while(!preorder.empty()) {
+            curNode = preorder.top();
+            preorder.pop();
+            
+            ans.push_back(curNode->val);
+            
+            for(int i = curNode->children.size() - 1; i >= 0; --i) {
+                preorder.push(curNode->children[i]);
+            }
+        }
+        return ans;
+    }
+};
