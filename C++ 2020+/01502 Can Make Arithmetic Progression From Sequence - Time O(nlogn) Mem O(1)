@@ -1,0 +1,18 @@
+//Run Time: 8ms - 87.54%
+//Memory Usage: 8.7MB - 78.89%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    bool canMakeArithmeticProgression(vector<int>& arr) {
+        //Sort the array
+        sort(arr.begin(), arr.end());
+        
+        //Determine if all element are a specific number apart
+        int curDiff = arr[0] - arr[1];
+        for(int i = 2; i < arr.size(); ++i) {     
+            if(arr[i - 1] - arr[i] != curDiff) return false;
+        }
+        return true;
+    }
+};
