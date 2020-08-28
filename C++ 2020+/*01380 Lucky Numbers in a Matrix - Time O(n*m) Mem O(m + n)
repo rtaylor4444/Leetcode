@@ -1,0 +1,37 @@
+//Run Time: 44ms - 95.07%
+//Memory Usage: 11.5MB - 71.25%
+//Solved =)
+//m == number of rows
+//n == number of columns
+//Time O(n*m) Memory O(m + n)
+class Solution {
+public:
+    vector<int> luckyNumbers (vector<vector<int>>& matrix) {
+        vector<int> luckyNums;
+        //Get the minimum for each row
+        //[3,7,15]
+        vector<int> rowMin(matrix.size(), INT_MAX);
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[i].size(); ++j) {
+                rowMin[i] = min(rowMin[i], matrix[i][j]);
+            }
+        }
+        //Get the maximum in each column
+        //[15, 16, 17]
+        vector<int> colMax(matrix[0].size(), INT_MIN);
+        for(int i = 0; i < matrix[0].size(); ++i) {
+            for(int j = 0; j < matrix.size(); ++j) {
+                colMax[i] = max(colMax[i], matrix[j][i]);
+            }
+        }
+        //Check each element as see if its in both lists
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[0].size(); ++j) {
+                if(matrix[i][j] != rowMin[i]) continue;
+                else if (matrix[i][j] != colMax[j]) continue;
+                luckyNums.push_back(matrix[i][j]);
+            }
+        }
+        return luckyNums;
+    }
+};
