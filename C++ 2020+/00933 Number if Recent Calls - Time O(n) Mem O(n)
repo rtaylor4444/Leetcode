@@ -1,0 +1,24 @@
+//Run Time: 288ms - 84.32%
+//Memory Usage: 57.4MB - 87.97%
+//Solved =)
+//Time O(n) Memory O(n)
+class RecentCounter {
+    queue<int> pings;
+public:
+    RecentCounter() {
+    }
+    
+    int ping(int t) {
+        pings.push(t);
+        while(!pings.empty() && t - pings.front() > 3000) {
+            pings.pop();
+        }
+        return pings.size();
+    }
+};
+
+/**
+ * Your RecentCounter object will be instantiated and called as such:
+ * RecentCounter* obj = new RecentCounter();
+ * int param_1 = obj->ping(t);
+ */
