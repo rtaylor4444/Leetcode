@@ -1,0 +1,17 @@
+//Run Time: 156ms - 58.65%
+//Memory Usage: 8.2MB - 29.17%
+//Unoptimal Solution - Time needs improvement
+//Didn't feel like coding another count sort algo
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int arrayPairSum(vector<int>& nums) {
+        //sort our array then count the pairs?
+        int sum = 0;
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size(); i += 2) {
+            sum += min(nums[i], nums[i + 1]);
+        }
+        return sum;
+    }
+};
