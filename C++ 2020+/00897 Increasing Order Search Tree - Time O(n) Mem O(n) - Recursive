@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+//Run Time: 4ms - 59.02%
+//Memory Usage: 7.9MB - 21.12%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void incresingBSTHelper(TreeNode* node, vector<TreeNode*>& newList) {
+        //In-Order Traversal
+        if(node == nullptr) return;
+        incresingBSTHelper(node->left, newList);
+        newList.push_back(node);
+        incresingBSTHelper(node->right, newList);
+    }
+    
+    TreeNode* increasingBST(TreeNode* root) {
+        vector<TreeNode*> newList;
+        incresingBSTHelper(root, newList);
+        for(int i = 0; i < newList.size() - 1; ++i) {
+            newList[i]->right = newList[i + 1];
+            newList[i]->left = nullptr;
+        }
+        return newList[0];
+    }
+};
