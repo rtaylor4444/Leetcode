@@ -1,0 +1,26 @@
+//Run Time: 24ms - 77.10%
+//Memory Usage: 11.6MB - 74.36%
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int peakIndexInMountainArray(vector<int>& A) {
+        //Binary Search
+        //[true, true, true, false, false, false]
+        //the array is layed out as such(where A[i] < A[i + 1]) 
+        //so basically its sorted making binary search possible
+        int l = 0;
+        int r = A.size() - 1;
+        while(l < r) {
+            int m = l + ((r - l) / 2);
+            if(A[m] > A[m + 1] &&
+              A[m] > A[m - 1])
+                return m;
+            
+            if(A[m] < A[m + 1])
+                l = m + 1;
+            else
+                r = m - 1;
+        }
+        return l;
+    }
+};
