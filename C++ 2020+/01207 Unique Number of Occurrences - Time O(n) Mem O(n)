@@ -1,0 +1,24 @@
+//Run Time: 4ms - 92.44%
+//Memory Usage: 8MB - 97.55%
+//Solved =)
+//n = length of the array
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool uniqueOccurrences(vector<int>& arr) {
+        //Make our counts array
+        int count[2001] = {0};
+        for(int i = 0; i < arr.size(); ++i) {
+            count[1000 + arr[i]]++;
+        }
+        unordered_set<int> uniqueCheck;
+        for(int i = 0; i < 2001; ++i) {
+            if(count[i] == 0) continue;
+            if(uniqueCheck.find(count[i]) != uniqueCheck.end())
+                return false;
+            
+            uniqueCheck.emplace(count[i]);
+        }
+        return true;
+    }
+};
