@@ -1,0 +1,50 @@
+//Run Time: 56ms - 95.02%
+//Memory Usage: 25.9MB - 66.14%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> merge(int l, int r, vector<int>& A) {
+        //cout << "l is: " << A[l] << " r is: " << A[r] << endl;
+        vector<int> merged;
+        merged.reserve(A.size());
+        while(l >= 0 && r < A.size()) {
+            if(A[l] < A[r]) { 
+                merged.push_back(A[l]);
+                --l;
+            }
+            else {
+                merged.push_back(A[r]);
+                ++r;
+            }
+        }
+        
+        //Add leftover left numbers(if any)
+        while(l >= 0) {
+            merged.push_back(A[l]);
+            --l;
+        }
+        
+        //Add leftover right numbers(if any)
+        while(r < A.size()) {
+            merged.push_back(A[r]);
+            ++r;
+        }
+        return merged;
+    }
+    vector<int> sortedSquares(vector<int>& A) {
+        //If no negative values the array is already sorted
+        //If there are negatives just reverse them and 
+        //perform a merge sort
+        int firstNegIndex = -1;
+        for(int i = 0; i < A.size(); ++i) {
+            if(A[i] < 0)
+                firstNegIndex = i;
+            
+            A[i] *= A[i];
+        }
+        //Start left and right at the middle of the array to avoid
+        //having to reverse it
+        return merge(firstNegIndex, firstNegIndex + 1, A);
+    }
+};
