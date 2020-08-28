@@ -1,0 +1,37 @@
+//Run Time: 48ms - 82.21%
+//Memory Usage: 11.5MB - 84.18%
+//Unoptimal Solution - Time needs improvement
+//m == number of rows
+//n == number of columns
+//Time O(m * (n+m)) Memory O(m)
+class Solution {
+public:
+    vector<int> luckyNumbers (vector<vector<int>>& matrix) {
+        //Loop through each row and find the minimum index
+        //Then loop through that min index column and see if its max
+        
+        vector<int> luckyNums;
+        int curRow = 0;
+        //For each row
+        while(curRow < matrix.size()) {
+            //Find Min
+            int minIndex = 0;
+            for(int i = 1; i < matrix[curRow].size(); ++i) {
+                if(matrix[curRow][i] < matrix[curRow][minIndex])
+                    minIndex = i;
+            }
+            //Find the maxIndex in the column
+            int maxIndex = 0;
+            for(int i = 1; i < matrix.size(); ++i) {
+                if(matrix[maxIndex][minIndex] < matrix[i][minIndex])
+                    maxIndex = i;
+            }
+            
+            if(matrix[maxIndex][minIndex] == matrix[curRow][minIndex])
+                luckyNums.push_back(matrix[curRow][minIndex]);
+            
+            ++curRow;
+        }
+        return luckyNums;
+    }
+};
