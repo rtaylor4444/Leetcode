@@ -1,0 +1,18 @@
+//Run Time: 24ms - 77.10%
+//Memory Usage: 11.9MB - 5.04%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int peakIndexInMountainArray(vector<int>& A) {
+        //scan the array looking speficially for a mountain
+        //where A[i] > A[i + 1] && A[i] > A[i - 1]
+        int peakIndex = 1;
+        for(int i = 1; i < A.size() - 1; ++i) {
+            if(A[i] > A[i + 1] && A[i] > A[i - 1]) {
+                if(A[i] > A[peakIndex]) peakIndex = i; 
+            }
+        }
+        return peakIndex;
+    }
+};
