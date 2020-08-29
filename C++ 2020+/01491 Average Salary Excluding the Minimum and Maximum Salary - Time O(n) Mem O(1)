@@ -1,0 +1,19 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.3MB - 33.02%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    double average(vector<int>& salary) {
+        int minSalary = INT_MAX;
+        int maxSalary = INT_MIN;
+        int totalSalary = 0;
+        for(int i = 0; i < salary.size(); ++i) {
+            minSalary = min(minSalary, salary[i]);
+            maxSalary = max(maxSalary, salary[i]);
+            totalSalary += salary[i];
+        }
+        totalSalary -= (minSalary + maxSalary);
+        return (double) totalSalary / (salary.size() - 2);
+    }
+};
