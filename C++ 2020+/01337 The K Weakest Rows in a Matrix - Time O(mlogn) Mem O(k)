@@ -1,0 +1,68 @@
+//Run Time: 28ms - 79.30%
+//Memory Usage: 10.6MB - 78.53%
+//Solved =)
+//n = size of each row
+//m = number of rows
+//k = num weakest rows we want 
+//Time O(mlogn) Memory O(k)
+class CompareRow
+{
+public:
+    bool operator() (pair<int,int>& lhs, pair<int,int>& rhs)
+    {
+        if(lhs.first < rhs.first)
+            return true;
+        else if (lhs.first > rhs.first)
+            return false;
+        
+        if(lhs.second < rhs.second)
+            return true;
+        
+        return false;
+    }
+};
+
+class Solution {
+public:
+    int findNumSoldiers(vector<int>& row) {
+        int l = 0;
+        int r = row.size() - 1;
+        //       *
+        //[1,1,1,1,0]
+        //l = 3
+        //r = 4
+        //m = 3
+        
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            //Exit Condition
+            if(m+1 < row.size() && row[m] > row[m+1]) return m+1;
+            
+            if(row[m] > 0)
+                l = m + 1;
+            else
+                r = m - 1;
+  
+        }
+        return row[0] > 0 ? row.size() : 0;
+    }
+    vector<int> kWeakestRows(vector<vector<int>>& mat, int k) {
+        //Sorted - solders stand in the front of the array
+        //Binary search is possible
+        //Counting Sort not possible
+        //Priority queue
+        vector<int> numWeakestRows(k, 0);
+        //count -> index
+        priority_queue<pair<int,int>, vector<pair<int,int>>, CompareRow> p_q;
+        for(int i = 0; i < mat.size(); ++i) {
+            p_q.push(make_pair(findNumSoldiers(mat[i]), i));
+            if(p_q.size() > k) p_q.pop();
+        }
+        while(!p_q.empty()) {
+            numWeakestRows[k-1] = p_q.top().second;
+            p_q.pop();
+            --k;
+        }
+        return numWeakestRows;
+    }
+};
