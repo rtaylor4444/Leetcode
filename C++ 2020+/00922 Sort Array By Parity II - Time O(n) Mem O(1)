@@ -1,0 +1,21 @@
+//Run Time: 36ms - 96.89%
+//Memory Usage: 21.5MB - 86.23%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> sortArrayByParityII(vector<int>& A) {
+        //Two Pointers with swaps
+        int ptr1 = 0;
+        int ptr2 = 1;
+        while(ptr1 < A.size() && ptr2 < A.size()) {
+            //Swap if ptr1 is odd and ptr2 is even
+            if(A[ptr1] % 2 == 1 && A[ptr2] % 2 == 0)
+                swap(A[ptr1], A[ptr2]);
+            
+            while(ptr1 < A.size() && A[ptr1] % 2 == 0) ptr1 += 2;
+            while(ptr2 < A.size() && A[ptr2] % 2 == 1) ptr2 += 2;
+        }
+        return A;
+    }
+};
