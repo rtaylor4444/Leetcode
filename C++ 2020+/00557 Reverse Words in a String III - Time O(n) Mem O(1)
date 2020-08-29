@@ -1,0 +1,26 @@
+//Run Time: 48ms - 95.07%
+//Memory Usage: 9.9MB - 56.43%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void reverseString(string& s, int l, int r) {
+        while(l < r) {
+            swap(s[l], s[r]);
+            l++;
+            r--;
+        }
+    }
+    string reverseWords(string s) {
+        int startIndex = 0;
+        int endIndex = 0;
+        while(startIndex < s.size()) {
+            while(endIndex < s.size() && s[endIndex] != ' ') ++endIndex;
+            reverseString(s, startIndex, endIndex - 1);
+            //cout << "start: " << startIndex << " end: " << endIndex << endl;
+            ++endIndex;
+            startIndex = endIndex;
+        }
+        return s;
+    }
+};
