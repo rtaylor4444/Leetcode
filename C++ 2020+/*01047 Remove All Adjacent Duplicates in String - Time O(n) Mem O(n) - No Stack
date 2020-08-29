@@ -1,0 +1,23 @@
+//Run Time: 48ms - 94.89%
+//Memory Usage: 10.1MB - 76.63%
+//Solved - Optimized
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string removeDuplicates(string S) {
+        //Only keep elements which are odd
+        //"abacab" => "abacab"
+        //Stack?
+        //"abbaca" => "ca"
+        string newString;
+        for(int i = 0; i < S.size(); ++i) {
+            char prevChar = newString.empty() ? ' ' : newString[newString.size() - 1];
+            if(prevChar == S[i]) {
+                newString.pop_back();
+                continue;
+            }
+            newString += S[i];
+        }
+        return newString;
+    }
+};
