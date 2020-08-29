@@ -1,0 +1,29 @@
+//Run Time: 12ms - 96.93%
+//Memory Usage: 10.7MB - 57.02%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> minSubsequence(vector<int>& nums) {
+        //Get a total sum while doing counting sort
+        int count[101] = {0};
+        int totalSum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            count[nums[i]]++;
+            totalSum += nums[i];
+        }
+        //Iterate through in reverse
+        int curSum = 0;
+        vector<int> seq;
+        for(int i = 100; i >= 0; --i) {
+            while(count[i] > 0) {
+                if(curSum > totalSum) return seq;
+                curSum += i;
+                totalSum -= i;
+                count[i]--;
+                seq.push_back(i);
+            }
+        }
+        return seq;
+    }
+};
