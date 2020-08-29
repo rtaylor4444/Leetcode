@@ -1,0 +1,26 @@
+//Run Time: 72ms - 94.29%
+//Memory Usage: 12.3MB - 54.80%
+//Solved =)
+//m = num strings
+//n = length of the strings
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    int minDeletionSize(vector<string>& A) {
+        //c d g
+        //b a h
+        //a f i
+        int numDeletions = 0;
+        for(int i = 0; i < A[0].size(); ++i) {
+            char prevChar = A[0][i];
+            for(int j = 1; j < A.size(); ++j) {
+                if(prevChar > A[j][i]) {
+                    ++numDeletions;
+                    break;
+                }
+                prevChar = A[j][i];
+            }
+        }
+        return numDeletions;
+    }
+};
