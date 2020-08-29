@@ -1,0 +1,31 @@
+/*
+ * // This is the custom function interface.
+ * // You should not implement it, or speculate about its implementation
+ * class CustomFunction {
+ * public:
+ *     // Returns f(x, y) for any given positive integers x and y.
+ *     // Note that f(x, y) is increasing with respect to both x and y.
+ *     // i.e. f(x, y) < f(x + 1, y), f(x, y) < f(x, y + 1)
+ *     int f(int x, int y);
+ * };
+ */
+
+//Run Time: 136ms - 13.04%
+//Memory Usage: 6.3MB - 72.83%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^@) Memory O(1)
+class Solution {
+public:
+    vector<vector<int>> findSolution(CustomFunction& customfunction, int z) {
+        vector<vector<int>> solutions;
+        for(int x = 1; x < 1001; ++x) {
+            for(int y = 1; y < 1001; ++y) {
+                if(customfunction.f(x, y) == z) {
+                    solutions.push_back({x,y});
+                    break;
+                }
+            }
+        }
+        return solutions;
+    }
+};
