@@ -1,0 +1,23 @@
+//Run Time: 4ms - 65.23%
+//Memory Usage: 7.8MB - 93.24%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> buildArray(vector<int>& target, int n) {
+        vector<string> stackOperations;
+        int targetIndex = 0;
+        for(int i = 1; i <= n; ++i) {
+            if(targetIndex >= target.size())
+                break;
+            
+            stackOperations.push_back("Push");
+            if(i != target[targetIndex])
+                stackOperations.push_back("Pop");
+            else {
+                ++targetIndex;
+            }
+        }
+        return stackOperations;
+    }
+};
