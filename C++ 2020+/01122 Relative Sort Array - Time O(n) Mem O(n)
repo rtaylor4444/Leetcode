@@ -1,0 +1,46 @@
+//Run Time: 4ms - 92.15%
+//Memory Usage: 8.1MB - 24.99%
+//Unoptimal Solution - Memory/Time needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        //Bucket Sort
+        //2 -> 0
+        //1 -> 1
+        //Place all arr 2 elements in a hashmap
+        //num -> index
+        unordered_map<int, int> relativeMapping;
+        for(int i = 0; i < arr2.size(); ++i) {
+            relativeMapping.emplace(arr2[i], i);
+        }
+        //Fill our buckets and keep track of elements that dont exist
+        vector<int> bucketSort(1001, 0);
+        vector<int> absentElements;
+        for(int i = 0; i < arr1.size(); ++i) {
+            if(relativeMapping.find(arr1[i]) == relativeMapping.end()) {
+                absentElements.push_back(arr1[i]);
+                continue;
+            }
+            bucketSort[relativeMapping[arr1[i]]]++;
+        }
+        //Sort elements that dont exist
+        sort(absentElements.begin(), absentElements.end());
+        //Build our array
+        //Buckets
+        int curIndex = 0;
+        for(int i = 0; i < 1001; ++i) {
+            while(bucketSort[i] > 0) {
+                arr1[curIndex] = arr2[i];
+                --bucketSort[i];
+                ++curIndex;
+            }
+        }
+        //Elements that don't exist
+        for(int i = 0; i < absentElements.size(); ++i) {
+            arr1[curIndex] = absentElements[i];
+            ++curIndex;
+        }
+        return arr1;
+    }
+};
