@@ -1,0 +1,29 @@
+//Run Time: 92ms - 93.59%
+//Memory Usage: 20.6MB - 54.35%
+//n = number of words
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int countCharacters(vector<string>& words, string chars) {
+        //Set up our count
+        int numChars = 0;
+        vector<int> countSort(26, 0);
+        for(int i = 0; i < chars.size(); ++i) {
+            countSort[chars[i] - 'a']++;
+        }
+        
+        for(int i = 0; i < words.size(); ++i) {
+            bool canFormWord = true;
+            vector<int> tempCount = vector<int>(countSort); 
+            for(int j = 0; j < words[i].size(); ++j) {
+                if(tempCount[words[i][j] - 'a'] <= 0) {
+                    canFormWord = false;
+                    break;
+                }
+                tempCount[words[i][j] - 'a']--;
+            }
+            if(canFormWord) numChars += words[i].size();
+        }
+        return numChars;
+    }
+};
