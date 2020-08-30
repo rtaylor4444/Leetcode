@@ -1,0 +1,19 @@
+//Run Time: 8ms - 74.87%
+//Memory Usage: 8.2MB - 92.71%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool threeConsecutiveOdds(vector<int>& arr) {
+        int numOdds = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            if(numOdds >= 3) return true;
+            
+            if(arr[i] % 2 == 1)
+                ++numOdds;
+            else
+                numOdds = 0;
+        }
+        return (numOdds >= 3);
+    }
+};
