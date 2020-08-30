@@ -1,0 +1,68 @@
+//Run Time: 4ms - 98.54%
+//Memory Usage: 16.7MB - 90.68%
+//Solved =) - Morris
+//n = number of nodes
+//Time O(n) Memory O(1)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+
+public:
+    int sumRootToLeaf(TreeNode* root) {
+        int totalSum = 0, curValue = 0;
+        TreeNode* predecessor;
+        int steps;
+        while(root != nullptr) {
+            //if left exists compute predecessor
+            if(root->left) {
+                //predecessor is one step left
+                predecessor = root->left;
+                steps = 1;
+                //Then to the right until you cant anymore
+                while(predecessor->right && predecessor->right != root) {
+                    predecessor = predecessor->right;
+                    ++steps;
+                }
+                
+                //Set link (right) to the root and explore left subtree
+                if(!predecessor->right) {
+                    curValue = (curValue << 1) | root->val;
+                    predecessor->right = root;
+                    root = root->left;
+                }
+                //Break Link (right) and explore right subtree
+                else {
+                    //If Leaf node update the sum
+                    if(!predecessor->left)
+                        totalSum += curValue;
+                    
+                    //fix curValue (since we must backtrack)
+                    for(int i = 0; i < steps; ++i)
+                        curValue >>= 1;
+                    
+                    predecessor->right = nullptr;
+                    root = root->right;
+                }
+            }
+            //go right if there is no left child
+            else {
+                curValue = (curValue << 1) | root->val;
+                //If Leaf node update the sum
+                if(!root->right)
+                    totalSum += curValue;
+                
+                root= root->right;
+            }
+        }
+        return totalSum;
+    }
+};
