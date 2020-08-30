@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.1MB - 67.36%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        //Counting Sort
+        //Get our starting count
+        int countSort[1001] = {0};
+        for(int i = 0; i < arr1.size(); ++i) {
+            countSort[arr1[i]]++;
+        }
+        //Replace elements based on arr2 mapping
+        int curIndex = 0;
+        for(int i = 0; i < arr2.size(); ++i) {
+            while(countSort[arr2[i]]) {
+                arr1[curIndex] = arr2[i];
+                --countSort[arr2[i]];
+                ++curIndex;
+            }
+        }
+        //Add remaining elements to arr1 (ones not in arr2 mapping)
+        for(int i = 0; i < 1001; ++i) {
+            while(countSort[i]) {
+                arr1[curIndex] = i;
+                --countSort[i];
+                ++curIndex;
+            }
+        }
+        return arr1;
+    }
+};
