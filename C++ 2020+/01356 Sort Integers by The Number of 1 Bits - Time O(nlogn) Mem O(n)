@@ -1,0 +1,40 @@
+//Run Time: 8ms - 87.42%
+//Memory Usage: 10.7MB - 34.97%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    int numBits(int num) {
+        int bit = 0;
+        while(num) {
+            bit += (num & 1);
+            num = num >> 1;
+        }
+        return bit;
+    }
+    vector<int> sortByBits(vector<int>& arr) {
+        //Bucket sort
+        //like a hashing function but they are ordered
+        // -> = hashing function
+        //0 -> [num elements]
+        //1 -> [num elements]
+        //2 -> [num elements]
+        //Assuming ints there are 32 bits which is the max value
+        vector<vector<int>> bucketSort(33, vector<int>());
+        //Sort our array so they are in ascending order
+        sort(arr.begin(), arr.end());
+        //Use our function to determine where each element goes
+        for(int i = 0; i < arr.size(); ++i) {
+            bucketSort[numBits(arr[i])].push_back(arr[i]);
+        }
+        //Construct array based on the buckets
+        int curIndex = 0;
+        for(int i = 0; i < bucketSort.size(); ++i) {
+            for(int j = 0; j < bucketSort[i].size(); ++j) {
+                arr[curIndex] = bucketSort[i][j];
+                ++curIndex;
+            }
+        }
+        return arr;
+    }
+};
