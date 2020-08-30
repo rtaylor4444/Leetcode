@@ -1,0 +1,32 @@
+//Run Time: 16ms - 84.65%
+//Memory Usage: 9.6MB - 45.84%
+//Solved =)
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    int projectionArea(vector<vector<int>>& grid) {
+        int topProj = 0;
+        int xProj = 0;
+        int yProj = 0;
+        //get x projection
+        for(int i = 0; i < grid.size(); ++i) {
+            int rowMax = INT_MIN;
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j]) ++topProj;
+                rowMax = max(grid[i][j], rowMax);
+            }
+            xProj += rowMax;
+        }
+        //get y projection
+        for(int i = 0; i < grid[0].size(); ++i) {
+            int colMax = INT_MIN;
+            for(int j = 0; j < grid.size(); ++j) {
+                colMax = max(grid[j][i], colMax);
+            }
+            yProj += colMax;
+        }
+        //cout << "x: " << xProj << " y: " << yProj;
+        //cout << " top: " << topProj << endl;
+        return topProj + xProj + yProj;
+    }
+};
