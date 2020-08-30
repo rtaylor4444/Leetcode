@@ -1,0 +1,39 @@
+//Run Time: 44ms - 94.47%
+//Memory Usage: 14.7MB - 53.08%
+//Solved =)
+//n = number of strings
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int numUniqueEmails(vector<string>& emails) {
+        //Use hashSet to keep track of the addresses
+        //to get mail
+        unordered_set<string> numEmails;
+        for(int i = 0; i < emails.size(); ++i) {
+            string curString = "";
+            bool isIgnore = false;
+            for(int j = 0; j < emails[i].size(); ++j) {
+                //Exit Condition
+                //Append the rest of the string and break the loop
+                if(emails[i][j] == '@') {
+                    curString += emails[i].substr(j, emails[i].size() - j);
+                    numEmails.emplace(curString);
+                    break;
+                }
+                
+                //Ignore everything once we find a + sign
+                if(emails[i][j] == '+' || isIgnore) {
+                    isIgnore = true;
+                    continue;
+                }
+                    
+                //Skip if we find a .
+                if(emails[i][j] == '.')
+                    continue;
+                
+                curString += emails[i][j];
+            }
+        }
+        return numEmails.size();
+    }
+};
