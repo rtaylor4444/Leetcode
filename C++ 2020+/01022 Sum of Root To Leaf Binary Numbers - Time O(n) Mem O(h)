@@ -1,0 +1,40 @@
+//Run Time: 4ms - 98.54%
+//Memory Usage: 16.8MB - 60.49%
+//Solved =)
+//n = number of nodes
+//h = height of tree
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    int totalSum;
+public:
+    void preorder(TreeNode* node, int curValue) {
+        //Exit Condition
+        if(node == nullptr) return;
+        curValue = curValue << 1;
+        curValue += node->val;
+        //Leaf Node
+        if(node->left == nullptr &&
+          node->right == nullptr) {
+            totalSum += curValue;
+            return;
+        }
+        preorder(node->left, curValue);
+        preorder(node->right, curValue);
+    }
+    int sumRootToLeaf(TreeNode* root) {
+        totalSum = 0;
+        preorder(root, totalSum); 
+        return totalSum;
+    }
+};
