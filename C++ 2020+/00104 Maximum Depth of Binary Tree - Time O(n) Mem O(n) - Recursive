@@ -1,7 +1,9 @@
 //Run Time: 12ms - 79.38%
 //Memory Usage: 19.2MB - 73.67%
 //Solved =)
-//Time O(n) Memory O(n)
+//n = number of nodes
+//h = height of the tree
+//Time O(n) Memory O(h)
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
