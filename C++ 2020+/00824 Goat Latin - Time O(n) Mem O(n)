@@ -1,0 +1,52 @@
+//Run Time: 4ms - 80.92%
+//Memory Usage: 6.4MB - 95.36%
+//Solved =)
+//n = size of the string
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string toGoatLatin(string S) {
+        int numWords = 0;
+        int startIndex = 0;
+        int endIndex = 0;
+        string goatLatin = "";
+        //Loop through and find each word;
+        while(startIndex < S.size()) {
+            //Get starting Index
+            while(startIndex < S.size() && S[startIndex] == ' ') 
+                ++startIndex;
+            //get ending Index
+            endIndex = startIndex;
+            while(endIndex < S.size() && S[endIndex] != ' ')
+                ++endIndex;
+            
+            //handle empty word edge case
+            if(startIndex == endIndex) {
+                //get rid of trailing space
+                goatLatin.pop_back();
+                break;
+            }
+            
+            //get word
+            string curString = S.substr(startIndex, endIndex - startIndex);
+            //cout << startIndex << "  " << endIndex << endl;
+            //cout << "word is: " << curString << " " << curString.size() << endl;
+            ++numWords;
+            //check consonant - put first value at the end
+            char curChar = curString[0] | 32;
+            if(curChar != 'a' && curChar != 'e' && curChar != 'i'
+              && curChar != 'o' && curChar != 'u') {
+                curString += curString[0];
+                curString = curString.substr(1, curString.size() - 1);
+            }
+            curString += "ma";
+            //add a based on wordcount
+            for(int i = 0; i < numWords; i++) curString += 'a';
+            goatLatin += curString;
+            //add space
+            if(endIndex < S.size()) goatLatin += ' ';
+            startIndex = endIndex;
+        }
+        return goatLatin;
+    }
+};
