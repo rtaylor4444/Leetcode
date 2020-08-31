@@ -1,0 +1,25 @@
+//Run Time: 184ms - 94.03%
+//Memory Usage: 32.5MB - 43.12%
+//Solved =)
+//n = size of the array
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<vector<int>> minimumAbsDifference(vector<int>& arr) {
+        //Sort + Two Pass
+        vector<vector<int>> diffPairs;
+        sort(arr.begin(), arr.end());
+        //First pass we find the minimum absolute diff
+        int minDiff = INT_MAX;
+        for(int i = 0; i < arr.size() - 1; ++i) {
+            int curDiff = abs(arr[i] - arr[i+1]);
+            minDiff = min(minDiff, curDiff);
+        }
+        //Second pass we collect element that have that minimum diff
+        for(int i = 0; i < arr.size() - 1; ++i) {
+            if(abs(arr[i] - arr[i+1]) == minDiff)
+                diffPairs.push_back({arr[i], arr[i+1]});
+        }
+        return diffPairs;
+    }
+};
