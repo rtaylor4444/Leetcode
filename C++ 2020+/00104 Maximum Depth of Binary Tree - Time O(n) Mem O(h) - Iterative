@@ -1,0 +1,40 @@
+//Run Time: 12ms - 79.38%
+//Memory Usage: 19MB - 87.12%
+//Solved =)
+//n = number of nodes
+//h = height of the tree
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == nullptr) return 0;
+        int depth = 0;
+        stack<pair<TreeNode*, int>> preorder;
+        preorder.push(make_pair(root, 1));
+        TreeNode* curNode;
+        int curDepth;
+        
+        while(!preorder.empty()) {
+            curNode = preorder.top().first;
+            curDepth = preorder.top().second;
+            preorder.pop();
+            
+            depth = max(curDepth, depth);
+            if(curNode->left) preorder.push(make_pair(curNode->left, curDepth + 1));
+            if(curNode->right) preorder.push(make_pair(curNode->right, curDepth + 1));
+        }
+        return depth;
+    }
+};
