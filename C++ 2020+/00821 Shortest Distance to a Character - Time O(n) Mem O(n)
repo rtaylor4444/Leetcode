@@ -1,0 +1,28 @@
+//Run Time: 4ms - 78.42%
+//Memory Usage: 6.7MB - 85.87%
+//Solved
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> shortestToChar(string S, char C) {
+        //Two Points/Multiple Pass
+        vector<int> charDist(S.size(), INT_MAX);
+        int startIndex = 0, count = 0;
+        //Right Scan
+        while(startIndex < S.size() && S[startIndex] != C) ++startIndex;
+        for(int i = startIndex; i < S.size(); ++i) {
+            if(S[i] == C) count = 0;
+            else ++count;
+            charDist[i] = min(count, charDist[i]);
+        }
+        //Left Scan
+        startIndex = S.size() - 1;
+        while(startIndex >= 0 && S[startIndex] != C) --startIndex;
+        for(int i = startIndex; i >= 0; --i) {
+            if(S[i] == C) count = 0;
+            else ++count;
+            charDist[i] = min(count, charDist[i]);
+        }
+        return charDist;
+    }
+};
