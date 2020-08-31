@@ -1,0 +1,62 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.8MB - 95.40%
+//n = size of board
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numRookCaptures(vector<vector<char>>& board) {
+        //Find the rook
+        int xPos = 0;
+        int yPos = 0;
+        for(int i = 0; i < 8; ++i) {
+            bool foundRook = false;
+            for(int j = 0; j < 8; ++j) {
+                if(board[i][j] == 'R') {
+                    foundRook = true;
+                    xPos = j;
+                    yPos = i;
+                    break;
+                }
+            }
+            if(foundRook) break;
+        }
+        //Scan up
+        int numPawns = 0;
+        for(int i = yPos - 1; i >= 0; --i) {
+            if(board[i][xPos] == 'B')
+                break;
+            else if(board[i][xPos] == 'p') {
+                ++numPawns;
+                break;
+            }
+        }
+        //Scan down
+        for(int i = yPos + 1; i < 8; ++i) {
+            if(board[i][xPos] == 'B')
+                break;
+            else if(board[i][xPos] == 'p') {
+                ++numPawns;
+                break;
+            }
+        }
+        //Scan left
+        for(int i = xPos - 1; i >= 0; --i) {
+            if(board[yPos][i] == 'B')
+                break;
+            else if(board[yPos][i] == 'p') {
+                ++numPawns;
+                break;
+            }
+        }
+        //Scan right
+        for(int i = yPos + 1; i < 8; ++i) {
+            if(board[yPos][i] == 'B')
+                break;
+            else if(board[yPos][i] == 'p') {
+                ++numPawns;
+                break;
+            }
+        }
+        return numPawns;
+    }
+};
