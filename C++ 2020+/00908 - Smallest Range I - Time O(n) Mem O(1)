@@ -1,0 +1,36 @@
+//Run Time: 32ms - 92.96%
+//Memory Usage: 15.7MB - 10.41%
+//Solved =)
+//n = size of the array
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int smallestRangeI(vector<int>& A, int K) {
+        //Loop through get an average and try to get
+        //as close to avg as possible?
+        //[3,1,10]
+        //4 
+        //avg = 14 / 3 = 4 or 5
+        //[5,5,6]
+        //Get our target which is smallest + k
+        int target = INT_MAX;
+        for(int i = 0; i < A.size(); ++i) {
+            target = min(target, A[i]);
+        }
+        target += K;
+        //Make B as close to target as possible while storing min-max
+        int minValue = INT_MAX;
+        int maxValue = INT_MIN;
+        for(int i = 0; i < A.size(); ++i) {
+            int diff = target - A[i];
+            //Cap out diff by K
+            if(diff < 0 && diff < -K)
+                diff = -K;
+            else if(diff > 0 && diff > K)
+                diff = K;
+            minValue = min(A[i] + diff, minValue);
+            maxValue = max(A[i] + diff, maxValue);
+        }
+        return maxValue - minValue;
+    }
+};
