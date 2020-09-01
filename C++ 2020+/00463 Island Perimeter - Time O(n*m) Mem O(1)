@@ -1,0 +1,35 @@
+//Run Time: 184ms - 93.23%
+//Memory Usage: 96MB - 90.40%
+//Solved =)
+//n = grid height
+//m = grid width
+//Time O(n*m) Memory O(1)
+class Solution {
+public:
+    int islandPerimeter(vector<vector<int>>& grid) {
+        //loop through and and check each index since
+        //we know there is only one island
+        int totalPerimeter = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                //Up
+                if(i - 1 < 0 || grid[i-1][j] == 0) 
+                    ++totalPerimeter;
+
+                //Left
+                if(j - 1 < 0 || grid[i][j-1] == 0)
+                    ++totalPerimeter;
+                
+                //Down
+                if(i + 1 >= grid.size() || grid[i+1][j] == 0)
+                    ++totalPerimeter;
+
+                //Right
+                if(j + 1 >= grid[i].size() || grid[i][j+1] == 0)
+                    ++totalPerimeter;
+            }
+        }
+        return totalPerimeter;
+    }
+};
