@@ -1,0 +1,14 @@
+//Run Time: 20ms - 93.86%
+//Memory Usage: 12.1MB - 60.39%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int element = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            element ^= nums[i];
+        }
+        return element;
+    }
+};
