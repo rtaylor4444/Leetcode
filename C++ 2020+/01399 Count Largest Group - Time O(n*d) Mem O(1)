@@ -1,0 +1,34 @@
+//Run Time: 4ms - 78.73%
+//Memory Usage: 6MB - 76.42%
+//Solved =)
+//n = how large n is
+//d = number of digits
+//Time O(n*d) Memory O(1)
+class Solution {
+public:
+    int addDigits(int n) {
+        int digitSum = 0;
+        while(n) {
+            digitSum += n % 10;
+            n /= 10;
+        }
+        return digitSum;
+    }
+    int countLargestGroup(int n) {
+        //1 - 9999
+        //18 + 18 = 36
+        //Build count array and get our max size
+        int groupCount[37] = {0};
+        int maxGroupSize = 0;
+        for(int i = 1; i <= n; ++i) {
+            maxGroupSize = max(++groupCount[addDigits(i)], maxGroupSize);
+        }
+        //find number of groups that match this size
+        int numGroupsAtMax = 0;
+        for(int i = 1; i < 37; ++i) {
+            if(maxGroupSize == groupCount[i])
+                ++numGroupsAtMax;
+        }
+        return numGroupsAtMax;
+    }
+};
