@@ -1,0 +1,17 @@
+//Run Time: 4ms - 56.26%
+//Memory Usage: 7.6MB - 21.74%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minStartValue(vector<int>& nums) {
+        //Add all numbers together and keep track
+        //of the lowest point
+        int lowest = INT_MAX, sum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            sum += nums[i];
+            lowest = min(sum, lowest);
+        }
+        return lowest >= 0 ? 1 : (0 - lowest) + 1; 
+    }
+};
