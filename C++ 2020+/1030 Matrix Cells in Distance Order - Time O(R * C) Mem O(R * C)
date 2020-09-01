@@ -1,0 +1,31 @@
+//Run Time: 68ms - 87.92%
+//Memory Usage: 25.2MB - 34.86%
+//Solved =)
+//Time O(R * C) Memory O(R * C)
+class Solution {
+public:
+    vector<vector<int>> allCellsDistOrder(int R, int C, int r0, int c0) {
+        //[0,1] - start pos R = 1 C = 1
+        //matrix example R = 2 C = 3
+        //[0,0][0,1][0,2]
+        //[1,0][1,1][1,2]
+        //count array
+        //dist -> elements
+        //build count array
+        vector<vector<vector<int>>> count(R + C, vector<vector<int>>());
+        for(int i = 0; i < R; ++i) {
+            for(int j = 0; j < C; ++j) {
+                int curDist = abs(r0 - i) + abs(c0 - j);
+                count[curDist].push_back({i, j});
+            }
+        }
+        //Build sorted array
+        vector<vector<int>> result;
+        for(int i = 0; i < count.size(); ++i) {
+            for(int j = 0; j < count[i].size(); ++j) {
+                result.push_back(count[i][j]);
+            }
+        }
+        return result;
+    }
+};
