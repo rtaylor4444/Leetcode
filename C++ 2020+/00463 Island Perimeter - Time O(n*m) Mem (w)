@@ -1,0 +1,79 @@
+//Run Time: 212ms - 82.08%
+//Memory Usage: 100MB - 8.61%
+//Solved =)
+//n = grid height
+//m = grid width
+//w = width of the bfs steps
+//Time O(n*m) Memory O(w)
+class Solution {
+public:
+    int getPerimeter(int x, int y, vector<vector<int>>& grid) {
+        int perimeter = 0;
+        queue<pair<int,int>> bfs;
+        bfs.push(make_pair(x, y));
+        grid[y][x] = -1;
+        while(!bfs.empty()) {
+            x = bfs.front().first;
+            y = bfs.front().second;
+            bfs.pop();
+            
+            //BUG - needs cleanup
+            //Up
+            if(y - 1 >= 0) {
+                if(grid[y-1][x] > 0) {
+                    grid[y-1][x] *= -1;
+                    bfs.push(make_pair(x, y-1));
+                }
+                else if(grid[y-1][x] == 0) ++perimeter;
+            }
+            else ++perimeter;
+            
+            //Down
+            if(y + 1 < grid.size()) {
+                if(grid[y+1][x] > 0) {
+                    grid[y+1][x] *= -1;
+                    bfs.push(make_pair(x, y+1));
+                }
+                else if(grid[y+1][x] == 0) ++perimeter;
+            }
+            else ++perimeter;
+            
+            //Left
+            if(x - 1 >= 0) {
+                if(grid[y][x-1] > 0) {
+                    grid[y][x-1] *= -1;
+                    bfs.push(make_pair(x-1, y));
+                }
+                else if(grid[y][x-1] == 0) ++perimeter;
+            }
+            else ++perimeter;
+            
+            //Right
+            if(x + 1 < grid[y].size()) {
+                if(grid[y][x+1] > 0) {
+                    grid[y][x+1] *= -1;
+                    bfs.push(make_pair(x+1, y));
+                }
+                else if(grid[y][x+1] == 0) ++perimeter;
+            }
+            else ++perimeter;
+            
+            //cout << "perimeter of " << x << ", " << y << " is: ";
+            //cout << perimeter << endl;
+        }
+        return perimeter;
+    }
+    int islandPerimeter(vector<vector<int>>& grid) {
+        //loop through and bfs
+        //mark the grid with -1 once we have processed a node
+        //perimeter if we cannot traverse
+        int totalPerimeter = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] > 0)
+                totalPerimeter += getPerimeter(j, i, grid);
+            }
+        }
+        return totalPerimeter;
+    }
+};
