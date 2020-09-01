@@ -1,0 +1,33 @@
+//Run Time: 28ms - 80.16%
+//Memory Usage: 17.7MB - 32.51%
+//Solved =)
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    bool isToeplitzMatrix(vector<vector<int>>& matrix) {
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[i].size(); ++j) {
+                //if we visisted this cell before skip it
+                if(matrix[i][j] & (1 << 9) == 0)
+                    continue;
+                
+                int curValue = matrix[i][j];
+                //loop diagonal from here
+                int diagDist = 0;
+                //bounds check
+                while(diagDist + j < matrix[i].size() && 
+                      diagDist + i < matrix.size()) {
+                    //Return false if diagnal cells dont match
+                    if(matrix[i + diagDist][j + diagDist] != curValue) 
+                        return false;
+                    
+                    //Mark cells we have visited for linear time
+                    matrix[i + diagDist][j + diagDist] |= (1 << 9);
+                    
+                    ++diagDist;
+                }
+            }
+        }
+        return true;
+    }
+};
