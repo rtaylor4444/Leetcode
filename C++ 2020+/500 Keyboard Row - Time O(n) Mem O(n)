@@ -1,0 +1,30 @@
+//Run Time: 4ms - 35.16%
+//Memory Usage: 7MB - 63.35%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+    unordered_set<char> keyboardRow[3];
+public:
+    bool checkWord(string word, int row) {
+        for(int j = 0; j < word.size(); ++j) {
+            if(keyboardRow[row].find(word[j] | 32) == keyboardRow[row].end())
+                return false;
+        }
+        return true;
+    }
+    vector<string> findWords(vector<string>& words) {
+        keyboardRow[0] = {'q','w','e','r','t','y','u','i','o','p'};
+        keyboardRow[1] = {'a','s','d','f','g','h','j','k','l'};
+        keyboardRow[2] = {'z','x','c','v','b','n','m'};
+        
+        vector<string> wordsCanType;
+        for(int i = 0; i < words.size(); ++i) {
+            for(int j = 0; j < 3; ++j)
+                if(checkWord(words[i], j)) {
+                    wordsCanType.push_back(words[i]);
+                    break;
+                }
+        }
+        return wordsCanType;
+    }
+};
