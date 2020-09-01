@@ -1,0 +1,30 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.1MB - 51.83%
+//Solved =)
+//n = size of the string
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> numberOfLines(vector<int>& widths, string S) {
+        //a => withds[a - 'a'] => 2 len
+        //one line == 100len
+        //output = [num * 3, leftovers]
+        int numLines = 0;
+        int curSum = 0;
+        for(int i = 0; i < S.size(); ++i) {
+            int curWidth = widths[S[i] - 'a'];
+            //number exceeds 100 case
+            if(curSum + curWidth > 100) {
+                ++numLines;
+                curSum = curWidth;
+                continue;
+            }
+            curSum += curWidth;
+            if(curSum == 100) {
+                ++numLines;
+                curSum = 0;
+            }
+        }
+        return {numLines + (curSum ? 1 : 0), curSum};
+    }
+};
