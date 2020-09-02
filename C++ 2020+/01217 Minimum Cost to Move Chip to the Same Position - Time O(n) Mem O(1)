@@ -1,0 +1,26 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.4MB - 58.15%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minCostToMoveChips(vector<int>& position) {
+        //if position is odd tiles away cost is 1 otherwise 0
+        //[6,4,7,8,2,10,2,7,9,7]
+        // 1 1 0 1 1 1  1 0 0 0
+        // 0 0 1 0 0 0  0 1 1 1
+        
+        //Find number of chips in even and odd places
+        int evenNumChips = 0, oddNumChips = 0;
+        for(int i = 0; i < position.size(); ++i) {
+            if(position[i] % 2)
+                oddNumChips++;
+            else
+                evenNumChips++;
+        }
+        //Return which ever one is smaller since we can make
+        //odd chips even or even chips odd at 1 cost each
+        //once all even or odd 0 cost to move to one position
+        return min(oddNumChips, evenNumChips);
+    }
+};
