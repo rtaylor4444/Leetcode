@@ -1,0 +1,23 @@
+//Run Time: 16ms - 89.45%
+//Memory Usage: 7.9MB - 97.26%
+//Solved =)
+//Time O(1) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        //swap the values then delete the next node
+        //and reattach pointers
+        ListNode* nextNode = node->next;
+        swap(node->val, nextNode->val);
+        node->next = nextNode->next;
+        delete nextNode;
+    }
+};
