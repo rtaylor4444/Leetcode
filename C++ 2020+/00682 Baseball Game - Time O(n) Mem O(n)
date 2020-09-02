@@ -1,0 +1,49 @@
+//Run Time: 4ms - 99.29%
+//Memory Usage: 8.6MB - 35.91%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        //uses a stack since we have to keep track of scores
+        //number - points gotten this round
+        //+ - sum of points from last two rounds (added to the stack?)
+        //D - *2 of last roudns points (added to the stack?)
+        //C - remove last value from stack and total points
+        //String cannot start with a non-number
+        //Cannot stack C + D so there is no number to double
+        //(Double is always valid)
+        int totalPoints = 0;
+        int curRound = 0;
+        vector<int> roundScores;
+        for(int i = 0; i < ops.size(); ++i) {
+            if(ops[i] == "+"){
+                if(curRound < 2) continue;
+                int curNum = roundScores[curRound - 1] + roundScores[curRound - 2];
+                totalPoints += curNum;
+                roundScores.push_back(curNum);
+                ++curRound;
+            }
+            else if(ops[i] == "D"){
+                if(curRound == 0) continue;
+                int prevValue = roundScores[curRound - 1] * 2;
+                totalPoints += prevValue;
+                roundScores.push_back(prevValue);
+                ++curRound;
+            }
+            else if(ops[i] == "C"){
+                int prevValue = roundScores[curRound - 1];
+                totalPoints -= prevValue;
+                roundScores.pop_back();
+                --curRound;
+            }
+            else {
+                int curNum = stoi(ops[i]);
+                totalPoints += curNum;
+                roundScores.push_back(curNum);
+                ++curRound;
+            }
+        }
+        return totalPoints;
+    }
+};
