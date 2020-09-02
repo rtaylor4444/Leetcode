@@ -1,0 +1,43 @@
+//Run Time: 8ms - 45.67%
+//Memory Usage: 6.5MB - 46.95%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> findOcurrences(string text, string first, string second) {
+        //place first and second string inside of a set
+        //for constant lookup
+        unordered_set<string> firstString = {first};
+        unordered_set<string> secondString = {second};
+        //Loop through our string get our first and second
+        //word and if BOTH are in the hash add third to our answer
+        vector<string> ans;
+        istringstream stream(text);
+        string firstWord, secondWord;
+        while(stream >> firstWord) {
+            if(firstString.find(firstWord) == firstString.end())
+                continue;
+            
+            istringstream::pos_type pos = stream.tellg();
+            if(!(stream >> secondWord))
+                break;
+            
+            if(secondString.find(secondWord) == secondString.end()) {
+                //Move the stream back since secondWord can possible be first word
+                stream.clear();
+                stream.seekg(pos, stream.beg);
+                continue;
+            }
+            
+            string thirdWord;
+            pos = stream.tellg();
+            if(stream >> thirdWord) {
+                ans.push_back(thirdWord);
+            }
+            //Move the stream back since thirdWord can possible be first word
+            stream.clear();
+            stream.seekg(pos, stream.beg);
+        }
+        return ans;
+    }
+};
