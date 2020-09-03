@@ -1,0 +1,48 @@
+//Run Time: 12ms - 74.01%
+//Memory Usage: 9.1MB - 56.80%
+//Solved =)
+//n = amount of numbers in nums1
+//m = amount of numbers in nums2
+//Time O(m + n) Memory O(m + n)
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        //Hash Map + Dynamic Programming
+        //Use a hash map for the following
+        //nums1 value => answer
+        //[4,1,2] [1,3,4,2]
+        //      dp[0,0,0,0]
+        //      dp[0,0,0,-1]
+        //      dp[0,0,-1,-1]
+        //*checked previous dp and saw -1 so we must be -1
+        //because were greater than the previous number
+        //      dp[0,4,-1,-1]
+        //*same as bove but we are smaller than the previous
+        // so we use that value instead
+        //      dp[3,4,-1,-1]
+        //*same as above
+        //*Wont work because if 1 was 5 we dont know what value to reference fpr -1
+        //unless we keep track of the greatest value so far
+        //Monotonic Stack + HashMap
+        stack<int> monoStack;
+        unordered_map<int, int> valToIndex;
+        for(int i = nums2.size() - 1; i >= 0; --i) {
+            //pop off any values that are smaller than our current
+            //since they are useless due to having current value
+            while(!monoStack.empty() && monoStack.top() < nums2[i]) {
+                monoStack.pop();
+            }
+            //Set next greatest element mapping
+            valToIndex.emplace(nums2[i], monoStack.empty() ? -1 : monoStack.top());
+            //Push back our value for checking(any value can be next greater)
+            monoStack.push(nums2[i]);   
+        }
+        
+        //Fill our answer using the mapping from the hashmap
+        vector<int> nextGreatEle(nums1.size(), 0);
+        for(int i = 0; i < nextGreatEle.size(); ++i) {
+            nextGreatEle[i] = valToIndex[nums1[i]];
+        }
+        return nextGreatEle;
+    }
+};
