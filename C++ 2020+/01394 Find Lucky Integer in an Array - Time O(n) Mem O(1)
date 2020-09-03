@@ -1,0 +1,21 @@
+//Run Time: 8ms - 69.75%
+//Memory Usage: 8.2MB - 27.11%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findLucky(vector<int>& arr) {
+        //Get counts of the array
+        int count[501] = {0};
+        for(int i = 0; i < arr.size(); ++i) {
+            count[arr[i]]++;
+        }
+        //Determine lucky numbers
+        int luckyNum = -1;
+        for(int i = 1; i < 501; ++i) {
+            if(i == count[i])
+                luckyNum = i;
+        }
+        return luckyNum;
+    }
+};
