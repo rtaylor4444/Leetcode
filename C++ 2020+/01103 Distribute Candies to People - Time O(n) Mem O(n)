@@ -1,0 +1,20 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 44.35%
+//Solved =)
+//n = amount of candies
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> distributeCandies(int candies, int num_people) {
+        vector<int> ans(num_people, 0);
+        int numIterations = 0;
+        while(candies) {
+            int index = numIterations % num_people;
+            int givenCandies = min(numIterations + 1, candies);
+            ans[index] += givenCandies;
+            candies -= givenCandies;
+            ++numIterations;
+        }
+        return ans;
+    }
+};
