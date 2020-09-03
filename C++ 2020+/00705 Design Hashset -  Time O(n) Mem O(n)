@@ -1,0 +1,47 @@
+//Run Time: 212ms - 23.86%
+//Memory Usage: 56MB - 36.73%
+//Unoptimal Solution - Memory/Time needs improvement
+//Time O(n) Memory O(n)
+class MyHashSet {
+    int numBuckets;
+    vector<vector<int>> hash;
+public:
+    /** Initialize your data structure here. */
+    MyHashSet() {
+        numBuckets = 10000;
+        vector<vector<int>> h(numBuckets, vector<int>());
+        hash = h;
+    }
+    
+    void add(int key) {
+        int newKey = key % numBuckets;
+        hash[newKey].push_back(key);
+    }
+    
+    void remove(int key) {
+        int newKey = key % numBuckets;
+        for(int i = 0; i < hash[newKey].size(); ++i) {
+            if(key == hash[newKey][i]) {
+                //cout << "removing: " << key << endl;
+                hash[newKey][i] = -1;
+            }
+        }
+    }
+    
+    /** Returns true if this set contains the specified element */
+    bool contains(int key) {
+        int newKey = key % numBuckets;
+        for(int i = 0; i < hash[newKey].size(); ++i) {
+            if(key == hash[newKey][i]) return true;
+        }
+        return false;
+    }
+};
+
+/**
+ * Your MyHashSet object will be instantiated and called as such:
+ * MyHashSet* obj = new MyHashSet();
+ * obj->add(key);
+ * obj->remove(key);
+ * bool param_3 = obj->contains(key);
+ */
