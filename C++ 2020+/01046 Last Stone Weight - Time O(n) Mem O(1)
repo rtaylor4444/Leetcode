@@ -1,0 +1,44 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.8MB - 9.06%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stones) {
+        //First we sort the array by its count
+        int countSort[1001] = {};
+        //The stones can only get smaller so we cna also nab 
+        //max number as we get out count - for opt
+        int startingMax = INT_MIN;
+        for(int i = 0; i < stones.size(); ++i) {
+            countSort[stones[i]]++;
+            startingMax = max(stones[i], startingMax);
+        }
+        //Simulate the process
+        int numStones = stones.size();
+        vector<int> curStones(2, 0);
+        while(numStones) {
+            //Nab two highest stones;
+            int curStoneIndex = 0;
+            for(int i = startingMax; i >= 1; --i) {
+                if(curStoneIndex >= 2) break;
+                while(countSort[i] > 0 && curStoneIndex < 2) {
+                    curStones[curStoneIndex++] = i;
+                    countSort[i]--;
+                    numStones--;
+                }
+            }
+            //If only one stone return result
+            if(curStoneIndex == 1) return curStones[0];
+            //Smash them together
+            //Do nothing if they are the same
+            //Otherwise add the result back to our count array
+            if(curStones[0] != curStones[1]) {
+                int newStone = curStones[0] - curStones[1];
+                countSort[newStone]++;
+                numStones++;
+            }
+        }
+        return 0;
+    }
+};
