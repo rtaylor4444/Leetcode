@@ -1,0 +1,20 @@
+//Run Time: 8ms - 95.91%
+//Memory Usage: 10.6MB - 66.14%
+//Solved =)
+//n = sizeof nums1
+//m = sizeof nums2
+//Time O(m + n) Memory O(n)
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        //Use hashset to keep track of the elements
+        unordered_set<int> elementsInNums1(nums1.begin(), nums1.end());
+        vector<int> intersections;
+        for(int i = 0; i < nums2.size(); ++i) {
+            if(elementsInNums1.erase(nums2[i]) > 0) {
+                intersections.push_back(nums2[i]);
+            }
+        }
+        return intersections;
+    }
+};
