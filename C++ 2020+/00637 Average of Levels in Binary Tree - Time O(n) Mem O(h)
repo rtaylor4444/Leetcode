@@ -1,0 +1,48 @@
+//Run Time: 24ms - 76.44%
+//Memory Usage: 22.4MB - 92.15%
+//Solved =)
+//n = number of nodes
+//h = height of the tree
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        //BFS - with dummy node to keep track of levels
+        vector<double> levelAverage;
+        double curSum = 0.0, numLevelNodes = 0.0;
+        
+        queue<TreeNode*> bfs;
+        TreeNode* curNode;
+        bfs.push(root);
+        bfs.push(nullptr);
+        while(!bfs.empty()) {
+            curNode = bfs.front();
+            bfs.pop();
+            
+            //If we reached end of the level
+            if(curNode == nullptr) {
+                levelAverage.push_back(curSum / numLevelNodes); 
+                curSum = numLevelNodes = 0.0;
+                if(!bfs.empty()) bfs.push(nullptr);
+                continue;
+            }
+            
+            curSum += (double)curNode->val;
+            ++numLevelNodes;
+            if(curNode->left) bfs.push(curNode->left);
+            if(curNode->right) bfs.push(curNode->right);
+        }
+        return levelAverage;
+    }
+};
