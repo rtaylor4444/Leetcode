@@ -1,0 +1,33 @@
+//Run Time: 8ms - 64.50%
+//Memory Usage: 8.6MB - 5.23%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    ListNode dummyHead;
+public:
+    ListNode* reverseListHelper(ListNode* curNode) {
+        if(curNode->next == nullptr) {
+            dummyHead.next = curNode;
+            return curNode;
+        }
+        ListNode* prevNode = reverseListHelper(curNode->next);
+        curNode->next = prevNode->next;
+        prevNode->next = curNode;
+        return curNode;
+    }
+    ListNode* reverseList(ListNode* head) {
+        if(head == nullptr) return head;
+        reverseListHelper(head);
+        return dummyHead.next;
+    }
+};
