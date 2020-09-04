@@ -1,0 +1,37 @@
+//Run Time: 24ms - 84.52%
+//Memory Usage: 17.5MB - 84.42%
+//Solved =)
+//n = number of nodes
+//h = height of the tree
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isinRange(int num, int L, int R) {
+        return (num >= L && num <= R);
+    }
+    TreeNode* trimBST(TreeNode* root, int L, int R) {
+        //Post Order traversal - since modifying tree
+        if(root == nullptr) return root;
+        root->left = trimBST(root->left, L, R);
+        root->right = trimBST(root->right, L, R);
+        //Is our value valid?
+        if(isinRange(root->val, L, R)) {
+            return root;
+        }
+        //Otherwise we return left or right
+        if(root->left) return root->left;
+        else if(root->right) return root->right;
+        return nullptr;
+    }
+};
