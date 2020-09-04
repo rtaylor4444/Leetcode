@@ -1,0 +1,39 @@
+//Run Time: 4ms - 84.74%
+//Memory Usage: 7MB - 52.71%
+//Solved =)
+//n = size of string A
+//m = size of string B
+//Time O(n + m) Memory O(n + m)
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        //Put A's words in the hashmap
+        istringstream stream(A);
+        string word;
+        unordered_map<string, int> totalWords;
+        while(stream >> word) {
+            if(totalWords.find(word) == totalWords.end())
+                totalWords.emplace(word, 0);
+            
+            totalWords[word]++;
+        }
+        
+        //Put B's words in the hashmap
+        stream.clear();
+        stream.str(B);
+        while(stream >> word) {
+            if(totalWords.find(word) == totalWords.end())
+                totalWords.emplace(word, 0);
+            
+            totalWords[word]++;
+        }
+        
+        //Get uncommon words between both
+        vector<string> uncommonWords;
+        for(auto it = totalWords.begin(); it != totalWords.end(); ++it) {
+            if(it->second == 1)
+                uncommonWords.push_back(it->first);
+        }
+        return uncommonWords;
+    }
+};
