@@ -1,0 +1,18 @@
+//Run Time: 4ms - 98.21%
+//Memory Usage: 7.9MB - 38.67%
+//n = the number passed in
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> fizzBuzz(int n) {
+        vector<string> stringReps;
+        for(int i = 1; i <= n; ++i) {
+            string curString = "";
+            if(i % 3 == 0) curString += "Fizz";
+            if(i % 5 == 0) curString += "Buzz";
+            else if(curString.empty()) curString = to_string(i);
+            stringReps.push_back(curString);
+        }
+        return stringReps;
+    }
+};
