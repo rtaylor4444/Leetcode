@@ -1,0 +1,20 @@
+//Run Time: 24ms - 84.07%
+//Memory Usage: 10.8MB - 21.27%
+//Solved =)
+//m = height of matrix
+//n = width of matrix
+//Time O(m * n) Memory O(m * n)
+class Solution {
+public:
+    vector<vector<int>> transpose(vector<vector<int>>& A) {
+        //Swap numbers in a specific order
+        //Make new vector since the matrix dimensions can be diff sizes
+        vector<vector<int>> transpose(A[0].size(), vector<int>(A.size(), 0));
+        for(int i = 0; i < A.size(); ++i) {
+            for(int j = 0; j < A[i].size(); ++j) {
+                transpose[j][i] = A[i][j];
+            }
+        }
+        return transpose;
+    }
+};
