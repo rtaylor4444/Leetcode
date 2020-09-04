@@ -1,0 +1,36 @@
+//Run Time: 8ms - 75.20%
+//Memory Usage: 6MB - 66.93%
+//Solved =)
+//n = range between L and R
+//Time O(n) Memory O(1)
+class Solution {
+    int primeNumbers[30];
+public:
+    Solution() {
+        primeNumbers[2] = 1;
+        primeNumbers[3] = 1;
+        primeNumbers[5] = 1;
+        primeNumbers[7] = 1;
+        primeNumbers[11] = 1;
+        primeNumbers[13] = 1;
+        primeNumbers[17] = 1;
+        primeNumbers[19] = 1;
+        primeNumbers[23] = 1;
+        primeNumbers[29] = 1;
+    }
+    bool countBits(int num) {
+        int numBits = 0;
+        while(num) {
+            numBits += num & 1;
+            num >>= 1;
+        }
+        return primeNumbers[numBits] == 1;
+    }
+    int countPrimeSetBits(int L, int R) {
+        int numPrimeBits = 0;
+        for(int i = L; i <= R; ++i) {
+            if(countBits(i)) ++numPrimeBits;
+        }
+        return numPrimeBits;
+    }
+};
