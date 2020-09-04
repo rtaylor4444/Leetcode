@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 67.35%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numWaterBottles(int numBottles, int numExchange) {
+        int bottlesDrank = 0;
+        int emptyBottles = 0;
+        while(numBottles) {
+            //We drink our bottles so they become empty;
+            bottlesDrank += numBottles;
+            emptyBottles += numBottles;
+            //keep track of the remaining bottles we will have after ex
+            int remainder = emptyBottles % numExchange;
+            //exchange our empty bottles
+            emptyBottles /= numExchange;
+            numBottles = emptyBottles;
+            emptyBottles = remainder;
+        }
+        return bottlesDrank;
+    }
+};
