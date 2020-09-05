@@ -1,0 +1,18 @@
+//Run Time: 28ms - 79.69%
+//Memory Usage: 12.3MB - 89.27%
+//Unoptimal Solution - Time needs improvement
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findSpecialInteger(vector<int>& arr) {
+        //Binary Search - optimal
+        //Linear Search checking arr.size / 4 elements ahead;
+        if(arr.size() == 1) return arr[0];
+        int limit = arr.size() / 4;
+        for(int i = 0; i + limit < arr.size(); ++i) {
+            if(arr[i] == arr[i + limit])
+                return arr[i];
+        }
+        return -1;
+    }
+};
