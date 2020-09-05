@@ -1,0 +1,41 @@
+//Run Time: 228ms - 68.29%
+//Memory Usage: 46.1MB - 72.87%
+//Unoptimal Solution - Memory needs improvement
+//n = number of queries
+//m = size of the array
+//Time O(n + m) Memory O(n)
+class Solution {
+public:
+    vector<int> sumEvenAfterQueries(vector<int>& A, vector<vector<int>>& queries) {
+        //value = queries[i][0]
+        //index = queries[i][1]
+        //Keep track of sum
+        //Start with a total sum and update it as we similate the process
+        //Get our even sum
+        int totalEvenSum = 0;
+        for(int i = 0; i < A.size(); ++i) {
+            if(A[i] % 2 == 0) totalEvenSum += A[i];
+        }
+        //Simulate the process
+        vector<int> totalEvenValues;
+        for(int i = 0; i < queries.size(); ++i) {
+            int index = queries[i][1];
+            int value = queries[i][0] + A[index];
+            //If future value is even we need to update our sum
+            if (value % 2 == 0) {
+                //Add this value to total sum if current value is odd
+                if(A[index] % 2 != 0) totalEvenSum += value;
+                //Update the total sum if current value is even
+                else totalEvenSum += (value - A[index]);
+            }
+            //Remove from total sum if current value is even
+            else if(A[index] % 2 == 0) totalEvenSum -= A[index];
+            //Do nothing if current value and future value is odd
+            
+            A[index] = value;
+            totalEvenValues.push_back(totalEvenSum);
+        }
+        return totalEvenValues;
+    }
+    
+};
