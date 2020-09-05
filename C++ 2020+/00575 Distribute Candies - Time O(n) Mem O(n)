@@ -1,0 +1,13 @@
+//Run Time: 512ms - 85.56%
+//Memory Usage: 8.2MB - 81.76%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int distributeCandies(vector<int>& candies) {
+        //Place diff type of canides in a set
+        unordered_set<int> diffTypes(candies.begin(), candies.end());
+        //Give the sister which ever is smaller the diff canides or half of the candies
+        return min(diffTypes.size(), candies.size() / 2);
+    }
+};
