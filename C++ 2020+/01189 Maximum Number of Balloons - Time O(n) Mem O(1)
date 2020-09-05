@@ -1,0 +1,29 @@
+//Run Time: 8ms - 77.12%
+//Memory Usage: 6.8MB - 28.23%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxNumberOfBalloons(string text) {
+        //Count the number of letters to form 'balloon'
+        //in the text and return the letter that has the min amount
+        int count[26] = {0};
+        unordered_set<char> balloonChars = {'b', 'a', 'l', 'o', 'n'};
+        for(int i = 0; i < text.size(); ++i) {
+            if(balloonChars.find(text[i]) != balloonChars.end()) {
+                count[text[i] - 'a']++;
+            }
+        }
+        //Handle special cases of 2 l and o needed
+        count['l' - 'a'] /= 2;
+        count['o' - 'a'] /= 2;
+        int minChar = INT_MAX;
+        for(int i = 0; i < 26; ++i) {
+            if(balloonChars.find('a' + i) == balloonChars.end())
+                continue;
+            
+            minChar = min(count[i], minChar);
+        }
+        return minChar;
+    }
+};
