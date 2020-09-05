@@ -1,0 +1,32 @@
+//Run Time: 20ms - 95.82%
+//Memory Usage: 8.2MB - 96.14%
+//Solved =)
+//Time O(r * c) Memory O(r * c)
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& nums, int r, int c) {
+        //if r * c is less or equal to the current size than 
+        //resizing isnt possible
+        //Two Pointers + Math
+        //Check if resizing is possible
+        int newSize = r * c;
+        int curSize = nums.size() * nums[0].size();
+        if(newSize > curSize)
+            return nums;
+        
+        int p = 0;
+        vector<vector<int>> newMat(r, vector<int>(c, 0));
+        while(p < curSize && p < newSize) {
+            //Index into the matrix
+            int y1 = p / nums[0].size();
+            int x1 = p % nums[0].size();
+            int y2 = p / c;
+            int x2 = p % c;
+            //cout << "cur matrix index: " << y1 << " " <<  x1 << endl;
+            //cout << "new matrix index: " << y2 << " " <<  x2 << endl;
+            newMat[y2][x2] = nums[y1][x1];
+            ++p;
+        }
+        return newMat;
+    }
+};
