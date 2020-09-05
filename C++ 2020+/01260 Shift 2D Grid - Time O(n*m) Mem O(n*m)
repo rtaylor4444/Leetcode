@@ -1,0 +1,29 @@
+//Run Time: 52ms - 63.61%
+//Memory Usage: 8.2MB - 33.22%
+//Unoptimal Solution - Memory needs improvement
+//Time O(m * n) Memory O(m * n)
+class Solution {
+public:
+    vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
+       //Make a 1d array place all elements inside of it
+       //We have an element that wants to move up K positions
+       //Iterate through the matrix and put each element where
+       //they want to go in 1d array; we can map 1d to matrix
+        vector<int> shifted1D (grid.size() * grid[0].size(), 0);
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                int pos = (i * grid[i].size()) + j;
+                pos = (pos + k) % shifted1D.size();
+                shifted1D[pos] = grid[i][j];
+            }
+        }
+        
+        for(int i = 0; i < shifted1D.size(); ++i) {
+            int y = i / grid[0].size();
+            int x = i % grid[0].size();
+            //cout << x << " " << y << endl;
+            grid[y][x] = shifted1D[i];
+        }
+        return grid;
+    }
+};
