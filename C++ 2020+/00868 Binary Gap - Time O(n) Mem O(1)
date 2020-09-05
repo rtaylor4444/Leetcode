@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 10.95%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int binaryGap(int N) {
+        int prev1 = -1;
+        int largestGap = 0; 
+        int numIterations = 0;
+        while(N) {
+            if(N & 1) {
+                if(prev1 != -1) {
+                    largestGap = max(largestGap, numIterations - prev1);
+                }
+                prev1 = numIterations;
+            }
+            N >>= 1;
+            ++numIterations;
+        }
+        return largestGap;
+    }
+};
