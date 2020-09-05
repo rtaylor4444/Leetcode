@@ -1,0 +1,20 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 88.94%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string thousandSeparator(int n) {
+        if(n == 0) return "0";
+        string num = "";
+        int numIterations = 0;
+        while(n) {
+            if(numIterations && numIterations % 3 == 0) num += '.';
+            num += (char)('0' + n % 10);
+            n /= 10;
+            ++numIterations;
+        }
+        reverse(num.begin(), num.end());
+        return num;
+    }
+};
