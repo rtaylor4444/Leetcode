@@ -1,0 +1,29 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 61.17%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string reformatDate(string date) {
+        istringstream stream(date);
+        unordered_map<string, string> monthToNum = {
+            {"Jan","01"}, {"Feb","02"},
+            {"Mar","03"}, {"Apr","04"},
+            {"May","05"}, {"Jun","06"},
+            {"Jul","07"}, {"Aug","08"},
+            {"Sep","09"}, {"Oct","10"},
+            {"Nov","11"}, {"Dec","12"},
+        };
+        string day, month, year;
+        stream >> day;
+        stream >> month;
+        stream >> year;
+        //Format day
+        int i = 0;
+        while(day[i] <= '9' && day[i] >= '0') ++i;
+        if(i == 1) day = "0" + day.substr(0, i);
+        else day = day.substr(0, i);
+        
+        return year + "-" + monthToNum[month] + "-" + day;
+    }
+};
