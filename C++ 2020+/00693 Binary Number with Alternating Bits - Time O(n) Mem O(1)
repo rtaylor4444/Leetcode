@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 40.43%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        //no previous bit values can be the same
+        //check bit by bit
+        //4 => 2
+        //-1 => 0
+        int prevBit = -1;
+        while(n) {
+            if(prevBit != -1) {
+                if((n & 1) == prevBit) return false;
+            }
+            prevBit = (n & 1);
+            n >>= 1;
+            
+        }
+        return true;
+    }
+};
