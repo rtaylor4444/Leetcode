@@ -1,0 +1,12 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 40.43%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        //check if no consec 1s
+        //check if no consec 0s
+        return (n & (n >> 1)) == 0 && (n & (n >> 2)) == (n >> 2);
+    }
+};
