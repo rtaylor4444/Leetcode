@@ -1,0 +1,19 @@
+//Run Time: 144ms - 97.00%
+//Memory Usage: 53MB - 17.78%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isMonotonic(vector<int>& A) {
+        if(A.size() == 1) return true;
+        int prevDiff = INT_MIN;
+        for(int i = 0; i < A.size() - 1; ++i) {
+            int curDiff = A[i] - A[i+1];
+            //Check if the differences differ betwen neg and pos
+            if(prevDiff != INT_MIN && ((curDiff > 0 && prevDiff < 0) ||
+              (curDiff < 0 && prevDiff > 0))) return false; 
+            if(curDiff != 0) prevDiff = curDiff;
+        }
+        return true;
+    }
+};
