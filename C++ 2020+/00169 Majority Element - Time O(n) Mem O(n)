@@ -1,0 +1,20 @@
+//Run Time: 128ms - 5.70%
+//Memory Usage: 19.9MB - 24.38%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        //HashMap
+        unordered_map<int, int> numFreq;
+        int mostFreqNum = nums[0];
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numFreq.find(nums[i]) == numFreq.end())
+                numFreq.emplace(nums[i], 0);
+            
+            if(++numFreq[nums[i]] > numFreq[mostFreqNum])
+                mostFreqNum = nums[i];
+        }
+        return mostFreqNum;
+    }
+};
