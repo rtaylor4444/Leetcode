@@ -1,0 +1,51 @@
+//Run Time: 16ms - 88.63%
+//Memory Usage: 9.6MB - 27.70%
+//Solved =)
+//Time O(n * n) Memory O(1)
+class Solution {
+public:
+    int surfaceArea(vector<vector<int>>& grid) {
+        //calc surface area?
+        //*Doesnt doesnt account for neighbors
+        //n * 6 -((n - 1) * 2)
+        //1 => 6 
+        //2 => 10 (1 * 6 + 1 * 6) - 2
+        //3 => 14 (18) - 4
+        //4 => 18 (24) - 6
+        //9 => 54 - 16 = 38
+        //*neighbor (calc sides covered by neighboring shape)
+        //above - min(neighbor, itself) 
+        //[9,1]
+        //9 => 38 - 1 = 37
+        //1 => 6 - 1 = 5
+        //37 + 5 = 42
+        //[1,9,1]
+        //1 => 6 - 1 = 5
+        //9 => 38 - 1 - 1 = 36
+        //1 => 5
+        //46
+        //n = value of the cell
+        //m = value of neighbor - left, up, right, down
+        //total formula = n * 6 -((n - 1) * 2) - for each m(min(n,m))
+        int totalSurfaceArea = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                int curValue = grid[i][j];
+                //Get our surface area
+                totalSurfaceArea += (curValue * 6) - ((curValue - 1) * 2);
+                //Account for neighbors
+                //up
+                int reducedSides = (i - 1 >= 0) ? min(curValue, grid[i-1][j]) : 0;
+                //left
+                reducedSides += (j - 1 >= 0) ? min(curValue, grid[i][j-1]) : 0;
+                //down
+                reducedSides += (i + 1 < grid.size()) ? min(curValue, grid[i+1][j]) : 0;
+                //right
+                reducedSides += (j + 1 < grid[i].size()) ? min(curValue, grid[i][j+1]) : 0;
+                totalSurfaceArea -= reducedSides;
+            }
+        }
+        return totalSurfaceArea;
+    }
+};
