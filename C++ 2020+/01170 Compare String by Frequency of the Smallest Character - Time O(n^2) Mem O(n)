@@ -1,0 +1,49 @@
+//Run Time: 120ms - 30.09%
+//Memory Usage: 11.8MB - 48.21%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int getSmallestCharFreq(string& word) {
+        //BUG - Optimization knowing we only need
+        //the smallest char?
+        //HeapSort 
+        int count[26] = {0};
+        for(int i = 0; i < word.size(); ++i) {
+            count[word[i] - 'a']++;
+        }
+        int freq = 0;
+        for(int i = 0; i < 26; ++i) {
+            if(count[i] == 0) continue;
+            freq = count[i];
+            break;
+        }
+        return freq;
+    }
+    vector<int> numSmallerByFrequency(vector<string>& queries, vector<string>& words) {
+        //freq of smallest char compare with query
+        //keep track of the number of words query succeeds
+        //return the result only if comparsion passes?
+        //Calculate the freq of the smallest char for each query and word
+        vector<int> queriesFreq(queries.size(), 0);
+        for(int i = 0; i < queries.size(); ++i) {
+            queriesFreq[i] = getSmallestCharFreq(queries[i]);
+            //cout << queries[i] << " => " << queriesFreq[i] << endl;
+        }
+        
+        vector<int> wordsFreq(words.size(), 0);
+        for(int i = 0; i < words.size(); ++i) {
+            wordsFreq[i] = getSmallestCharFreq(words[i]);
+        }
+        
+        vector<int> ans(queries.size(), 0);
+        for(int i = 0; i < queriesFreq.size(); ++i) {
+            int numWords = 0;
+            for(int j = 0; j < wordsFreq.size(); ++j) {
+                if(queriesFreq[i] < wordsFreq[j]) ++numWords;
+            }
+            ans[i] = numWords;
+        }
+        return ans;
+    }
+};
