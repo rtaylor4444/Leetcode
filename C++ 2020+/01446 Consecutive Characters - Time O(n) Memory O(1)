@@ -1,0 +1,20 @@
+//Run Time: 8ms - 86.74%
+//Memory Usage: 6.7MB - 76.58%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxPower(string s) {
+        char prevChar = s[0];
+        int maxConsec = 1;
+        int curConsec = 1;
+        for(int i = 1; i < s.size(); ++i) {
+            if(prevChar == s[i])
+                ++curConsec;
+            else curConsec = 1;
+            prevChar = s[i];
+            maxConsec = max(maxConsec, curConsec);
+        }
+        return maxConsec;
+    }
+};
