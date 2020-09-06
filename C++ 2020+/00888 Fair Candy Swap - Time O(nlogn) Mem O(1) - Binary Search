@@ -1,0 +1,51 @@
+//Run Time: 172ms - 97.82%
+//Memory Usage: 39.2MB - 90.29%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int binarySearch(int target, vector<int>& B) {
+        int l = 0;
+        int r = B.size() - 1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            //Exit Condition
+            if(B[m] == target) return B[m];
+            
+            if(B[m] > target)
+                r = m - 1;
+            else
+                l = m + 1;
+        } 
+        return -1;
+    }
+    vector<int> fairCandySwap(vector<int>& A, vector<int>& B) {
+        //*One of the arrays has more candy than the other
+        //*The larger one wants to give out a larger piece of candy
+        //*The smaller wants to give out a smaller piece of candy
+        //Our target is the average of the total candies
+        //basically we need see which two bars equal the target
+        sort(B.begin(), B.end());
+        //Get Target candy amount
+        int totalCandyA = 0, targetCandies = 0;
+        for(int i = 0; i < A.size(); ++i) {
+            totalCandyA += A[i];
+        }
+        for(int i = 0; i < B.size(); ++i) {
+            targetCandies += B[i];
+        }
+        targetCandies = (totalCandyA + targetCandies) >> 1;
+        
+        //Binary Search to find our target
+        int i = 0, result;
+        for(i = 0; i < A.size(); ++i) {
+            int newTarget = targetCandies - (totalCandyA - A[i]);
+            //cout << "our target for exchanging " << A[i] << " is " << newTarget << endl;
+            if(newTarget <= 0) continue;
+            
+            result = binarySearch(newTarget, B);
+            if(result >= 0) break;
+        }
+        return {A[i], result};
+    }
+};
