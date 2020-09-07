@@ -1,0 +1,31 @@
+//Run Time: 12ms - 75.86%
+//Memory Usage: 13.2MB - 40.81%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        //[7,1,5,3,6,4]
+        //lowest points are: a low value after a high
+        //1, 3
+        //Calculate profit points
+        //1 => (5: 4), (6: 5), (4: 3)
+        //3 => (6: 3), (4: 1)
+        //*Efficent to sell early if we come across a lower or even point
+        //Always efficent to sell if we find another low point?
+        int curLowPoint = 0;
+        int totalProfit = 0, curProfit = 0;
+        for(int i = 1; i < prices.size(); ++i) {
+            //If we find a new low point - sell off our stock
+            if(prices[i-1] > prices[i]) {
+                totalProfit += curProfit;
+                curLowPoint = i;
+                curProfit = 0;
+            }
+            //Keep track of maximum profit we can get
+            //cout << "profit is: " << (prices[i] - prices[curLowPoint]) << endl;
+            curProfit = max(curProfit, prices[i] - prices[curLowPoint]);
+        }
+        return totalProfit + curProfit;
+    }
+};
