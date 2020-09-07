@@ -1,0 +1,43 @@
+//Run Time: 40ms - 82.27%
+//Memory Usage: 12.7MB - 64.43%
+//Solved =)
+//n = number of nodes
+//Time O(n) Memory O(n + w)
+/*
+// Definition for Employee.
+class Employee {
+public:
+    int id;
+    int importance;
+    vector<int> subordinates;
+};
+*/
+class Solution {
+public:
+    int getImportance(vector<Employee*> employees, int id) {
+        //bfs
+        if(employees.empty()) return 0;
+        //Create hashmap for quick look up
+        unordered_map<int, Employee*> idToEmployee;
+        for(int i = 0; i < employees.size(); ++i) {
+            idToEmployee.emplace(employees[i]->id, employees[i]);
+        }
+        Employee* curEmp = idToEmployee[id];
+        if(curEmp == nullptr) return 0;
+        
+        int totalImportance = 0;
+        queue<Employee*> bfs;
+        bfs.push(curEmp);
+        
+        while(!bfs.empty()) {
+            curEmp = bfs.front();
+            bfs.pop();
+            
+            totalImportance += curEmp->importance;
+            for(int i = 0; i < curEmp->subordinates.size(); ++i) {
+                bfs.push(idToEmployee[curEmp->subordinates[i]]);
+            }
+        }
+        return totalImportance;
+    }
+};
