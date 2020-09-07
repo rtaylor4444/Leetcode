@@ -1,0 +1,26 @@
+//Run Time: 68ms - 5.00%
+//Memory Usage: 9MB - 52.51%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        //perform swaps?
+        //Two Pointers
+        int l = 0;
+        int zeroPosition = nums.size() - 1;
+        while(l < zeroPosition) {
+            //Find first non-zero number
+            while(zeroPosition >= 0 && !nums[zeroPosition]) --zeroPosition;
+            //Find first zero
+            while(l < nums.size() && nums[l]) ++l;
+            if(l >= zeroPosition) break;
+            
+            //Perform our swaps
+            //cout << l << " - " << zeroPosition << endl;
+            for(int i = l; i < zeroPosition; ++i) {
+                swap(nums[i], nums[i + 1]);
+            }
+        }
+    }
+};
