@@ -1,0 +1,18 @@
+//Run Time: 8ms - 93.52%
+//Memory Usage: 9.3MB - 5.90%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        //One Pass
+        int lastZeroPos = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            //Swap when nums isnt a zero
+            //while keeping track of the last zero position
+            // - valid numbers will bubble to the top and 0s will be
+            // swapped toward the end
+            if(nums[i] != 0) swap(nums[lastZeroPos++], nums[i]);
+        }
+    }
+};
