@@ -1,0 +1,43 @@
+//Run Time: 16ms - 98.65%
+//Memory Usage: 16.4MB - 94.32%
+//Solved =)
+//n = number of character
+//Time O(n) Memory O(1)
+class Solution {
+public:
+  string shortestCompletingWord(string licensePlate, vector<string>& words) {
+    //Convert all upper to lower case and get rid of invalid chars
+    clean(licensePlate);
+    //Get our result by multiplying primes together = a unique product number
+    uint64_t plateProduct = wordProductMod(licensePlate);
+    //dummy string with max size
+    string result = "1234567890123456";
+    for (auto&& word : words)
+      //If we get a result divisable by our plateProduct it must contain the same chars
+      //Just keep track of the smallest one we get.
+      if (word.size() < result.size() && wordProductMod(word, plateProduct) == 0)
+        result = move(word);
+    return result;
+  }
+  
+private:
+  static constexpr int PRIMES[26] = {
+     2,  3,  5,  7, 11, 13, 17, 19, 23, 29, 31, 37,  41,
+    43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101
+  };
+  
+  uint64_t wordProductMod(const string& word, uint64_t mod = UINT64_MAX) {
+    uint64_t result = 1;
+    for (char c : word)
+      result = result * PRIMES[c-'a'] % mod;
+    return result;
+  }
+  
+  void clean(string& licensePlate) {
+    int s = 0;
+    for (char c : licensePlate)
+      if (isalpha(c))
+        licensePlate[s++] = tolower(c);
+    licensePlate.resize(s);
+  }
+};
