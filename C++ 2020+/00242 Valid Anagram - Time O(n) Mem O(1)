@@ -1,0 +1,22 @@
+//Run Time: 16ms - 92.65%
+//Memory Usage: 7.5MB - 29.48%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        //hashset to store all s's chars
+        //Then we delete all s's chars as we loop
+        //through t, if any remain then there is no anagram
+        if(s.size() != t.size()) return false;
+        int count[26] = {0};
+        for(int i = 0; i < s.size(); ++i) {
+            count[s[i] - 'a']++;
+        }
+        for(int i = 0; i < t.size(); ++i) {
+            if(count[t[i] - 'a'] == 0) return false;
+            count[t[i] - 'a']--;
+        }
+        return true;
+    }
+};
