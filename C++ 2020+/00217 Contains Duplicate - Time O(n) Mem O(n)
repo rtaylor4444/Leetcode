@@ -1,0 +1,17 @@
+//Run Time: 68ms - 72.33%
+//Memory Usage: 8.2MB - 72.93%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        //hashset
+        unordered_set<int> seenNums;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(seenNums.find(nums[i]) != seenNums.end())
+                return true;
+            seenNums.emplace(nums[i]);
+        }
+        return false;
+    }
+};
