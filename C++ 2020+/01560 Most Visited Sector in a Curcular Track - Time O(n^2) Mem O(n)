@@ -1,0 +1,47 @@
+//Run Time: 8ms - 85.76%
+//Memory Usage: 11.7MB - 19.70%
+//Unoptimal Solution - Time needs improvement
+//*I simulate the process by iterating through the ranges which is why n^2
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    vector<int> mostVisited(int n, vector<int>& rounds) {
+        //n = number of sectors
+        //there are total n sectors
+        //[1,3,1,2]
+        //1 is the start 
+        //then we go to 3
+        //then we go to 1
+        //then we go to 2
+        //Determine which one was hit the most
+        //keep count of all visited sectors
+        
+        //Get our count of all visited sectors
+        vector<int> timesVisitedSector(n+1, 0);
+        int start = rounds[0];
+        timesVisitedSector[start]++;
+        for(int i = 1; i < rounds.size(); ++i) {
+            int finish = rounds[i];
+            int current = start;
+            //cout <<  start << " to " << finish << endl;
+            while(current != finish) {
+                current = (current % n) + 1;
+                //cout << "we are currently at: " << current << endl;
+                timesVisitedSector[current]++;
+            }
+            start = finish;
+        }
+        
+        //Convert visited count into an array sorted by most times visited
+        vector<vector<int>> mostVisitedSector(rounds.size(), vector<int>());
+        int mostVisited = 0;
+        for(int i = 0; i < timesVisitedSector.size(); ++i) {
+            if(timesVisitedSector[i] == 0) continue;
+            //cout << "visited: " << i << " times: " << timesVisitedSector[i] << endl;
+            mostVisitedSector[timesVisitedSector[i]].push_back(i);
+            mostVisited = max(mostVisited, timesVisitedSector[i]);
+        }
+        
+        return mostVisitedSector[mostVisited];
+    }
+};
