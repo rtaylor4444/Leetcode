@@ -1,0 +1,28 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 38.89%
+//Solved =)
+//n = the number
+//d = number of digits
+//Time O(n * d) Memory O(1)
+class Solution {
+public:
+    bool hasZero(int num) {
+        while(num) {
+            if(num % 10 == 0) return true;
+            num /= 10;
+        }
+        return false;
+    }
+    vector<int> getNoZeroIntegers(int n) {
+        //Split onteger to a number that has no zeros
+        //Deduct 1 continuously until the number doesnt contain
+        //any zeros
+        int A = 1;
+        int B = n - 1;
+        while(hasZero(A) || hasZero(B)) {
+            ++A;
+            --B;
+        }
+        return {A, B};
+    }
+};
