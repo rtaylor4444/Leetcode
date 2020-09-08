@@ -1,0 +1,53 @@
+//Run Time: 12ms - 40.08%
+//Memory Usage: 6.1MB - 26.26%
+//Unoptimal Solution - Time needs improvement
+//n = amount of numbers
+//d = number of digits
+//Time O(n * d) Memory O(1)
+class Solution {
+    vector<bool> invalidNums, mustHave;
+public:
+    Solution() {
+        invalidNums = vector<bool>(8, false);
+        invalidNums[3] = true;
+        invalidNums[4] = true;
+        invalidNums[7] = true;
+        mustHave = vector<bool>(10, false);
+        mustHave[2] = true;
+        mustHave[5] = true;
+        mustHave[6] = true;
+        mustHave[9] = true;
+    }
+    bool isGood(int N) {
+        bool doesChange = false;
+        while(N) {
+            int curDigit = N % 10;
+            if(invalidNums[curDigit]) return false;
+            if(mustHave[curDigit]) doesChange = true;
+            N /= 10;
+        }
+        return doesChange;
+    }
+    int rotatedDigits(int N) {
+        //Rotations
+        //0 => 0
+        //1 => 1
+        //2 => 5
+        //3 => /
+        //4 => /
+        //5 => 2
+        //6 => 9
+        //7 => /
+        //8 => 8
+        //9 => 6
+        //*good number cannot contain 3,4,7
+        //*good number must change so must contain 2,5,6,9
+        //1-10 = 4
+        //11-20 = 4
+        int goodNums = 0;
+        for(int i = 1; i <= N; ++i) {
+            if(isGood(i)) ++goodNums;
+        }
+        return goodNums;
+    }
+};
