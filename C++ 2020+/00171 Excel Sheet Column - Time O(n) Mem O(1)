@@ -1,0 +1,16 @@
+//Run Time: 4ms - 53.53%
+//Memory Usage: 5.9MB - 90.75%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int titleToNumber(string s) {
+        //base 26
+        int num = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            num *= 26;
+            num += s[i] - 'A' + 1;
+        }
+        return num;
+    }
+};
