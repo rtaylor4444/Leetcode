@@ -1,0 +1,59 @@
+//Run Time: 28ms - 78.65%
+//Memory Usage: 16.4MB - 38.38%
+//Solved =)
+//n = number of character
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string shortestCompletingWord(string licensePlate, vector<string>& words) {
+        //Words ahve to contain the same amount of a specific char
+        //*Sort the words by size: count sort
+        //Each word has only lowercase but plate has upper case
+        //*make all plates chars lowercase
+        //*get count of plate itself - chars have to be alpha
+        //*check and see if we can get plates count to 0 for every word
+        
+        //Sort our words from smallest to largest
+        vector<vector<string>> countSort(16, vector<string>());
+        for(int i = 0; i < words.size(); ++i) {
+            countSort[words[i].size()].push_back(words[i]);
+        }
+        int curIndex = 0;
+        for(int i = 1; i < 16; ++i) {
+            for(int j = 0; j < countSort[i].size(); ++j) {
+                words[curIndex++] = countSort[i][j];
+            }
+        }
+        
+        //Get plate count + make chars lowercase
+        vector<int> licenseCount(26, 0);
+        int totalCount = 0;
+        for(int i = 0; i < licensePlate.size(); ++i) {
+            if(isalpha(licensePlate[i])) {
+                licensePlate[i] |= 32;
+                licenseCount[licensePlate[i] - 'a']++;
+                ++totalCount;
+            }
+        }
+        
+        //Get shortest completing word by checking the counts;
+        string shortestCompWord = "";
+        for(int i = 0; i < words.size(); ++i) {
+            int tempTotalCount = totalCount;
+            vector<int> tempCount = licenseCount;
+            for(int j = 0; j < words[i].size(); ++j) {
+                if(tempCount[words[i][j] - 'a'] == 0)
+                    continue;
+                //Update our counts
+                tempCount[words[i][j] - 'a']--;
+                if(--tempTotalCount == 0) break;
+            }
+            //If current word matches count this si out answer
+            if(tempTotalCount == 0) {
+                shortestCompWord = words[i];
+                break;
+            }
+        }
+        return shortestCompWord;
+    }
+};
