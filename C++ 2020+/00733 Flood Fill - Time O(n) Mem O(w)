@@ -1,0 +1,47 @@
+//Run Time: 24ms - 27.90%
+//Memory Usage: 14.3MB - 28.47%
+//Solved =)
+//Time O(n) Memory O(w)
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        //BFS
+        int startingColor = image[sr][sc];
+        if(startingColor == newColor) return image;
+        image[sr][sc] = newColor;
+        queue<pair<int,int>> bfs;
+        bfs.push({sr,sc});
+        while(!bfs.empty()) {
+            sr = bfs.front().first;
+            sc = bfs.front().second;
+            bfs.pop();
+            
+            cout << sr << " " << sc << endl;
+            //Change color before processing potential nodes so they dont  get added
+            //Up
+            if(sr-1 >= 0 && image[sr-1][sc] == startingColor) {
+                image[sr-1][sc] = newColor;
+                bfs.push({sr-1,sc});
+            }
+            
+            //Down
+            if(sr+1 < image.size() && image[sr+1][sc] == startingColor) {
+                image[sr+1][sc] = newColor;
+                bfs.push({sr+1,sc});
+            }
+            
+            //Left
+            if(sc-1 >= 0 && image[sr][sc-1] == startingColor) {
+                image[sr][sc-1] = newColor;
+                bfs.push({sr,sc-1});
+            }
+            
+            //Right
+            if(sc+1 < image[sr].size() && image[sr][sc+1] == startingColor) {
+                image[sr][sc+1] = newColor;
+                bfs.push({sr,sc+1});
+            }
+        }
+        return image;
+    }
+};
