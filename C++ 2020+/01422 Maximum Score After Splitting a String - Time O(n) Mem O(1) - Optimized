@@ -1,0 +1,23 @@
+//Run Time: 4ms - 61.06%
+//Memory Usage: 6.2MB - 93.72%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxScore(string s) {
+        //Two Pass 
+        //Count our 1s
+        int oneCount = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '1') ++oneCount;  
+        }
+        //Calc Maxcount
+        int maxCount = 0, zeroCount = 0;
+        for(int i = 0; i < s.size() - 1; ++i) {
+            if(s[i] == '0') ++zeroCount;
+            else if(s[i] == '1') --oneCount;
+            maxCount = max(maxCount, oneCount + zeroCount);
+        }
+        return maxCount;
+    }
+};
