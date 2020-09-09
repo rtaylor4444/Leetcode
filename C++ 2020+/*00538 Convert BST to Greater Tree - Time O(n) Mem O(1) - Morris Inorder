@@ -1,0 +1,68 @@
+//Run Time: 60ms - 23.32%
+//Memory Usage: 34MB - 5.08%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* getSuccessor(TreeNode* node) {
+        //Get successor which is smallest value node larger
+        //than the current (we know node has a right)
+        TreeNode* succ = node->right;
+        //Make sure we dont traverse any links either
+        while(succ->left && succ->left != node) {
+            succ = succ->left;
+        }
+        return succ;
+    }
+    TreeNode* convertBST(TreeNode* root) {
+        //reverse in-order?
+        int prevVal = 0;
+        TreeNode* curNode = root;
+        while(curNode) {
+            //If no right subtree
+            if(!curNode->right) {
+                //Visit this node
+                //cout << curNode->val << " ";
+                curNode->val += prevVal;
+                prevVal = curNode->val;
+                //traverse left (this is our link)
+                curNode = curNode->left;
+            }
+            //There is a right subtree
+            else {
+                //Get successor - smallest value node larger than the current
+                TreeNode* successor = getSuccessor(curNode);
+                //If we visited the link
+                if(successor && successor->left == curNode) {
+                    //Break our link
+                    successor->left = nullptr;
+                    //Visit this node (done with right subtree)
+                    //cout << curNode->val << " ";
+                    curNode->val += prevVal;
+                    prevVal = curNode->val;
+                    //Traverse left
+                    curNode = curNode->left;
+                }
+                //did not visit the link
+                else {
+                    //Link successor to current node (successors left will be null)
+                    successor->left = curNode;
+                    //traverse right
+                    curNode = curNode->right;
+                }
+            }
+        }
+        return root;
+    }
+};
