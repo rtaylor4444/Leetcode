@@ -1,0 +1,20 @@
+//Run Time: 0ms - 69.75%
+//Memory Usage: 6.1MB - 19.40%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool canWinNim(int n) {
+        //Any turn we want the heap to be 4
+        //in order to win the game by forcing
+        //If heap is 4 during our turn we lose
+        //4 => we lose
+        //n < 4 => we win
+        //5 => take 1 so it will be four => we win
+        //6, 7 are the same take 2 and 3 respectively
+        //8 => assuming optimal play our opponent will just 
+        //make it 4 next turn so we lose; no matter if we pick 1,2,3
+        return (n % 4);
+        
+    }
+};
