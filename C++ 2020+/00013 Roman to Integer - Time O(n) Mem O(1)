@@ -1,0 +1,29 @@
+//Run Time: 24ms - 50.77%
+//Memory Usage: 7.7MB - 52.56%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int romanToInt(string s) {
+        unordered_map<char, int> romanToInt = { 
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        };
+        int intValue = 0, prevVal = 0;
+        for(int i = s.size() - 1; i >= 0; --i) {
+            //If prev letter is greater than we want to subtract
+            if(prevVal > romanToInt[s[i]])
+                intValue -= romanToInt[s[i]];
+            else
+                intValue += romanToInt[s[i]];
+            
+            prevVal = romanToInt[s[i]];
+        }
+        return intValue;
+    }
+};
