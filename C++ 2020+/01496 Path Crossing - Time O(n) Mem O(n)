@@ -1,0 +1,25 @@
+//Run Time: 4ms - 95.91%
+//Memory Usage: 6.7MB - 69.47%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool isPathCrossing(string path) {
+        //Hashset to keep track of previous values
+        //x, y 
+        set<pair<int, int>> prevPositions;
+        int x = 0, y = 0;
+        prevPositions.insert({x,y});
+        for(int i = 0; i < path.size(); ++i) {
+            if(path[i] == 'N') ++y;
+            else if(path[i] == 'S') --y;
+            else if(path[i] == 'E') --x;
+            else if(path[i] == 'W') ++x;
+            if(prevPositions.find({x,y}) != prevPositions.end())
+                return true;
+            
+            prevPositions.insert({x,y});
+        }
+        return false;
+    }
+};
