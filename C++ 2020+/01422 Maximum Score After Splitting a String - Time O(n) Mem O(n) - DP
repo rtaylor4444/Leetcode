@@ -1,0 +1,46 @@
+//Run Time: 4ms - 61.06%
+//Memory Usage: 6.5MB - 30.67%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int maxScore(string s) {
+        //Brute Force - check every breaking point
+        //with a nested loop
+        //Two Pointers
+        //we increment left + right until we hit a number that
+        //doesnt count toward our score
+        //011101
+        //left = 1
+        //right = 1
+        //  l     r
+        //0 1 1 1 0 1
+        //left = 1
+        //right = 1
+        //  l     
+        //  r
+        //0 1 1 1 0 1
+        //left 1
+        //right 4
+        //Two Pass with DP
+        vector<int> maxOnes(s.size(), 0), maxZeros(s.size(), 0);
+        //Left pass
+        int maxCount = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '0') ++maxCount;
+            maxZeros[i] = maxCount;
+        }
+        //Right Pass
+        maxCount = 0;
+        for(int i = s.size() - 1; i >= 0; --i) {
+            if(s[i] == '1') ++maxCount;
+            maxOnes[i] = maxCount;
+        }
+        //Calc Maxcount
+        maxCount = 0;
+        for(int i = 1; i < s.size(); ++i) {
+            maxCount = max(maxCount, maxOnes[i] + maxZeros[i-1]);
+        }
+        return maxCount;
+    }
+};
