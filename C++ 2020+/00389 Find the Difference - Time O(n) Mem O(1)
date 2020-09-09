@@ -1,0 +1,27 @@
+//Run Time: 4ms - 96.76%
+//Memory Usage: 6.8MB - 33.49%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        if(s.empty()) return t[0];
+        //count the chars of both strings then find the lone count
+        int count[26] = {0};
+        for(int i = 0; i < s.size(); ++i) {
+            count[s[i] - 'a']++;
+            count[t[i] - 'a']--;
+        }
+        //We know t is always only 1 char longer
+        count[t[t.size()-1] - 'a']--;
+        //find the -1
+        char extra = ' ';
+        for(int i = 0; i < 26; ++i) {
+            if(count[i] < 0) {
+                extra = 'a' + i;
+                break;
+            }
+        }
+        return extra;
+    }
+};
