@@ -1,0 +1,26 @@
+//Run Time: 116ms - 84.59%
+//Memory Usage: 34.1MB - 24.05%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        //Marking Algorithm
+        //Mark the positions that are filled
+        for(int i = 0; i < nums.size(); ++i) {
+            int index = nums[i];
+            //ensure our index is always positive
+            index = (index > 0) ? index : -index;
+            //mark this index as present(only non-existant indices will be pos)
+            if(nums[index-1] > 0)
+                nums[index-1] *= -1;
+        }
+            
+        //Use positive indices to fill
+        vector<int> missingNums;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] > 0) missingNums.push_back(i + 1);
+        }
+        return missingNums;
+    }
+};
