@@ -1,0 +1,59 @@
+//Run Time: 8ms - 99.56%
+//Memory Usage: 7.3MB - 94.01%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string reformat(string s) {
+        //count both the numbers and chars
+        //then interweave them; if the counts dont differ by 1
+        //then its impossible to make a formated string
+        int numCount[10] = {0};
+        int alphaCount[26] = {0};
+        int totalNumCount = 0, totalAlphaCount = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            if(isalpha(s[i])) {
+                alphaCount[s[i] - 'a']++;
+                ++totalAlphaCount;
+            }
+            else if(isdigit(s[i])) {
+                numCount[s[i] - '0']++;
+                ++totalNumCount;
+            }
+        }
+        //Exit if impossible to reformat the string
+        if(abs(totalAlphaCount-totalNumCount) > 1) return "";
+    
+        //Reformat the string
+        string newString = "";
+        bool needAlpha = (totalNumCount > totalAlphaCount) ? false : true;
+        int p1 = 0, p2 = 0;
+        while(totalNumCount && totalAlphaCount) {
+            if(needAlpha) {
+                while(alphaCount[p1] == 0) ++p1;
+                newString += ('a' + p1);
+                --alphaCount[p1];
+                --totalAlphaCount;
+                needAlpha = false;
+            }
+            else {
+                while(numCount[p2] == 0) ++p2;
+                newString += ('0' + p2);
+                --numCount[p2];
+                --totalNumCount;
+                needAlpha = true;
+            }
+        }
+        
+        //merge missing letter
+        if(totalNumCount) {
+            while(numCount[p2] == 0) ++p2;
+            newString += ('0' + p2);
+        }
+        else if(totalAlphaCount) {
+            while(alphaCount[p1] == 0) ++p1;
+            newString += ('a' + p1);
+        }
+        return newString;
+    }
+};
