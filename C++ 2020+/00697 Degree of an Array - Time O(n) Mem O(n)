@@ -1,0 +1,45 @@
+//Run Time: 76ms - 91.01%
+//Memory Usage: 8.2MB - 83.57%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+    struct SubArrayInfo {
+        int count;
+        int startIndex;
+        int endIndex;
+        SubArrayInfo() {
+            count = startIndex = endIndex = 0;
+        }
+        SubArrayInfo(int c, int start, int end) {
+            count = c;
+            startIndex = start;
+            endIndex = end;
+        }
+    };
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        //Count the number of times each element appears
+        //And keep track of the element that has the highest freq
+        //Then use two pointers l + r and iterate both until we hit the
+        //most frequent element
+        //[2,1,1,2,1,3,3,3,1,3,1,3,2]
+        
+        //Count our elements and keep track of start and end positions
+        int maxFreq = 0, mostFreqElement;
+        unordered_map<int, SubArrayInfo> numCount;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numCount.find(nums[i]) == numCount.end())
+                numCount.emplace(nums[i], SubArrayInfo(0, i, i));
+            
+            maxFreq = max(++numCount[nums[i]].count, maxFreq);
+            numCount[nums[i]].endIndex = i;
+        }
+
+        int minSubArray = INT_MAX;
+        for(auto it = numCount.begin(); it != numCount.end(); ++it) {
+            if(it->second.count < maxFreq) continue;
+            minSubArray = min(minSubArray, it->second.endIndex - it->second.startIndex);
+        }
+        return minSubArray + 1;
+    }
+};
