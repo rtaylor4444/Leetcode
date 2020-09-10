@@ -1,0 +1,33 @@
+//Run Time: 8ms - 82.25%
+//Memory Usage: 8.8MB - 70.13%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int distanceBetweenBusStops(vector<int>& distance, int start, int destination) {
+        //Simulate it
+        //Get clockwise and counterclock wise distance and return the min
+        //[1,2,3,4,1,2,3,4]
+        //Clockwise
+        //Loop through double our array size to simulate a loop
+        int curPos, n = distance.size();
+        int clockwiseDist = 0;
+        for(curPos = start; curPos < (n * 2); ++curPos) {
+            int index = curPos % n;
+            if(index == destination) break;
+            clockwiseDist += distance[index];
+        }
+        
+        //[1,2,3,4,1,2,3,4]
+        //Counter-clockwise
+        //want to start at our previous position
+        int counterDist = 0;
+        for(curPos = start + n - 1; curPos >= 0; --curPos) {
+            int index = curPos % n;
+            counterDist += distance[index];
+            if(index == destination) break;
+            
+        }
+        return min(clockwiseDist, counterDist);
+    }
+};
