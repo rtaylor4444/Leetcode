@@ -1,0 +1,30 @@
+//Run Time: 40ms - 57.26%
+//Memory Usage: 55.7MB - 41.43%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    string tree2str(TreeNode* t) {
+        if(t == nullptr) return "";
+        string newString = to_string(t->val);
+        //if we are a leaf we can omit parenthesis
+        if(t->left == nullptr && t->right == nullptr)
+            return newString;
+        //Add parenthesis to left regardless
+        newString += '(' + tree2str(t->left) + ')';
+        //Only add parenthesis if right exists
+        if(t->right) newString += '(' + tree2str(t->right) + ')';
+        return newString;
+    }
+};
