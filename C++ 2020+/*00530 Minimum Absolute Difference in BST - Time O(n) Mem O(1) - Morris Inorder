@@ -1,0 +1,66 @@
+//Run Time: 32ms - 48.87%
+//Memory Usage: 25.3MB - 55.93%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* getSuccessor(TreeNode* node) {
+        //Get next smallest value
+        TreeNode* succ = node->left;
+        while(succ->right && succ->right != node) {
+            succ = succ->right;
+        }
+        return succ;
+    }
+    int getMinimumDifference(TreeNode* root) {
+        //Morris
+        TreeNode* curNode = root;
+        int minDiff = INT_MAX, prevValue = -1, curValue;
+        while(curNode) {
+            //If we dont have left sub-tree go right
+            if(!curNode->left) {
+                //process the node
+                curValue = curNode->val;
+                if(prevValue >= 0) minDiff = min(minDiff, abs(curValue - prevValue));
+                prevValue = curValue;
+                //Go right
+                curNode = curNode->right;
+            }
+            //We have a left subtree
+            else {
+                //get Successor - next smallest value in subtree
+                TreeNode* succ = getSuccessor(curNode);
+                //Link exists and points to our curNode
+                if(succ->right && succ->right == curNode) {
+                    //break link
+                    succ->right = nullptr;
+                    //process the node - done with left subtree
+                    curValue = curNode->val;
+                    if(prevValue >= 0) minDiff = min(minDiff, abs(curValue - prevValue));
+                    prevValue = curValue;
+                    //traverse right
+                    curNode = curNode->right;
+                }
+                //Link hasn't been established
+                else {
+                    //establish link
+                    succ->right = curNode;
+                    //traverse left
+                    curNode = curNode->left;
+                }
+            }
+        }
+        return minDiff;
+    }
+};
