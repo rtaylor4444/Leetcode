@@ -1,0 +1,26 @@
+//Run Time: 4ms - 91.23%
+//Memory Usage: 6.4MB - 66.43%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string makeGood(string s) {
+        //stack?
+        //       *
+        //"leEeetcode"
+        //stack leetc
+        //cur: e
+        //Use at atck to store the chars and remove when we find a matching upper
+        string newString = "";
+        for(int i = 0; i < s.size(); ++i) {
+            char top = (newString.empty()) ? ' ' : newString[newString.size() - 1];
+            //if both chars are the same but diff case
+            if((s[i] ^ top) == 32) {
+                newString.pop_back();
+                continue;
+            }
+            newString += s[i];
+        }
+        return newString;
+    }
+};
