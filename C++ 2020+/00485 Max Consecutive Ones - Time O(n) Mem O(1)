@@ -1,0 +1,20 @@
+//Run Time: 92ms - 61.01%
+//Memory Usage: 36.4MB - 36.76%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+        //Linear Sweep
+        int maxConsec = 0, curConsec = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == 1)
+                ++curConsec;
+            else
+                curConsec = 0;
+            
+            maxConsec = max(curConsec, maxConsec);
+        }
+        return maxConsec;
+    }
+};
