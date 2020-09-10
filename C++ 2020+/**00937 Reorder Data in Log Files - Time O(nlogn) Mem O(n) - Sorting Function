@@ -1,0 +1,48 @@
+//Run Time: 20ms - 73.01%
+//Memory Usage: 16.1MB - 13.49%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+bool myCompare(string a, string b) {
+    //Get Identifier first so we can determine if digit or alpha
+    //***
+    //true = we want a to be ordered before b
+    //false = equal or we want b to be ordered before a
+    //Always return false when elements are equal
+    //***
+    int idIndexA, idIndexB;
+    while(a[idIndexA] != ' ') ++idIndexA;
+    while(b[idIndexB] != ' ') ++idIndexB;
+    bool isDigitA = isdigit(a[++idIndexA]);
+    bool isDigitB = isdigit(b[++idIndexB]);
+    //If neither are digit we are dealing with letters
+    if(!isDigitA && !isDigitB) {
+        //Compare substrs - add first word the the end
+        string subA = a.substr(idIndexA, a.size() - idIndexA) + a.substr(0, idIndexA);
+        string subB = b.substr(idIndexB, b.size() - idIndexB) + b.substr(0, idIndexB);
+        //cout << subA << " " << subB << endl;
+        //Lesser strings go first
+        return (subA < subB); 
+    }
+    //Otherwise there is at least one digit
+    //A is not a digit but B is so we want A first
+    else if(!isDigitA && isDigitB)
+        return true;
+    //Otherwise we want b first or they are equal
+    return false;
+}
+
+class Solution {
+public:
+    vector<string> reorderLogFiles(vector<string>& logs) {
+        //id => lowercase OR numbers
+        //letter-logs + digit-logs
+        //digits original order
+        //letters the word is ordered by second word
+        //******
+        //stable sorting algorithms sort equal elements in the same order 
+        //that they appear in the input.
+        //*******
+        stable_sort(logs.begin(), logs.end(), myCompare);
+        return logs;    
+    }
+};
