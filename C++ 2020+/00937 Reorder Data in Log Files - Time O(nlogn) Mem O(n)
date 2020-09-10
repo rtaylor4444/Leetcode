@@ -1,0 +1,54 @@
+//Run Time: 20ms - 73.01%
+//Memory Usage: 11.4MB - 73.12%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    vector<string> reorderLogFiles(vector<string>& logs) {
+        //id => lowercase OR numbers
+        //letter-logs + digit-logs
+        //digits original order
+        //letters the word is ordered by second word
+        
+        //Get digits and mark them so they are in the same order
+        istringstream stream;
+        vector<bool> isDigit(logs.size(), false);
+        unordered_map<string, int> letterToIndex;
+        vector<string> sortedStrings;
+        string firstWord, secondWord, identifier, totalWord;
+        for(int i = 0; i < logs.size(); ++i) {
+            stream.str(logs[i]);
+            stream.clear();
+            
+            stream >> firstWord;
+            stream >> identifier;
+            totalWord = identifier;
+            while(stream >> secondWord) totalWord += " " + secondWord;
+            
+            //cout << firstWord << " " << totalWord << endl;
+            if(isdigit(identifier[0]))
+                isDigit[i] = true;
+            else {
+                //Mark letter-logs so they can be sorted later
+                //Add first word to the back so we get unique strings
+                //and sorting order is not affected
+                sortedStrings.push_back(totalWord+firstWord);
+                letterToIndex.emplace(totalWord+firstWord, i);
+            }
+        }
+        sort(sortedStrings.begin(), sortedStrings.end());
+        
+        vector<string> newLogs;
+        newLogs.reserve(logs.size());
+        //Add letter logs based on our sorted strings
+        for(int i = 0; i < sortedStrings.size(); ++i) {
+            int index = letterToIndex[sortedStrings[i]];
+            newLogs.push_back(logs[index]);
+        }
+        //Add digits to the newLogs
+        for(int i = 0; i < isDigit.size(); ++i) {
+            if(isDigit[i]) newLogs.push_back(logs[i]);
+        }
+        return newLogs;
+    }
+};
