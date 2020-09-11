@@ -1,0 +1,31 @@
+//Run Time: 8ms - 96.81%
+//Memory Usage: 8.2MB - 39.08%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void duplicateZeros(vector<int>& arr) {
+        //Linear sweep with a queue
+        //when queue is equal to arr.size then we stop looping
+        //[1,0,2,3,0,4,5,0]
+        //q: 1
+        //q: 1 0 0 - we found a 0 so we append it twice
+        //q: 1 0 0 2 3 0 0 - same as above
+        //q: 1 0 0 2 3 0 0 4 - exit since queue is same size as arr
+        queue<int> arrElements;
+        for(int i = 0; i < arr.size(); ++i) {
+            if(arrElements.size() == arr.size())
+                break;
+            
+            if(arr[i] == 0) arrElements.push(0);
+            
+            if(arrElements.size() < arr.size())
+                arrElements.push(arr[i]);
+        }
+        int index = 0;
+        while(!arrElements.empty()) {
+            arr[index++] = arrElements.front();
+            arrElements.pop();
+        }
+    }
+};
