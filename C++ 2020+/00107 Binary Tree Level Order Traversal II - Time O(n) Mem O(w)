@@ -1,0 +1,51 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 12.5MB - 93.13%
+//Solved =)
+//Time O(n) Memory O(w)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        //BFS
+        //Level order traversal and reverse the array result?
+        if(!root) return {};
+        queue<TreeNode*> bfs;
+        TreeNode* curNode;
+        int curLevel = 0;
+        vector<vector<int>> bottomUp;
+        bottomUp.push_back(vector<int>());
+        bfs.push(root);
+        bfs.push(nullptr);
+        
+        while(!bfs.empty()) {
+            curNode = bfs.front();
+            bfs.pop();
+            
+            //If curNode is null - we finished traversing a level
+            if(!curNode) {
+                ++curLevel;
+                if(!bfs.empty()) {
+                    bfs.push(nullptr);
+                    bottomUp.push_back(vector<int>());
+                }
+                continue;
+            }
+            bottomUp[curLevel].push_back(curNode->val);
+            
+            if(curNode->left) bfs.push(curNode->left);
+            if(curNode->right) bfs.push(curNode->right);
+        }
+        reverse(bottomUp.begin(), bottomUp.end());
+        return bottomUp;
+    }
+};
