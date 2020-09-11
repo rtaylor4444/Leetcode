@@ -1,0 +1,25 @@
+//Run Time: 32ms - 96.46%
+//Memory Usage: 8.9MB - 34.41%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+       //Count the characters in the ransomNote then
+        //update the count be chars in magazine
+        //if there is still a count magazine cannot make ransom
+        int ransomCount[26] = {0};
+        for(int i = 0; i < ransomNote.size(); ++i) {
+            ransomCount[ransomNote[i] - 'a']++;
+        }
+        int totalCount = ransomNote.size();
+        for(int i = 0; i < magazine.size(); ++i) {
+            if(ransomCount[magazine[i] - 'a'] == 0)
+                continue;
+            
+            ransomCount[magazine[i] - 'a']--;
+            totalCount--;
+        }
+        return (totalCount == 0);
+    }
+};
