@@ -1,0 +1,40 @@
+//Run Time: 4ms - 75.03%
+//Memory Usage: 8.5MB - 36.15%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string tictactoe(vector<vector<int>>& moves) {
+        //Execute all moves then check the board
+        //Possible outputs Draw, A , B, Pending
+        //Pending and Draw depend on if the board is filled or not
+        string result = (moves.size() == 9) ? "Draw" : "Pending";
+        //Now we must see if there is a winner
+        //every even move is A's move, every odd move is B's move
+        //Simulate the moves - I think its possible to solve without but we will see
+        vector<vector<int>> board(3, vector<int>(3, 0));
+        for(int i = 0; i < moves.size(); ++i) {
+            //A = 1, B = 2
+            board[moves[i][0]][moves[i][1]] = (i % 2) + 1;
+        }
+        //Horizontal + Vertical check
+        //Impossible for moves to make two winners
+        int diag1 = 3, diag2 = 3;
+        for(int i = 0; i < 3; ++i) {
+            int horz = 3, vert = 3;
+            diag1 &= board[i][i];
+            //0,2 => 1,1 => 2,0
+            diag2 &= board[i][2-i];
+            for(int j = 0; j < 3; ++j) {
+                horz &= board[i][j];
+                vert &= board[j][i];
+            }
+            if(horz == 1 || vert == 1) return "A";
+            else if(horz == 2 || vert == 2) return "B";
+        }
+        //Diagnol Check
+        if(diag1) return (diag1 == 1) ? "A" : "B";
+        if(diag2) return (diag2 == 1) ? "A" : "B";
+        return result;
+    }
+};
