@@ -1,0 +1,50 @@
+//Run Time: 4ms - 99.05%
+//Memory Usage: 9.8MB - 40.05%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isOrdered(string& word1, string& word2, unordered_map<char, int>& charToOrder) {
+        int maxSize = max(word1.size(), word2.size());
+        //not in order if word2 char is less than word1 char
+        char char1, char2;
+        for(int i = 0; i < maxSize; ++i) {
+            //Handle if out of bounds for one word
+            char1 = (word1.size() == i) ? ' ' : word1[i];
+            char2 = (word2.size() == i) ? ' ' : word2[i];
+            //cout << "comparing " << char1 << " to " << char2 << endl;
+            //if word2 is shorter than word1 (assuming previous checks passed)
+            if(char2 == ' ' && char1 != ' ')
+                return false;
+            //if word1 is shorter than word2 (assuming previous checks passed)
+            else if(char1 == ' ' && char2 != ' ')
+                break;
+            
+            //If char1 is greater than char2 we are sorted wrong
+            if(charToOrder[char1] > charToOrder[char2])
+                return false;
+            //If char1 is less than char2 we are sorted correct
+            else if(charToOrder[char1] < charToOrder[char2])
+                break;
+            //Otherwise keep checking
+        }
+        return true;
+    }
+    bool isAlienSorted(vector<string>& words, string order) {
+        //Need a way to quickly check if string is in order
+        //Check two strings at a time and see if they are in order
+        //ex: check string1 and string 2 then string2 and string 3
+        
+        //Place ordering in a hasmap fo quick loop up
+        unordered_map<char, int> charToOrder;
+        for(int i = 0; i < order.size(); ++i) {
+            charToOrder.emplace(order[i], i);
+        }
+        //Check ordering for every two strings
+        for(int i = 0; i < words.size() - 1; ++i) {
+            if(!isOrdered(words[i], words[i+1], charToOrder))
+                return false;
+        }
+        return true;
+    }
+};
