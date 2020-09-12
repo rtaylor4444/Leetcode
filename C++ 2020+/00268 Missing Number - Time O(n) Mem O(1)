@@ -1,0 +1,22 @@
+//Run Time: 32ms - 98.73%
+//Memory Usage: 18MB - 84.09%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        //Hashmap - n
+        //place elements in hash and find the one not in hash
+        //Count - math
+        //Get expected count without a missing number and get a true count
+        //deduct the two and we have our answer
+        int expectedCount = 0;
+        int trueCount = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            expectedCount += i;
+            trueCount += nums[i];
+        }
+        expectedCount += nums.size();
+        return expectedCount - trueCount;
+    }
+};
