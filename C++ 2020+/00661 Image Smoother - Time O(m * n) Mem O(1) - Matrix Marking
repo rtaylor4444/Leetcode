@@ -1,0 +1,73 @@
+//Run Time: 128ms - 31.61%
+//Memory Usage: 21.9MB - 49.14%
+//Solved =)
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    int smooth(int x, int y, vector<vector<int>>& M) {
+        int totalCells = 1;
+        int values = M[y][x] & 255;
+        
+        bool isUpValid = (y - 1 >= 0);
+        bool isLeftValid = (x - 1 >= 0);
+        bool isRightValid = (x + 1 < M[y].size());
+        bool isDownValid = (y + 1 < M.size());
+        //Up
+        if(isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x] & 255;
+        }
+        //Left
+        if(isLeftValid)  {
+            ++totalCells;
+            values += M[y][x-1] & 255;
+        }
+        //Upper Left
+        if(isLeftValid && isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x-1] & 255;
+        }
+        //Upper Right
+        if(isRightValid && isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x+1] & 255;
+        }
+        //Right
+        if(isRightValid)  {
+            ++totalCells;
+            values += M[y][x+1] & 255;
+        }
+        //Lower Left
+        if(isLeftValid && isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x-1] & 255;
+        }
+        //Down
+        if(isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x] & 255;
+        }
+        //Lower Right
+        if(isRightValid && isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x+1] & 255;
+        } 
+        //cout << "total value: " << values << " total cells: " << totalCells << endl;
+        return values / totalCells;
+    }
+    vector<vector<int>> imageSmoother(vector<vector<int>>& M) {
+        //Use bits to store the next value
+        for(int i = 0; i < M.size(); ++i) {
+            for(int j = 0; j < M[i].size(); ++j) {
+                M[i][j] += (smooth(j, i, M) << 8);
+            }
+        }
+        //Fix our matrix to only have new values
+        for(int i = 0; i < M.size(); ++i) {
+            for(int j = 0; j < M[i].size(); ++j) {
+                M[i][j] >>= 8;
+            }
+        }
+        return M;
+    }
+};
