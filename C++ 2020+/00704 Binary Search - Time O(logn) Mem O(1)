@@ -1,0 +1,22 @@
+//Run Time: 80ms - 95.90%
+//Memory Usage: 27.5MB - 99.21%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() -1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            //Exit Condition
+            if(nums[m] == target)
+                return m;
+            
+            if(nums[m] > target)
+                r = m - 1;
+            else 
+                l = m + 1;
+        }
+        return -1;
+    }
+};
