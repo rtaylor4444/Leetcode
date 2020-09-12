@@ -1,0 +1,69 @@
+//Run Time: 8ms - 73.51%
+//Memory Usage: 7.5MB - 33.44%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    bool checkDivisor(int length, string str, unordered_set<string>& prefixes) {
+        //assuming string size is divisable by length
+        for(int i = 0; i < str.size(); i+=length) {
+            cout << str.substr(i, length) << endl;
+            if(prefixes.find(str.substr(i, length)) == prefixes.end())
+                return false;
+        }
+        return true;
+    }
+    string gcdOfStrings(string str1, string str2) {
+        //All letters are uppercase
+        //Put all str2 substrings in a hash?
+        //greatest common divisor so if we had str leng 6
+        //divisors are 2 3 (1 by default)
+        //*odd length string = no divisor (exception is if strings match or single char)
+        //*Has to be a prefix of the string
+        //Get common divisor based off length between the two that way we know
+        //what prefixes to check for
+        //str1 = "ABCABC", str2 = "ABC"
+        //len = 6, len = 3 divs = 1,3
+        //so we check 'A' and 'ABC' have to match both strings
+        //str1 = "ABABAB", str2 = "ABAB"
+        //len = 6, len = 4 divs = 1,2
+        //so we check 'A' and 'AB' have to match both strings
+        
+        //Get common divisors
+        char isDivisor[1001] = {0};
+        //String 1
+        int length = str1.size();
+        for(int i = length; i >= 1; --i) {
+            if(length % i == 0) {
+                isDivisor[i] |= 1;
+            }
+        }
+        //String 2
+        length = str2.size();
+        for(int i = length; i >= 1; --i) {
+            if(length % i == 0) {
+                isDivisor[i] |= 2;
+            }
+        }
+        
+        //Get prefixes
+        unordered_set<string> prefixes;
+        length = max(length, (int)str1.size());
+        //Iterate backwards to check greater strings first
+        for(int i = length; i >= 1; --i) {
+            //is common divisor
+            if(isDivisor[i] != 3) continue;
+            string curDivisor = str1.substr(0, i);
+            prefixes.emplace(curDivisor);
+            //check if true divisor of str1
+            if(!checkDivisor(i, str1, prefixes)) {
+                prefixes.erase(curDivisor);
+                continue;
+            }
+            //check is divisor for str2
+            if(checkDivisor(i, str2, prefixes))
+                return curDivisor;
+        }
+        return "";
+    }
+};
