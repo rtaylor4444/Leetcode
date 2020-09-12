@@ -1,0 +1,57 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 11.4MB - 18.10%
+//Solved =)
+//Time O(n) Memory O(w)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+
+public:
+    bool isCousins(TreeNode* root, int x, int y) {
+        //possible to exit early if we find both values early
+        //keep track of depth, parent, value
+        //Level Order - dont need to keep track of depth
+        //val -> parent
+        TreeNode* curNode, *curParent;
+        unordered_map<int, TreeNode*> possibleCousins;
+        queue<pair<TreeNode*, TreeNode*>> bfs;
+        bfs.push({root, nullptr});
+        bfs.push({nullptr, nullptr});
+        while(!bfs.empty()) {
+            curNode = bfs.front().first;
+            curParent = bfs.front().second;
+            bfs.pop();
+            
+            //Check if we are done traversing this level
+            if(curNode == nullptr) {
+                //break if only one node found, since distinct
+                //we know that only one of each value exists
+                if(possibleCousins.size() == 1) break;
+                //We found both nodes on the same level just need to check parents
+                else if(possibleCousins.size() == 2) {
+                    return (possibleCousins[x] != possibleCousins[y]);
+                }
+                possibleCousins.clear();
+                if(!bfs.empty()) bfs.push({nullptr, nullptr});
+                continue;
+            }
+            
+            //process node
+            if(curNode->val == x || curNode->val == y)
+                possibleCousins.emplace(curNode->val, curParent);
+                
+            if(curNode->left) bfs.push({curNode->left, curNode});
+            if(curNode->right) bfs.push({curNode->right, curNode});
+        }
+        return false;
+    }
+};
