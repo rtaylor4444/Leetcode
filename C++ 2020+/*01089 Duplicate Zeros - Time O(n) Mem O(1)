@@ -1,0 +1,36 @@
+//Run Time: 8ms - 96.81%
+//Memory Usage: 9.9MB - 44.02%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void duplicateZeros(vector<int>& arr) {
+        //Two Pass
+        //We count the zeros and estimate how much to shift each element by
+        int numZeros = 0, startPos = 1;
+        //Omit any elements we know wont fit into the final array
+        for(int i = 0; (i + numZeros) < arr.size(); ++i) {
+            if(arr[i] == 0) {
+                ++startPos;
+                //Check and see if we have room for this zero
+                if((i + numZeros + 1) == arr.size()) {
+                    //Just copy over 0 we dont have room for
+                    arr[arr.size() - 1] = 0;
+                    break;
+                }
+                ++numZeros;
+            } 
+        }
+        if(numZeros == 0) return;
+        //Shift over elements
+        for(int i = arr.size() - startPos; i >= 0; --i) {
+            //shift
+            arr[i+numZeros] = arr[i];
+            //add extra zero
+            if(arr[i] == 0) {
+                --numZeros;
+                arr[i+numZeros] = 0;
+            }
+        }
+    }
+};
