@@ -1,0 +1,67 @@
+//Run Time: 96ms - 79.01%
+//Memory Usage: 22MB - 27.16%
+//Unoptimal Solution - Memory needs improvement
+//Time O(m * n) Memory O(m * n)
+class Solution {
+public:
+    int smooth(int x, int y, vector<vector<int>>& M) {
+        int totalCells = 1;
+        int values = M[y][x];
+        
+        bool isUpValid = (y - 1 >= 0);
+        bool isLeftValid = (x - 1 >= 0);
+        bool isRightValid = (x + 1 < M[y].size());
+        bool isDownValid = (y + 1 < M.size());
+        //Up
+        if(isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x];
+        }
+        //Left
+        if(isLeftValid)  {
+            ++totalCells;
+            values += M[y][x-1];
+        }
+        //Upper Left
+        if(isLeftValid && isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x-1];
+        }
+        //Upper Right
+        if(isRightValid && isUpValid)  {
+            ++totalCells;
+            values += M[y-1][x+1];
+        }
+        //Right
+        if(isRightValid)  {
+            ++totalCells;
+            values += M[y][x+1];
+        }
+        //Lower Left
+        if(isLeftValid && isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x-1];
+        }
+        //Down
+        if(isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x];
+        }
+        //Lower Right
+        if(isRightValid && isDownValid)  {
+            ++totalCells;
+            values += M[y+1][x+1];
+        } 
+        //cout << "total value: " << values << " total cells: " << totalCells << endl;
+        return values / totalCells;
+    }
+    vector<vector<int>> imageSmoother(vector<vector<int>>& M) {
+        vector<vector<int>> newMatrix(M.size(), vector<int>(M[0].size(), 0));
+        for(int i = 0; i < M.size(); ++i) {
+            for(int j = 0; j < M[i].size(); ++j) {
+                newMatrix[i][j] = smooth(j, i, M);
+            }
+        }
+        return newMatrix;
+    }
+};
