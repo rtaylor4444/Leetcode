@@ -1,0 +1,32 @@
+//Run Time: 12ms - 13.09%
+//Memory Usage: 8.2MB - 22.71%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        //count numbers of evens
+        //add the largest odd
+        //palindrome can be built with any number of evens + odds - 1
+        unordered_map<char, int> letterCount;
+        int size = s.size();
+        for(int i = 0; i < size; ++i) {
+            if(letterCount.find(s[i]) == letterCount.end())
+                letterCount.emplace(s[i], 0);
+            
+            letterCount[s[i]]++;
+        }
+        int length = 0, oddChar = 0;
+        for(auto it = letterCount.begin(); it != letterCount.end(); ++it) {
+            if(it->second % 2 == 0)
+                length += it->second;
+            else {
+                length += (it->second - 1);
+                //Add leftover odd char than can be used
+                oddChar = 1;
+            }
+        }
+        
+        return length + oddChar;
+    }
+};
