@@ -1,0 +1,32 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.3MB - 45.38%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int getSquaredDigits(int n) {
+        int total = 0;
+        //cout << n << " -> ";
+        while(n) {
+            int digit = n % 10;
+            total += (digit * digit);
+            n /= 10;
+        }
+        //cout << total << endl;
+        return total;
+    }
+    bool isHappy(int n) {
+        //Simulate the process, use set to store results
+        //if results repeat return false;
+        //numer -> result
+        unordered_set<int> seenNums;
+        while(n != 1) {
+            if(seenNums.find(n) != seenNums.end())
+                return false;
+            
+            seenNums.emplace(n);
+            n = getSquaredDigits(n);
+        }
+        return true;
+    }
+};
