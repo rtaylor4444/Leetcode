@@ -1,0 +1,51 @@
+//Run Time: 116ms - 61.18%
+//Memory Usage: 32MB - 79.00%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool canThreePartsEqualSum(vector<int>& A) {
+        //A = [0,2,1,-6,6,-7,9,1,2,0,1]
+        //sum = 9
+        //A = [0,2,1,-6,6,7,9,-1,2,0,1]
+        //sum = 21
+        //* seeing if dividing sum by 3 doesnt solve problem
+        //* but it might be able to elimate some arrays
+        //* elements all in the same position when partitioned
+        //* check and see if we can get sum/3 three times when we scan
+        //A = [0,2,1,-6,6,-7,9,1,2,0,1]
+        //sum = 9 target = 9/3 = 3
+        //scan array adding up nums to see if we can get three
+        //0 + 2 + 1 == 3 timesHitTarget = 1
+        //-6 + 6 + -7 + 9 + 1 = 3 timesHitTarget = 2
+        //2 + 0 + 1 timesHitTarget = 3 break and keep track of the index(should be on final)
+        
+        //Get our sum
+        int totalSum = 0;
+        for(int i = 0; i < A.size(); ++i) totalSum += A[i];
+        //cout << totalSum << endl;
+        //Number must be divisable by 3
+        if(totalSum % 3 != 0) return false;
+        
+        //Get target add see if we can hit it three times
+        int target = totalSum / 3, timeHitTarget = 0;
+        int curIndex = 0, curSum = 0;
+        //cout << target << endl;
+        for(curIndex; curIndex < A.size(); ++curIndex) {
+           curSum += A[curIndex];
+            if(curSum == target) {
+                curSum = 0;
+                ++timeHitTarget;
+            }
+        }
+        //Zero edge case if our target is 0 we can can combine partitions
+        if(target == 0 && curSum == 0 && timeHitTarget > 2)
+            return true;
+        
+        //If didnt get target at least 3 times or there is a leftover sum
+        if(timeHitTarget != 3 || curSum != 0)
+            return false;
+        
+        return true;
+    }
+};
