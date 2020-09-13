@@ -1,0 +1,28 @@
+//Run Time: 12ms - 66.77%
+//Memory Usage: 13.6MB - 84.08%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        //DP
+        //[10,15,20]
+        //[10,15,30,15]
+        //Calc min cost to get to each step
+        //vector<int> dp(cost.size()+1, 0);
+        //dp[0] = cost[0];
+        //dp[1] = cost[1];
+        int firstStep = cost[0];
+        int secondStep = cost[1];
+        int finalStep = 0;
+        for(int i = 2; i < cost.size()+1; ++i) {
+            int curCost = (i == cost.size()) ? 0 : cost[i];
+            //dp[i] = min(dp[i-1], dp[i-2]) + curCost;
+            finalStep = min(firstStep, secondStep) + curCost;
+            firstStep = secondStep;
+            secondStep = finalStep;
+        }
+        return finalStep;
+        //return dp[cost.size()];
+    }
+};
