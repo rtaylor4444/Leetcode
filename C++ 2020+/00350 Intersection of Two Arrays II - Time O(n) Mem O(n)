@@ -1,0 +1,40 @@
+//Run Time: 12ms - 67.12%
+//Memory Usage: 11MB - 29.14%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        //hashmap
+        //pick smaller array and put those numbers in a hashmap
+        //iterate through larger array keeping track of consec
+        //hashmap hits
+        //*common numbers between two elements
+        vector<int> smallArr, largeArr;
+        if(nums1.size() > nums2.size()) {
+            smallArr = nums2;
+            largeArr = nums1;
+        }
+        else {
+            largeArr = nums2;
+            smallArr = nums1;
+        }
+        
+        unordered_map<int, int> smallArrNums(smallArr.size());
+        for(int i = 0; i < smallArr.size(); ++i) {
+            if(smallArrNums.find(smallArr[i]) == smallArrNums.end())
+                smallArrNums.emplace(smallArr[i], 0);
+            
+            smallArrNums[smallArr[i]]++;
+        }
+            
+        vector<int> intersection;
+        for(int i = 0; i < largeArr.size(); ++i) {
+            if(smallArrNums.find(largeArr[i]) != smallArrNums.end()) {
+                if(smallArrNums[largeArr[i]]-- > 0)
+                    intersection.push_back(largeArr[i]);
+            }
+        }
+        return intersection;
+    }
+};
