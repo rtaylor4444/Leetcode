@@ -1,0 +1,29 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.8MB - 97.09%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getSquaredDigits(int n) {
+        int total = 0;
+        while(n) {
+            int digit = n % 10;
+            total += (digit * digit);
+            n /= 10;
+        }
+        return total;
+    }
+    bool isHappy(int n) {
+        //Floyd Cycle Detection
+        //Fast - Slow pointer
+        int slow = n, fast = n;
+        //Must use do while to prevent breaking early
+        do {
+            slow = getSquaredDigits(slow);
+            fast = getSquaredDigits(fast);
+            fast = getSquaredDigits(fast);
+            if(fast == 1) return true;
+        } while(slow != fast);
+        return false;
+    }
+};
