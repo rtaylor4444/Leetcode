@@ -1,0 +1,16 @@
+//Run Time: 12ms - 75.26%
+//Memory Usage: 13MB - 84.40%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int lowestPrice = INT_MAX;
+        int maxProfit = 0;
+        for(int i = 0; i < prices.size(); ++i) {
+            lowestPrice = min(lowestPrice, prices[i]);
+            maxProfit = max(maxProfit, prices[i] - lowestPrice);
+        }
+        return maxProfit;
+    }
+};
