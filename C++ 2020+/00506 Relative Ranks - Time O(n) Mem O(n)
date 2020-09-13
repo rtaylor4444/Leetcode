@@ -1,0 +1,39 @@
+//Run Time: 24ms - 82.78%
+//Memory Usage: 12.4MB - 18.25%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> findRelativeRanks(vector<int>& nums) {
+        //highest score = gold, next highest = silver
+        //n = 10000 max
+        //sort scores descending order and top 3 get the medals
+        //convert all others to strings
+        //Build hashmap of:
+        //score -> position
+        int maxScore = 0;
+        unordered_map<int, int> scoreToIndex;
+        for(int i = 0; i < nums.size(); ++i) {
+            maxScore = max(maxScore, nums[i]);
+            scoreToIndex.emplace(nums[i], i);
+        }
+        
+        //Sort or better yet get a counts
+        vector<int> countSort(maxScore+1, 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            countSort[nums[i]]++;
+        }
+        
+        //Assign ranks
+        vector<string> medals = {"Gold Medal", "Silver Medal", "Bronze Medal"};
+        vector<string> relativeRanks(nums.size());
+        int medalPos = 0;
+        for(int i = maxScore; i >= 0; --i) {
+            if(countSort[i] == 0) continue;
+            int index = scoreToIndex[i];
+            relativeRanks[index] = (medalPos < 3) ? medals[medalPos] : to_string(medalPos+1);
+            medalPos++;
+        }
+        return relativeRanks;
+    }
+};
