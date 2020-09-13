@@ -1,0 +1,51 @@
+//Run Time: 8ms - 97.22%
+//Memory Usage: 9MB - 84.05%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int largestSumAfterKNegations(vector<int>& A, int K) {
+        //largest sum possible
+        //*even negations average themselves out
+        //*always negate the smallest numbers/negative numbers
+        //-Sorting
+        //*Our goal is to negate all the negative numbers
+        //A = [2,-3,-1,5,-4], K = 2
+        //[-4,-3,-1,2,5] negate (-4, -3) out of negations so we exit with total
+        //A = [-1,0,2,3], K = 3
+        //negate (-1) no more negs to exit out with K = 2
+        //Since K is even we can double negate to get the same max result
+        //k % 2 = 0;
+        //Otherwise just negate the smallest number
+        //Sort our array
+        int totalSum = 0;
+        int countSort[201] = {0};
+        for(int i = 0; i < A.size(); ++i) {
+            countSort[100 + A[i]]++;
+            totalSum += A[i];
+        }
+        int curIndex = 0;
+        for(int i = 0; i < 201; ++i) {
+            while(countSort[i]-- > 0) {
+                A[curIndex++] = i - 100;
+            }
+        }
+        
+        //Negate all of the negatives
+        curIndex = 0;
+        while(curIndex < A.size() && A[curIndex] < 0 && K > 0) {
+            A[curIndex] *= -1;
+            totalSum += A[curIndex] * 2;
+            ++curIndex;
+            --K;
+        }
+        //If we run out of negations or they are even at this point exit
+        if(K % 2 == 0) return totalSum;
+        //Just negate our smallest number
+        int minNumber = INT_MAX;
+        for(int i = min(curIndex, (int)A.size() - 1); i >= 0; --i)
+            minNumber = min(A[i], minNumber);
+        
+        return totalSum - (minNumber * 2);
+    }
+};
