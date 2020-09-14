@@ -1,0 +1,29 @@
+//Run Time: 100ms - 33.83%
+//Memory Usage: 17.5MB - 69.14%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        //sort the cookies then runs a binary search
+        //to find which cookie will satify the child
+        //*one strat satisfy the least greedy children first
+        //g = greed facter
+        //s size of cookies
+        //Sort both greed factor and cookies
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        //Satisfy the least greedy children first
+        //Two Pointer linear scan
+        int i = 0, j = 0;
+        while(i < g.size() && j < s.size()) {
+            //if we can satisfy this child
+            if(g[i] <= s[j]) {
+                ++i;
+                ++j;
+            }
+            else ++j;
+        }
+        return i;
+    }
+};
