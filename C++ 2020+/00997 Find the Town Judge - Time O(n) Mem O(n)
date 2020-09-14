@@ -1,0 +1,32 @@
+//Run Time: 344ms - 94.29%
+//Memory Usage: 60.8MB - 94.59%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int findJudge(int N, vector<vector<int>>& trust) {
+        //Everyone points to the jugde
+        //judge points to nobody
+        //trust[i] = [a,b]
+        //person a trusts b
+        //loop through and put every person in a set the one
+        //that isnt found is the judge
+        
+        //Find who trusts someone and times a person is trusted
+        vector<bool> peopleWhoTrust(N+1, false);
+        vector<int> timesTrusted(N+1, 0);
+        for(int i = 0; i < trust.size(); ++i) {
+            peopleWhoTrust[trust[i][0]] = true;
+            timesTrusted[trust[i][1]]++;
+        }
+        //Determine who trusts nobody
+        for(int i = 1; i <= N; ++i) {
+            if(peopleWhoTrust[i]) continue;
+            //If we find that person determine if they are the judge
+            //Trusted by everyone but themself
+            if(timesTrusted[i] == N-1)
+                return i;
+        }
+        return -1;
+    }
+};
