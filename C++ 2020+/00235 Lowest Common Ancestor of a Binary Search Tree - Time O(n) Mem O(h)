@@ -1,0 +1,47 @@
+//Run Time: 32ms - 98.52%
+//Memory Usage: 23.2MB - 84.87%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+class Solution {
+    TreeNode* firstAncestor, *desc1, *desc2;
+public:
+    TreeNode* postOrder(TreeNode* node) {
+        //Get possible descendants
+        TreeNode* leftDesc = nullptr, *rightDesc = nullptr;
+        if(node->left) leftDesc = postOrder(node->left);
+        if(node->right) rightDesc = postOrder(node->right);
+        //check for descendants
+        int numDesc = 0;
+        if(leftDesc == desc1 || rightDesc == desc1 || node == desc1)
+            numDesc |= 1;
+        if(leftDesc == desc2 || rightDesc == desc2 || node == desc2)
+            numDesc |= 2;
+        //Set ancestor if they both exist
+        if(numDesc == 3 && firstAncestor == nullptr)
+            firstAncestor = node;
+        else if(numDesc == 2) return desc2;
+        else if(numDesc == 1) return desc1;
+        return nullptr;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        //Traversal - postorder backtracking
+        //we use bst property to determine?
+        //left right and self contain p and q
+        if(root == nullptr) return nullptr;
+        desc1 = p;
+        desc2 = q;
+        firstAncestor = nullptr;
+        postOrder(root);
+        return firstAncestor;
+    }
+};
