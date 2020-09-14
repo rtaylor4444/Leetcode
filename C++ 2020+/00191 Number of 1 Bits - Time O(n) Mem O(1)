@@ -1,0 +1,15 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 39.17%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int numBits = 0;
+        while(n) {
+            if(n & 1) ++numBits;
+            n >>= 1;
+        }
+        return numBits;
+    }
+};
