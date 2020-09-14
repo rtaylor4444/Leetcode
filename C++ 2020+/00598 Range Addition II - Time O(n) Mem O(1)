@@ -1,0 +1,22 @@
+//Run Time: 24ms - 58.30%
+//Memory Usage: 11.3MB - 51.57%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxCount(int m, int n, vector<vector<int>>& ops) {
+        //make matrix and simulate the process
+        //(m * n * num(ops))
+        //return all cells that have the max value
+        //top left hard corner always has the greatst value
+        //return op that has the smallest area
+        //*always starts at 0
+        //*always adds 1 with no variation
+        int minY = m, minX = n;
+        for(int i = 0; i < ops.size(); ++i) {
+            minY = min(ops[i][0], minY);
+            minX = min(ops[i][1], minX);
+        }
+        return minY * minX;
+    }
+};
