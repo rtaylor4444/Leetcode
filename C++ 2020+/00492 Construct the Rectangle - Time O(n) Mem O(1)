@@ -1,0 +1,27 @@
+//Run Time: 16ms - 26.04%
+//Memory Usage: 6.1MB - 77.42%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> constructRectangle(int area) {
+        //W cannot be larger than L
+        //difference between the two should be as small as possible
+        //sq root for an area and set L and W to that
+        //then ++L --W until we meet that area
+        //Area can be a prime number
+        if(area == 0) return {};
+        int squareRoot = sqrt(area);
+        int L = squareRoot;
+        int W = squareRoot;
+        int currentArea = L * W;
+        while(currentArea != area) {
+            if(currentArea < area)
+                ++L;
+            else
+                --W;
+            currentArea = L * W;
+        }
+        return {L, W};
+    }
+};
