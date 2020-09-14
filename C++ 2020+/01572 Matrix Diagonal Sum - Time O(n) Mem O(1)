@@ -1,0 +1,22 @@
+//Run Time: 28ms - 94.50%
+//Memory Usage: 11.5MB - 31.98%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int diagonalSum(vector<vector<int>>& mat) {
+        //Iterate and mark the mat as we go
+        //Top Diag
+        int totalSum = 0;
+        for(int i = 0; i < mat.size(); ++i) {
+            //0,0 1,1 2,2
+            totalSum += mat[i][i];
+            //0,2, 1,1 2,0
+            //Skip when both diag has the same index
+            if((mat.size() - 1) - i == i)
+                continue;
+            totalSum += mat[i][(mat.size() - 1) - i];
+        }
+        return totalSum;
+    }
+};
