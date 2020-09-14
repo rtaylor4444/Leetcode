@@ -1,0 +1,29 @@
+//Run Time: 76ms - 74.29%
+//Memory Usage: 20.2MB - 18.25%
+//Solved =)
+//Time O(n) Memory O(k)
+class KthLargest {
+    int size;
+    priority_queue<int, vector<int>, greater<int>> p_q;
+public:
+    KthLargest(int k, vector<int>& nums) {
+        //HEAP but have to maintain all elements
+        size = k;
+        for(int i = 0; i < nums.size(); ++i) {
+            p_q.push(nums[i]);
+            if(p_q.size() > k) p_q.pop();
+        }
+    }
+    //O(1) time O(1) mem
+    int add(int val) {      
+        p_q.push(val);
+        if(p_q.size() > size) p_q.pop();
+        return p_q.top();
+    }
+};
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest* obj = new KthLargest(k, nums);
+ * int param_1 = obj->add(val);
+ */
