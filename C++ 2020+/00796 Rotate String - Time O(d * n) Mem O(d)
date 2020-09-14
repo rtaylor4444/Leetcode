@@ -1,0 +1,49 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.3MB - 47.05%
+//Solved =)
+//d = max number of duplicate chars
+//n = length of the string
+//Time O(d * n) Memory O(d)
+class Solution {
+public:
+    bool rotateString(string A, string B) {
+        //specific order
+        //*no count or sort
+        //cannot use count but must have the same characters
+        //use hashmap and check positions
+        //* % by the last index
+        //* all letters exist and they have the same distance
+        // between each other then possible to rotate
+        //"abcde" "cdeab"
+        //(B - A) % size
+        //if neg + size
+        //c => 2 c => 0 -2 or + 3
+        //d => 3 d => 1 -2
+        //e => 4 e => 2 -2 
+        //a => 0 a => 3 -2
+        //b => 1 b => 4 -2
+        //Above fails if multiple chars but logic is the same
+        //Instead we find all the possible distances and check them
+        
+        if(A.size() != B.size()) return false;
+        if(A.empty()) return true;
+        int size = A.size();
+        char initalChar = A[0];
+        vector<int> possibleDist;
+        for(int i = 0; i < size; ++i) {
+            if(initalChar == B[i])
+                possibleDist.push_back(i); 
+        }
+        
+        for(int i = 0; i < possibleDist.size(); ++i) {
+            bool canRotate = true;
+            for(int j = 0; j < size; ++j) {
+                //If we dont find a character impossible to rotate
+                if(A[j] != B[(j + possibleDist[i]) % size])
+                    canRotate = false;
+            }
+            if(canRotate) return true;
+        }
+        return false;
+    }
+};
