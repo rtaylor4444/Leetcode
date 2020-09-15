@@ -1,0 +1,18 @@
+//Run Time: 4ms - 64.67%
+//Memory Usage: 6.5MB - 50.58%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        //Two Pointers
+        //Iterate through s as the characters match
+        int i = 0, j = 0;
+        while(i < s.size() && j < t.size()) {
+            if(s[i] == t[j])
+                ++i;
+            ++j;
+        }
+        return i == s.size();
+    }
+};
