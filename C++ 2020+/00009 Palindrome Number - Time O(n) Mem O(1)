@@ -1,0 +1,23 @@
+//Run Time: 24ms - 33.81%
+//Memory Usage: 5.8MB - 95.48%
+//Solved =)
+//n = number of digits
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    long flipNum(long n) {
+        long newN = 0;
+        while(n) {
+            newN *= 10;
+            newN += n % 10;
+            n /= 10;
+        }
+        return newN;
+    }
+    bool isPalindrome(int x) {
+        //All neg numbers are not palindromes
+        //flip the number and see if they are equal
+        if(x < 0) return false;
+        return (long)x == flipNum((long)x);
+    }
+};
