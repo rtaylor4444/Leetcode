@@ -1,0 +1,27 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 9.1MB - 8.50%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+       //No data structures
+        //Swap values - move all instances to the back of the array
+        int numInstances = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == val) ++numInstances;
+        }
+        int newSize = nums.size() - numInstances;
+        int l = 0, r = nums.size() - 1;
+        while(numInstances) {
+            //find an instance
+            while(l < newSize && nums[l] != val) ++l;
+            //find a non-instance
+            while(r >= newSize && nums[r] == val) --r;
+            if(r < newSize) break;
+            swap(nums[l], nums[r]);
+            --numInstances;
+        }
+        return newSize;
+    }
+};
