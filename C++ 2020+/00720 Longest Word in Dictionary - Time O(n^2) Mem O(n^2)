@@ -1,0 +1,41 @@
+//Run Time: 84ms - 82.17%
+//Memory Usage: 16.6MB - 94.73%
+//Solved =)
+//n = number of words
+//Time O(n^2) Memory O(n^2)
+bool MySort(string& a, string& b) {
+    if(a.size() > b.size())
+        return true;
+    else if (b.size() > a.size())
+        return false;
+    
+    //lexographic order
+    if(a.compare(b) < 0)
+        return true;
+    
+    return false;
+};
+
+class Solution {
+public:
+    string longestWord(vector<string>& words) {
+        //place every word inside of a hashset for quick loopup
+        //Scan through the larger words first - Sorting
+        //Check substring by substring down to the last character
+        //if there is a match for all we found our answer
+        unordered_set<string> dict(words.begin(), words.end());
+        sort(words.begin(), words.end(), MySort);
+        for(int i = 0; i < words.size(); ++i) {
+            //check all substrings
+            bool canBuild = true;
+            for(int j = words[i].size() - 1; j >= 1; --j) {
+                if(dict.find(words[i].substr(0, j)) == dict.end()) {
+                    canBuild = false;
+                    break;
+                }
+            }
+            if(canBuild) return words[i];
+        }
+        return "";
+    }
+};
