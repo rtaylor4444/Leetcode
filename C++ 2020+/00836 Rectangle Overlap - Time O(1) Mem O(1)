@@ -1,0 +1,28 @@
+//Run Time: 4ms - 29.93%
+//Memory Usage: 7.9MB - 91.88%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool isRectangleOverlap(vector<int>& rec1, vector<int>& rec2) {
+        //0 - left
+        //1 - bottom
+        //2 - right
+        //3 - top
+        //outside bounds
+        //top
+        if(rec1[3] <= rec2[1])
+            return false;
+        //bottom
+        if(rec1[1] >= rec2[3])
+            return false;
+        //right
+        if(rec1[2] <= rec2[0])
+            return false;
+        //left
+        if(rec1[0] >= rec2[2])
+            return false;
+
+        return true;
+    }
+};
