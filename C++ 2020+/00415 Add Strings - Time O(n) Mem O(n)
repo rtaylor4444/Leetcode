@@ -1,0 +1,58 @@
+//Run Time: 12ms - 55.59%
+//Memory Usage: 6.6MB - 81.65%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    char addRemainder(bool& rem, char c) {
+        if(rem) {
+            c += 1;
+            rem = false;
+        }
+        return c;
+    }
+    char fixOverflow(bool& rem, char c) {
+        if(c > '9') {
+            c -= 10;
+            rem = true;
+        }
+        return c;
+    }
+    string addStrings(string num1, string num2) {
+        //Add String without converting to ints
+        string result;
+        result.reserve(max(num1.size(), num2.size()) + 1);
+        int p1 = num1.size() - 1, p2 = num2.size() - 1;
+        bool remainder = false;
+        //iterate in reverse to 
+        while(p1 >= 0 && p2 >= 0) {
+            //add strings
+            char digit = ((num1[p1] - '0') + (num2[p2] - '0')) + '0';
+            //add remainder if any
+            digit = addRemainder(remainder, digit);
+            //check and fix overflow
+            digit = fixOverflow(remainder, digit);
+            //cout << digit << endl;
+            result.push_back(digit);
+            --p1;
+            --p2;
+        }
+        //Add remaining num1 if any left
+        while(p1 >= 0) { 
+            char digit = addRemainder(remainder, num1[p1]);
+            result.push_back(fixOverflow(remainder, digit));
+            --p1;
+        }
+        //Add remaining num2 if any left
+        while(p2 >= 0) { 
+            char digit = addRemainder(remainder, num2[p2]);
+            result.push_back(fixOverflow(remainder, digit));
+            --p2;
+        }
+        //if there is still a remainder just push a new one
+        if(remainder) result.push_back('1');
+        //digits will be in reverse order so we must reverse the string
+        reverse(result.begin(), result.end());
+        return result;
+    }
+};
