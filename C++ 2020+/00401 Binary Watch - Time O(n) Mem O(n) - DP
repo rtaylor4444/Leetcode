@@ -1,0 +1,44 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.2MB - 31.85%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int countBits(int num) {
+        int bits = 0;
+        while(num) {
+            bits += (num & 1);
+            num >>= 1;
+        }
+        return bits;
+    }
+    void minutesToTimeString(int num, string& s) {
+        s.push_back('0' + (num / 10));
+        s.push_back('0' + (num % 10));
+    }
+    vector<string> readBinaryWatch(int num) {
+        //Dynamic Programming
+        //Calculate what numbers have what bits and store
+        //what number have what about of bits
+        
+        //Edge case numbers with bits greater than 8 isnt possible
+        if(num > 8) return {};
+        //numbits -> numbers that have bits
+        vector<vector<int>> numsThatHaveBit(11, vector<int>());
+        for(int i = 0; i < 60; ++i) {
+            numsThatHaveBit[countBits(i)].push_back(i);
+        }
+        //
+        vector<string> ans;
+        for(int i = 0; i < 12; ++i) {
+            int curBitsReq = num - countBits(i);
+            if(curBitsReq < 0) continue;
+            for(int j = 0; j < numsThatHaveBit[curBitsReq].size(); ++j) {
+                string curString = to_string(i) + ':';
+                minutesToTimeString(numsThatHaveBit[curBitsReq][j], curString);
+                ans.push_back(curString);
+            }
+        }
+        return ans;
+    }
+};
