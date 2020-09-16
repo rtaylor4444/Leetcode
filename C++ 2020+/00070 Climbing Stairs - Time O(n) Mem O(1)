@@ -1,0 +1,18 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 91.66%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int climbStairs(int n) {
+        if(n < 3) return n;
+        int firstStep = 1, secondStep = 2;
+        int finalStep;
+        for(int i = 3; i <= n; ++i) {
+            finalStep = secondStep + firstStep;
+            firstStep = secondStep;
+            secondStep = finalStep;
+        }
+        return finalStep;
+    }
+};
