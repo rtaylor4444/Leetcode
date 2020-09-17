@@ -1,0 +1,20 @@
+//Run Time: 12ms - 80.44%
+//Memory Usage: 13.4MB - 19.04%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        //Kadanes Algo
+        //Iterate through comparing currentSum to the curValue
+        //before adding them together
+        int maxSum = nums[0], curSum = nums[0];
+        for(int i = 1; i < nums.size(); ++i) {
+            //reset if our value becomes negative
+            if(curSum < 0) curSum = nums[i];
+            else curSum += nums[i];
+            maxSum = max(maxSum, curSum);
+        }
+        return maxSum;
+    }
+};
