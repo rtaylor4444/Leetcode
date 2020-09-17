@@ -1,0 +1,50 @@
+//Run Time: 332ms - 5.20%
+//Memory Usage: 27.6MB - 59.74%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+bool positiveFirst(int a, int b) {
+    return (a > b);
+}
+bool negativeFirst(int a, int b) {
+    return (a < b);
+}
+class Solution {
+public:
+    int maximumProduct(vector<int>& nums) {
+        //Three high positives
+        //Two 'high' negatives
+        //could sort pick product of two smallest
+        priority_queue<int, vector<int>, std::function<bool(int, int)>> maxNums(positiveFirst);
+        priority_queue<int, vector<int>, std::function<bool(int, int)>> negatives(negativeFirst);
+        int maxNum = INT_MIN;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] < 0) negatives.push(nums[i]);
+            maxNums.push(nums[i]);
+            maxNum = max(nums[i], maxNum);
+            //Ensure queues are the same size
+            while(maxNums.size() > 3) maxNums.pop();
+            while(negatives.size() > 2) negatives.pop();
+        }
+        //Get maximum product
+        int maxProduct = 1;
+        while(!maxNums.empty()) {
+            maxProduct *= maxNums.top();
+            maxNums.pop();
+        }
+        
+        //No negatives, no positives or simply only 3 elements
+        //so just return our maxProduct
+        if(negatives.empty() || maxNum < 0 || nums.size() == 3) 
+            return maxProduct;
+        
+        //Get our max neg product which can possibly be more than max product
+        //only 1 negative number means always less than max product
+        int maxNegativeProduct = 1;
+        while(!negatives.empty()) {
+            maxNegativeProduct *= negatives.top();
+            negatives.pop();
+        }
+        //Check if negative product is greater than our greatest product
+        return max(maxProduct, maxNegativeProduct * maxNum);
+    }
+};
