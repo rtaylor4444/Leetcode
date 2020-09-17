@@ -1,0 +1,26 @@
+//Run Time: 88ms - 36.88%
+//Memory Usage: 23.2MB - 76.84%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numPairsDivisibleBy60(vector<int>& time) {
+        //Hashmap
+        //duration -> count (since there can be dups)
+        //Then lookup durations that make us divisable by 60
+        
+        //Set up our count
+        vector<int> durationCounts(61, 0);
+        for(int i = 0; i < time.size(); ++i) {       
+            durationCounts[time[i] % 60]++;
+        }
+        
+        int numPairDivBy60 = 0;
+        for(int i = 0; i < time.size(); ++i) {
+            int neededDuration = 60 - (time[i] % 60);
+            durationCounts[time[i] % 60]--;
+            numPairDivBy60 += durationCounts[neededDuration % 60];
+        }
+        return numPairDivBy60;
+    }
+};
