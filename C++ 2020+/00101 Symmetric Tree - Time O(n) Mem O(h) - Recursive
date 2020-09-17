@@ -1,0 +1,34 @@
+//Run Time: 4ms - 92.33%
+//Memory Usage: 16.7MB - 84.50%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetricHelper(TreeNode* tree1, TreeNode* tree2) {
+        //check nulls
+        if(tree1 == nullptr && tree2 == nullptr)
+            return true;
+        else if(tree1 == nullptr || tree2 == nullptr)
+            return false;
+        //check values
+        if(tree1->val != tree2->val)
+            return false;
+        return isSymmetricHelper(tree1->left, tree2->right) && isSymmetricHelper(tree1->right, tree2->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        //Recursive
+        if(root == nullptr) return true;
+        return isSymmetricHelper(root->left, root->right);
+    }
+};
