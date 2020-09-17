@@ -1,0 +1,39 @@
+//Run Time: 192ms - 70.82%
+//Memory Usage: 41.3MB - 50.31%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        //[1,3,2,2,5,2,3,7]
+        //value -> count
+        //1 => 1
+        //2 => 3
+        //3 => 2
+        //5 => 1
+        //7 => 7
+        //we can check scan until we find the larger value
+        //ex; check 1 and 2
+        //then check 2 and 3 etc
+        //Populate our hashmap
+        //value -> count
+        unordered_map<int, int> numCount;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numCount.find(nums[i]) == numCount.end())
+                numCount.emplace(nums[i], 0);
+            
+            numCount[nums[i]]++;
+        }
+        int longestSeq = 0;
+        for(auto it = numCount.begin(); it != numCount.end(); ++it) {
+            int curValue = it->first;
+            //Check +1/-1 value
+            int nextCount = (numCount.find(curValue+1) == numCount.end()) ? 0 : numCount[curValue+1];
+            int prevCount = (numCount.find(curValue-1) == numCount.end()) ? 0 : numCount[curValue-1];
+            //Skip over lone counts
+            if(nextCount == 0 && prevCount == 0) continue;
+            longestSeq = max(longestSeq, it->second + max(nextCount, prevCount));
+        }
+        return longestSeq;
+    }
+};
