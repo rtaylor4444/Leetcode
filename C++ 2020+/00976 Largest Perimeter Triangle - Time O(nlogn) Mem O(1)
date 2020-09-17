@@ -1,0 +1,30 @@
+//Run Time: 132ms - 24.75%
+//Memory Usage: 21.9MB - 45.42%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+bool MySort(int a, int b) {
+    return (a > b);
+}
+class Solution {
+public:
+    int largestPerimeter(vector<int>& A) {
+        //two of the same number + 1 smallers number
+        //can be diff amounts- must form a triangle
+        //should iterate through the larger numbers first
+        //two side lengths of a triangle is always greater than the third side. 
+        //If this is true for all three combinations of added side lengths, 
+        //then you will have a triangle.
+        sort(A.begin(), A.end(), MySort);
+        int side1 = A[0], side2 = A[1];
+        for(int i = 2; i < A.size(); ++i) {
+            int curSide = A[i];
+            //verify side1 - since it is the largest
+            if(side1 < curSide + side2)
+                return side1 + side2 + curSide;
+            
+            side1 = side2;
+            side2 = curSide;
+        }
+        return 0;
+    }
+};
