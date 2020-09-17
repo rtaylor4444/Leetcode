@@ -1,0 +1,46 @@
+//Run Time: 96ms - 90.65%
+//Memory Usage: 8.2MB - 99.17%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numEquivDominoPairs(vector<vector<int>>& dominoes) {
+        //one domino can be rotated to equal another one
+        //a == c and b == d || a == d and c == b
+        //a + b == c + d
+        //1 + 2 == 2 + 1
+        //2 + 3 == 4 + 1
+        //-----------------------------------
+        //1 * 2 == 2 * 1
+        //2 * 3 == 4 * 1
+        //1 * 9 == 3 * 3
+        //Brute Force by checking every domino against itself
+        //No plausible way to sort
+        //lookup up the dominos to speed up?
+        //we have domino [1,2]
+        //placed in hash(count) as [1,2] and [2,1]
+        //domino -> count?
+        //We have to make the dominos equal each other
+        //so [2,1] goes to [1,2] and [1,2] goes to [1,2]
+        //number of ways to select 2 from 
+        //get count of all dominos
+        vector<vector<int>> numEquivDom(10, vector<int>(10, 0));
+        for(int i = 0; i < dominoes.size(); ++i) {
+            int x = dominoes[i][0];
+            int y = dominoes[i][1];
+            //smaller numbers first
+            if(x > y) swap(x, y);
+            numEquivDom[x][y]++;
+        }
+        //calc all possible pairs
+        int totalPairs = 0;
+        for(int i = 1; i <= 9; ++i) {
+            for(int j = i; j <= 9; ++j) {
+                int curCount = numEquivDom[i][j];
+                //Use formula number of ways to select 2 from n
+                totalPairs += (curCount * (curCount - 1)) / 2;
+            }
+        }
+        return totalPairs;
+    }
+};
