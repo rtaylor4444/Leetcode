@@ -1,0 +1,24 @@
+//Run Time: 4ms - 57.21%
+//Memory Usage: 6.5MB - 22.73%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void backspaceString(string& src, string& dest) {
+        for(int i = 0; i < src.size(); ++i) {
+            if(src[i] == '#') {
+                if(!dest.empty()) dest.pop_back();
+            } 
+            else dest.push_back(src[i]);
+        }
+    }
+    bool backspaceCompare(string S, string T) {
+        //Stack
+        string newS, newT;
+        newS.reserve(S.size());
+        newT.reserve(T.size());
+        backspaceString(S, newS);
+        backspaceString(T, newT);
+        return (newS == newT);
+    }
+};
