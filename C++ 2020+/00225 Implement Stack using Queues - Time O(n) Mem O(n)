@@ -1,0 +1,60 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.9MB - 79.83%
+//Solved =)
+//Time O(n) Memory O(n)
+class MyStack {
+    int topElement;
+    queue<int> q1, q2;
+public:
+    /** Initialize your data structure here. */
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        topElement = x;
+        q1.push(x);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        if(!q1.empty()) {
+            //place elements in q2
+            int prevTop = topElement;
+            while(q1.size() > 1) {
+                //keep track of final element
+                topElement = q1.front();
+                q2.push(topElement);
+                q1.pop();
+            }
+            q1.pop();
+            return prevTop;
+        }
+        //place q2 element in q1
+        while(!q2.empty()) {
+            q1.push(q2.front());
+            q2.pop();
+        }
+        return pop();
+    }
+    
+    /** Get the top element. */
+    int top() {
+        return topElement;
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q1.empty() && q2.empty();
+    }
+};
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
