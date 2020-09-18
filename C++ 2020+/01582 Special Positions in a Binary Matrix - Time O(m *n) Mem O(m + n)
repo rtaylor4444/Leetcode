@@ -1,0 +1,27 @@
+//Run Time: 48ms - 72.23%
+//Memory Usage: 13.3MB - 25.10%
+//Solved =)
+//Time O(m * n) Memory O(n + m)
+class Solution {
+public:
+    int numSpecial(vector<vector<int>>& mat) {
+        //Calculate the number of 1s in each row and col
+        vector<int> num1Row(mat.size(), 0), num1Col(mat[0].size(), 0);
+        for(int i = 0; i < mat.size(); ++i) {
+            for(int j = 0; j < mat[0].size(); ++j) {
+                num1Row[i] += mat[i][j];
+                num1Col[j] += mat[i][j];
+            }
+        }
+        //check for 1s and see if they are the only one in that row and col
+        int specialPos = 0;
+        for(int i = 0; i < mat.size(); ++i) {
+            for(int j = 0; j < mat[0].size(); ++j) {
+                if(mat[i][j] != 1) continue;
+                if(num1Row[i] + num1Col[j] == 2)
+                    ++specialPos;
+            }
+        }
+        return specialPos;
+    }
+};
