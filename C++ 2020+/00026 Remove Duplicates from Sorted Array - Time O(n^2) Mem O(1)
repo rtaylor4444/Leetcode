@@ -1,0 +1,26 @@
+//Run Time: 780ms - 5.08%
+//Memory Usage: 14.1MB - 7.09%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        //*new length being current - num of dups
+        //*iterate through array backwards and shift each dup to the back
+        //when we find a dup shift it to the back
+        //[1,1,2]
+        int newLength = nums.size() - 1;
+        for(int i = newLength - 1; i >= 0; --i) {
+            if(nums[i] == nums[i+1]) {
+                int curIndex = i + 1;
+                //Swap until we reach the bounds of our new size
+                while(curIndex < newLength) {
+                    swap(nums[curIndex], nums[curIndex+1]);
+                    ++curIndex;
+                }
+                --newLength;
+            }
+        }
+        return newLength + 1;
+    }
+};
