@@ -1,0 +1,25 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 39.16%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string convertToBase7(int num) {
+        //one digit at a time
+        bool isNeg = false;
+        string base7;
+        //negative edge case - ensure our number is positive during conversion
+        if(num < 0) {
+            isNeg = true;
+            num *= -1;
+        }
+         do {
+            int remainder = (num % 7);
+            base7 += ('0' + remainder);
+            num /= 7;
+        } while(num);
+        if(isNeg) base7.push_back('-');
+        reverse(base7.begin(), base7.end());
+        return base7;
+    }
+};
