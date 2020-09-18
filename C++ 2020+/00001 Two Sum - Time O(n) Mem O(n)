@@ -1,0 +1,19 @@
+//Run Time: 12ms - 96.37%
+//Memory Usage: 10.3MB - 25.00%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> currentNums;
+        vector<int> ans;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(currentNums.find(target - nums[i]) != currentNums.end()) {
+                ans = {i, currentNums[target - nums[i]]};
+                break;
+            }
+            currentNums.emplace(nums[i], i);
+        }
+        return ans;
+    }
+};
