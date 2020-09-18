@@ -1,0 +1,24 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 35.27%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool checkRecord(string s) {
+        //No more than one absences
+        //No more than 2 consec lates
+        int numAbsent = 0;
+        int consecLate = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            //Absent
+            if(s[i] == 'A') ++numAbsent;
+            if(numAbsent > 1) return false;
+            
+            //Late
+            if(s[i] != 'L') consecLate = 0;
+            else ++consecLate;
+            if(consecLate > 2) return false;
+        }
+        return true;
+    }
+};
