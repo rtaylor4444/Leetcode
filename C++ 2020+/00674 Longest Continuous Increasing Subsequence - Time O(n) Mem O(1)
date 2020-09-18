@@ -1,0 +1,20 @@
+//Run Time: 20ms - 82.59%
+//Memory Usage: 11.2MB - 42.87%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findLengthOfLCIS(vector<int>& nums) {
+        //YOU MEAN SUBARRAY
+        if(nums.empty()) return 0;
+        int maxSize = 1, curSize = 1;
+        for(int i = 1; i < nums.size(); ++i) {
+            if(nums[i-1] < nums[i])
+                ++curSize;
+            else
+                curSize = 1;
+            maxSize = max(maxSize, curSize);
+        }
+        return maxSize;
+    }
+};
