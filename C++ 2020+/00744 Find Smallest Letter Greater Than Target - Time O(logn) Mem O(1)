@@ -1,0 +1,38 @@
+//Run Time: 28ms - 87.87%
+//Memory Usage: 16.1MB - 42.50%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    char nextGreatestLetter(vector<char>& letters, char target) {
+        //binary search
+        //how to do wrapping?
+        //z = 25 a = 0
+        //they differ by 1
+        //if neg add 26
+        //'a' - 'z' = -25 + 26 since neg = 1
+        int l = 0;
+        int r = letters.size() - 1;
+        //Dont find anything greater than target default to first index
+        char greatest = letters[0];
+        int closestDist = INT_MAX;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            
+            //Update next greatest letter
+            int curDist = letters[m] - target;
+            if(curDist > 0 && curDist < closestDist) {
+                greatest = letters[m];
+                //Exit Condition
+                if(curDist == 1) break;
+                closestDist = curDist;
+            }
+            
+            if(letters[m] <= target)
+                l = m + 1;
+            else
+                r = m - 1;
+        }
+        return greatest;
+    }
+};
