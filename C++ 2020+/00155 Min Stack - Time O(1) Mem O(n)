@@ -1,0 +1,50 @@
+//Run Time: 48ms - 60.30%
+//Memory Usage: 16.1MB - 53.72%
+//Solved =)
+//Time O(1) Memory O(n)
+class MinStack {
+    struct minData {
+        int val, min;
+        minData(int v, int m) {
+            val = v;
+            min = m;
+        }
+    };
+    stack<minData> minStack;
+    int curMin;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        curMin = INT_MAX;
+    }
+    
+    void push(int x) {
+        curMin = min(x, curMin); 
+        minStack.push(minData(x, curMin));
+    }
+    
+    void pop() {
+        minStack.pop();
+        if(minStack.empty())
+            curMin = INT_MAX;
+        else
+            curMin = minStack.top().min;
+    }
+    
+    int top() {
+        return minStack.top().val;
+    }
+    
+    int getMin() {
+        return curMin;
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
