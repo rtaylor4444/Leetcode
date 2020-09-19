@@ -1,0 +1,22 @@
+//Run Time: 20ms - 59.73%
+//Memory Usage: 10.3MB - 59.83%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool checkStraightLine(vector<vector<int>>& coordinates) {
+        //diff between points should all be the same dir
+        /* Constants of a line
+        A = y_2 - y_1
+        B = x_1 - x_2
+        C = -A*x_1 - B*y_1
+        */
+        int B = coordinates[0][0] - coordinates[1][0];
+        int A = coordinates[1][1] - coordinates[0][1];
+        int C = -A * coordinates[0][0] - B * coordinates[0][1];
+        for(int i = 0; i < coordinates.size(); ++i) {
+            if(A*coordinates[i][0] + B*coordinates[i][1] + C != 0) return false;
+        }
+        return true;
+    }
+};
