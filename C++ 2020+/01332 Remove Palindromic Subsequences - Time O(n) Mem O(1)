@@ -1,0 +1,17 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 92.66%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int removePalindromeSub(string s) {
+        if(s.empty()) return 0;
+        //Check if string is a palindrome
+        int l = 0, r = s.size() - 1;
+        while(l < r) {
+            if(s[l++] != s[r--])
+                return 2;
+        }
+        return 1;
+    }
+};
