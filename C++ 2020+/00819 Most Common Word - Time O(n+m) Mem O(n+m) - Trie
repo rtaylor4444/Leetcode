@@ -1,0 +1,80 @@
+//Run Time: 8ms - 93.45%
+//Memory Usage: 8.3MB - 27.11%
+//Solved =)
+//n = banned list
+//m = words in paragraph
+//Time O(n+m) Memory O(n+m)
+class Trie {
+    struct TrieNode {
+      TrieNode* children[26];
+      int freq;
+      TrieNode() {
+          freq = 0;
+          for(int i = 0; i < 26; ++i)
+              children[i] = nullptr;
+      }
+      ~TrieNode() {
+          for(int i = 0; i < 26; ++i)
+              delete children[i];
+      }
+    };
+    
+    TrieNode* root;
+    string mostFreq;
+    int maxFreq;
+public:
+    Trie() {
+        root = new TrieNode();
+        maxFreq = INT_MIN;
+    }
+    Trie(vector<string>& words, bool isBanned) {
+        root = new TrieNode();
+        maxFreq = INT_MIN;
+        for(int i = 0; i < words.size(); ++i)
+            putWord(words[i], isBanned);
+    }
+    ~Trie() {
+        delete root;
+    }
+    int putWord(string& word, bool isBanned) {
+        TrieNode* curNode = root;
+        string curWord;
+        curWord.reserve(word.size());
+        for(int i = 0; i < word.size(); ++i) {
+            //skip punctuation chars
+            if(word[i] == ',') break;
+            if(!isalpha(word[i])) continue;
+            char curChar = tolower(word[i]);
+            curWord += curChar;
+            if(!curNode->children[curChar-'a'])
+                curNode->children[curChar-'a'] = new TrieNode();
+            
+            curNode = curNode->children[curChar-'a'];
+        }
+        if(isBanned || curNode->freq < 0) return --curNode->freq;
+        //get our most freq word;
+        if(++curNode->freq > maxFreq) {
+            maxFreq = curNode->freq;
+            mostFreq = curWord;
+        }
+        return curNode->freq;
+    }
+    string getMostFrequent() {
+        return mostFreq;
+    }    
+};
+class Solution {
+public:
+    string mostCommonWord(string paragraph, vector<string>& banned) {
+        //put banned words inside of a trie
+        //extra words from paragraph via istringstream
+        //convert to lower case and rid punct then check if  in banned
+        Trie trie(banned, true);
+        istringstream stream(paragraph);
+        string curWord;
+        while(stream >> curWord) {
+            trie.putWord(curWord, false);
+        }
+        return trie.getMostFrequent();
+    }
+};
