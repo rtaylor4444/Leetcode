@@ -1,0 +1,30 @@
+//Run Time: 4ms - 92.49%
+//Memory Usage: 6.4MB - 69.24%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        //Merge the string together
+        string merged;
+        char carry = '0';
+        int p1 = a.size() - 1, p2 = b.size() - 1;
+        while(p1 >= 0 || p2 >= 0) {
+            char a1 = (p1 >= 0) ? a[p1] : '0';
+            char b2 = (p2 >= 0) ? b[p2] : '0';
+            //char res = carry ^ a1 ^ b2;
+            //cout << "carry: " << carry << " chars: " << a1 << " - " << b2 << endl;
+            //cout << "result: " << res << endl;
+            merged.push_back(carry ^ a1 ^ b2);
+            //Calc carry
+            if((a1 & b2) == '1') carry = '1';
+            else if ((a1 | b2) == '0') carry = '0';
+            --p1;
+            --p2;
+        }
+        //If we still have a carry add it to our results
+        if(carry == '1') merged.push_back('1');
+        reverse(merged.begin(), merged.end());
+        return merged;
+    }
+};
