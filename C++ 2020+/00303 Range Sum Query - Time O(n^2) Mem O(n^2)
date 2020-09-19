@@ -1,0 +1,35 @@
+//Run Time: 712ms - 5.02%%
+//Memory Usage: 518MB - 5.08%
+//Unoptimal Solution - Memory/Time needs improvement
+//Time O(n^2) Memory O(n^2)
+class NumArray {
+    vector<vector<int>> dp;
+public:
+    NumArray(vector<int>& nums) {
+        //i = start, j = end
+        dp = vector<vector<int>>(nums.size(), vector<int>(nums.size(), 0));
+        int curSum = 0;
+        //Starting row
+        for(int i = 0; i < nums.size(); ++i) {
+            curSum += nums[i];
+            dp[0][i] = curSum;
+        }
+        for(int i = 1; i < nums.size(); ++i) {
+            for(int j = i; j < nums.size(); ++j) {
+                dp[i][j] = dp[i-1][j] - nums[i-1];
+            }
+        }
+    }
+    
+    //Time O(1)
+    int sumRange(int i, int j) {
+        //i,j => sum
+        return dp[i][j];
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * int param_1 = obj->sumRange(i,j);
+ */
