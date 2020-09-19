@@ -1,0 +1,24 @@
+//Run Time: 64ms - 59.13%
+//Memory Usage: 27.4MB - 90.30%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> addToArrayForm(vector<int>& A, int K) {
+        vector<int> newA;
+        newA.reserve(A.size() + 1);
+        int curIndex = A.size() - 1;
+        int carry = 0;
+        while(K || curIndex >= 0) {
+            int curArrayNum = (curIndex >= 0) ? A[curIndex--] : 0;
+            int digit = (K % 10) + curArrayNum + carry;
+            if(digit > 9) carry = 1;
+            else carry = 0;
+            newA.push_back(digit % 10);
+            K /= 10;        
+        }
+        if(carry) newA.push_back(1);
+        reverse(newA.begin(), newA.end());
+        return newA;
+    }
+};
