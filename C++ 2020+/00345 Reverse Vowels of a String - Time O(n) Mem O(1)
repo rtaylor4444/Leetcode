@@ -1,0 +1,24 @@
+//Run Time: 28ms - 43.14%
+//Memory Usage: 8.2MB - 66.49%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string reverseVowels(string s) {
+        unordered_set<char> vowels = {'a', 'e', 'i', 'o', 'u'};
+        int l = 0;
+        int r = s.size() - 1;
+        while(l < r) {
+            //find vowel
+            while(l < r && vowels.find(tolower(s[l])) == vowels.end())
+                ++l;
+            while(l < r && vowels.find(tolower(s[r])) == vowels.end())
+                --r;
+            if(r <= l) break;
+            swap(s[l], s[r]);
+            ++l;
+            --r;
+        }
+        return s;
+    }
+};
