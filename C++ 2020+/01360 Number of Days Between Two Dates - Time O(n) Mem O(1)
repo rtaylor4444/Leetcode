@@ -1,0 +1,33 @@
+//Run Time: 4ms - 18.95%
+//Memory Usage: 5.9MB - 75.56%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getDaysFromYear(int year) {
+        //convert years to days 1 year = 365 days +1 if leap
+        int days = 0;
+        for(int i = 0; i < year; ++i) {
+            //1 to account for the diff of 1971
+            if(i % 4 == 1) days += 366;
+            else days += 365;
+        }
+        return days;
+    }
+    int daysBetweenDates(string date1, string date2) {
+        //vector<int> daysInMonth = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        vector<int> daysInMonth = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
+        //extract info
+        int year1 = stoi(date1.substr(0, 4)), year2 = stoi(date2.substr(0, 4));
+        int month1 = stoi(date1.substr(5, 2)), month2 = stoi(date2.substr(5, 2));
+        int day1 = stoi(date1.substr(8, 2)), day2 = stoi(date2.substr(8, 2));
+        //convert all to days
+        int totalDays1 = getDaysFromYear(year1 - 1971) + daysInMonth[month1-1] + day1;
+        int totalDays2 = getDaysFromYear(year2 - 1971) + daysInMonth[month2-1] + day2;
+        //account for leap year
+        //current year is a leap and month is greater than feb
+        if(year1 % 4 == 0 && year1 != 2100 && month1 > 2) totalDays1++;
+        if(year2 % 4 == 0 && year2 != 2100 && month2 > 2) totalDays2++;
+        return abs(totalDays1 - totalDays2);
+    }
+};
