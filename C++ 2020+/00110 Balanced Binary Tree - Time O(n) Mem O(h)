@@ -1,0 +1,33 @@
+//Run Time: 24ms - 37.47%
+//Memory Usage: 21.7MB - 74.73%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    bool isBalancedNode;
+public:
+    //return hieght at end of the tree
+    int getHeights(TreeNode* node, int curHeight) {
+        if(node == nullptr || !isBalancedNode) return curHeight;
+        int leftHeight = getHeights(node->left, curHeight+1);
+        int rightHeight = getHeights(node->right, curHeight+1);
+        if(isBalancedNode) isBalancedNode = (abs(leftHeight-rightHeight) < 2);
+        return max(leftHeight, rightHeight);
+    }
+    bool isBalanced(TreeNode* root) {
+        //get min and max height then compare the two
+        isBalancedNode = true;
+        getHeights(root, 0);
+        return isBalancedNode;
+    }
+};
