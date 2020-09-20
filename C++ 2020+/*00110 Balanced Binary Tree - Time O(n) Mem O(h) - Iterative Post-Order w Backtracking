@@ -1,0 +1,72 @@
+//Run Time: 20ms - 63.95%
+//Memory Usage: 22MB - 19.29%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        //get min and max height then compare the two
+        //Iterative Post-Order
+        if(root == nullptr) return true;
+        int curHeight = 0;
+        TreeNode* curNode = root;
+        unordered_map<TreeNode*, int> maxHeights;
+        stack<pair<TreeNode*, int>> postOrder;
+        while(curNode || !postOrder.empty()) {
+            //Populate the Stack
+            //right->root->left
+            while(curNode) {
+                if(curNode->right) postOrder.push({curNode->right, curHeight+1});
+                postOrder.push({curNode, curHeight});
+                curNode = curNode->left;
+                ++curHeight;
+            }
+            
+            curNode = postOrder.top().first;
+            curHeight = postOrder.top().second;
+            postOrder.pop();
+            
+            //Fix the stack - check if the next node is our right
+            TreeNode* nextNode = (!postOrder.empty()) ? postOrder.top().first : nullptr;
+            int nextHeight = (!postOrder.empty()) ? postOrder.top().second : -1;
+            if(nextNode && curNode->right == nextNode) {
+                //pop off and set to right for processing and push root back on stack
+                postOrder.pop();
+                postOrder.push({curNode, curHeight});
+                curNode = nextNode;
+                curHeight = nextHeight;
+            }
+            //Process our node as normal
+            else {
+                //cout << curNode->val << " -> " << curHeight << endl;
+                //Check and see if we are a leaf node
+                if(curNode->left == nullptr && curNode->right == nullptr) {
+                    //Just place curHeight inside of the hash
+                    maxHeights.emplace(curNode, curHeight);
+                }
+                else {
+                    //otherwise check left and right max heights
+                    int leftHeight = (curNode->left) ? maxHeights[curNode->left] : curHeight;
+                    int rightHeight = (curNode->right) ? maxHeights[curNode->right] : curHeight;
+                    //cout << "left: " << leftHeight << " right: " << rightHeight << endl;
+                    //if left and right subtrees diff in hieght return false
+                    if(abs(leftHeight-rightHeight) > 1) return false;
+                    maxHeights.emplace(curNode, max(leftHeight, rightHeight));
+                }
+                curNode = nullptr;
+            }
+        }
+        return true;
+    }
+};
