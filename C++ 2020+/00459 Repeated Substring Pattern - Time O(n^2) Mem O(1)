@@ -1,0 +1,33 @@
+//Run Time: 580ms - 9.37%
+//Memory Usage: 8.2MB - 87.17%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        //Brute Force check every substring until we get a match
+        //"abab"
+        //i = 0
+        //j = 1
+        //k = 1
+        
+        for(int i = 0; i < s.size() - 1; ++i) {
+            int curLength = i + 1;
+            bool isMatch = true;
+            //cout << curLength << endl;
+            for(int j = curLength; j < s.size(); j += curLength) {
+                //check strings
+                if(!isMatch) break;
+                for(int k = 0; k < curLength; ++k) {
+                    //cout << s[k] << " " << s[j+k] << endl;
+                    if(s[k] != s[j+k]) {
+                        isMatch = false;
+                        break;
+                    }
+                }
+            } 
+            if(isMatch) return true;
+        }
+        return false;
+    }
+};
