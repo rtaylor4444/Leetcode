@@ -1,0 +1,21 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 9.75%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    string dayOfTheWeek(int day, int month, int year) {
+        //Zellers congruence
+        vector<string> weekdays = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday",
+                               "Thursday", "Friday"};
+        if(month < 3) {
+            month += 12;
+            year -= 1;
+        }
+        int back = year%100;
+        int cent = year/100;
+        //cout << day << " " << month << " " << back << " " << cent << endl; 
+        int zeller = (day + (13*(month+1))/5 + back + back/4 + cent/4 + 5* cent) % 7;
+        return weekdays[zeller];
+    }
+};
