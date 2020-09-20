@@ -1,0 +1,31 @@
+//Run Time: 24ms - 99.00%
+//Memory Usage: 31.7MB - 50.62%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+        //Dynamic Programming - removed data structure
+        //[1,7,3,6,5,6]
+        //total sum: 28
+        //right sums [27,20,17,11,6,0]
+        //left sums  [0,1,8,11,18,23]
+        //Calc total sum
+        int totalSum = 0;
+        for(int i = nums.size() - 1; i >= 0; --i) {
+            totalSum += nums[i];
+        }
+        //Check if left = right
+        int curSum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            //calc right
+            totalSum -= nums[i];
+            if(curSum == totalSum)
+                return i;
+            //update left
+            curSum += nums[i];
+            
+        }
+        return -1;
+    }
+};
