@@ -1,0 +1,12 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 84.62%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        //00000100 &
+        //00000011
+        return n > 0 && ((n & (n-1)) == 0);
+    }
+};
