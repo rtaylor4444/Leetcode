@@ -1,0 +1,43 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7MB - 76.58%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int findSecondMinimumValue(TreeNode* root) {
+        //Go right until we find a larger value
+        //*No, because left value could be smaller
+        //Traverse the whole tree and do min() for every value greater than 
+        //minimumVal
+        if(root == nullptr) return -1;
+        int minimumVal = root->val, secMinVal = -1;
+        TreeNode* curNode;
+        stack<TreeNode*> preOrder;
+        preOrder.push(root);
+        
+        while(!preOrder.empty()) {
+            curNode = preOrder.top();
+            preOrder.pop();
+            
+            if(curNode->val > minimumVal) {
+                if(secMinVal == -1) secMinVal = curNode->val;
+                else secMinVal = min(secMinVal, curNode->val);
+            }
+            
+            if(curNode->left) preOrder.push(curNode->left);
+            if(curNode->right) preOrder.push(curNode->right);
+        }
+        return secMinVal;
+    }
+};
