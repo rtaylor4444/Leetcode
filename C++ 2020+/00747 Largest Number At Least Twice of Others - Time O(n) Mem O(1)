@@ -1,0 +1,23 @@
+//Run Time: 4ms - 84.91%
+//Memory Usage: 11.2MB - 91.64%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int dominantIndex(vector<int>& nums) {
+        int maxNum = INT_MIN, secondMaxNum = INT_MIN, maxIndex = -1;
+        for(int i = 0; i < nums.size(); ++i) {
+            //Set maximum and 2nd max number
+            if(nums[i] > maxNum) {
+                secondMaxNum = maxNum;
+                maxIndex = i;
+                maxNum = nums[i];
+            }
+            //Check if its only greater than 2nd max
+            else if(nums[i] > secondMaxNum) {
+                secondMaxNum = nums[i];
+            }
+        }
+        return (maxNum/2 >= secondMaxNum) ? maxIndex : -1;
+    }
+};
