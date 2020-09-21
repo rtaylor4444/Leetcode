@@ -1,0 +1,44 @@
+//Run Time: 36ms - 53.94%
+//Memory Usage: 29.9MB - 8.22%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    int maxCount;
+public:
+    void findModeHelper(TreeNode* node, unordered_map<int, int>& count) {
+        if(node == nullptr) return;
+        
+        if(count.find(node->val) == count.end())
+            count.emplace(node->val, 0);
+        
+        maxCount = max(maxCount, ++count[node->val]);
+        findModeHelper(node->left, count);
+        findModeHelper(node->right, count);
+    }
+    vector<int> findMode(TreeNode* root) {
+        //Duplicates allowed and bst
+        //left = less than or equal to
+        //right = greater keys
+        maxCount = 0;
+        unordered_map<int, int> valCount;
+        vector<int> ans;
+        
+        findModeHelper(root, valCount);
+        for(auto it = valCount.begin(); it != valCount.end(); ++it) {
+            if(it->second == maxCount)
+                ans.push_back(it->first);
+        }
+        return ans;
+    }
+};
