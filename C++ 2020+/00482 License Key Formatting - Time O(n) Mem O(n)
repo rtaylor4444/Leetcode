@@ -1,0 +1,22 @@
+//Run Time: 32ms - 56.44%
+//Memory Usage: 8.2MB - 86.57%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string licenseKeyFormatting(string S, int K) {
+        //copy into new string until a dash
+        int numChars = 0;
+        string newString = "";
+        for(int i = S.size() - 1; i >= 0; --i) {
+            if(S[i] == '-') continue;
+            newString += (isalpha(S[i])) ? toupper(S[i]) : S[i];
+            if(++numChars % K == 0) newString += '-';
+        }
+        //Remove extra dash
+        if(!newString.empty() && newString[newString.size()-1] == '-') 
+            newString.pop_back();
+        reverse(newString.begin(), newString.end());
+        return newString;
+    }
+};
