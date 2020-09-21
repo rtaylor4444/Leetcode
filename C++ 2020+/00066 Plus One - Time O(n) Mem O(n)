@@ -1,0 +1,20 @@
+//Run Time: 4ms - 59.36%
+//Memory Usage: 8.8MB - 52.34%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int carry = 1;
+        vector<int> newDigits;
+        newDigits.reserve(digits.size());
+        for(int i = digits.size() - 1; i >= 0; --i) {
+            int curNum = digits[i] + carry;
+            newDigits.push_back(curNum % 10);
+            carry = curNum / 10;
+        }
+        if(carry) newDigits.push_back(carry);
+        reverse(newDigits.begin(), newDigits.end());
+        return newDigits;
+    }
+};
