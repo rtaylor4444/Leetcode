@@ -1,0 +1,27 @@
+//Run Time: 4ms - 89.52%
+//Memory Usage: 8.5MB - 50.39%
+//Unoptimal Solution - Memory/Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int sumOddLengthSubarrays(vector<int>& arr) {
+        //Dynamic Programming
+        //[1,4,2,5,3]
+        //[0,1,5,7,12,15]
+        //check 1 3 5 ..etc
+        int totalSum = 0;
+        //Calc Single element arrays and build dp
+        vector<int> dp(arr.size()+1, 0);
+        for(int i = 0; i < arr.size(); ++i) {
+            totalSum += arr[i];
+            dp[i+1] = totalSum;
+        }
+        //Get all other lengths
+        for(int i = 2; i < arr.size(); i+=2) {
+            for(int j = 0; (j + i) < arr.size(); ++j) {
+                totalSum += dp[j+i+1] - dp[j];
+            }
+        }
+        return totalSum;
+    }
+};
