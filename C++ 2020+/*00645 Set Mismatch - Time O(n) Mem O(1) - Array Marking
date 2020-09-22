@@ -1,0 +1,25 @@
+//Run Time: 60ms - 84.84%
+//Memory Usage: 8.2MB - 90.11%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> findErrorNums(vector<int>& nums) {
+        //n = array size
+        //dup found via set
+        //one that isnt in set would be the missing one
+        //completed 2 loops - wish I had math
+        if(nums.size() < 2) return {};
+        int expectedSum = 0, totalSum = 0, dupNum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            expectedSum += (1+i);
+            int curNum = abs(nums[i])-1;
+            totalSum += curNum+1;
+            if(nums[curNum] < 0) {
+                dupNum = curNum+1;
+            }
+            nums[curNum] *= -1;
+        }
+        return {dupNum, expectedSum - (totalSum - dupNum)};
+    }
+};
