@@ -1,0 +1,16 @@
+//Run Time: 16ms - 13.08%
+//Memory Usage: 6MB - 27.11%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int arrangeCoins(int n) {
+        if(n == 0) return 0;
+        int i = 0;
+        while(n > i) {
+            ++i;
+            n -= i;
+        }
+        return i;
+    }
+};
