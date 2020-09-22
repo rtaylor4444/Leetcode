@@ -1,0 +1,38 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.3MB - 62.50%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^3) Memory O(1)
+class Solution {
+public:
+    bool isMatch(int i, int j, int m, vector<int>& arr) {
+        for(int l = 0; l < m; ++l) {
+            if(arr[i+l] != arr[j+l]) {
+                return false;
+            }
+        }
+        return true;
+    } 
+    bool containsPattern(vector<int>& arr, int m, int k) {
+        //Check all subarrays against the array
+        //[1,2,1,2,1,1,1,3]
+        //[1,2], [2,1], [1,1], [1,3]
+        //set to ensure we dont recheck the same patterns
+        //Do math to ensure its possible to match enough patterns
+        //need at least m * k space for pattern matching
+        //*make sure pattern is consec
+        int spaceNeeded = m * k;
+        if(spaceNeeded > arr.size()) return false;
+        for(int i = 0; i+spaceNeeded <= arr.size(); ++i) {
+            int timesRepeated = 1;
+            for(int j = (i + m); j < arr.size(); j+=m) {
+                //Check Pattern
+                //cout << "checking i: " << i << " j: " << j << endl;
+                if(!isMatch(i, j, m, arr)) break;
+                //cout << "found pattern " << ++timesRepeated << " times" << endl;
+                ++timesRepeated;
+            }
+            if(timesRepeated >= k) return true;
+        }
+        return false;
+    }
+};
