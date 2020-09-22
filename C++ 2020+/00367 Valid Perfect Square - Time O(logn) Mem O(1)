@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 14.49%
+//Unoptimal Solution - Memory needs improvement
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    bool isPerfectSquare(int num) {
+        //binary search values 1-n
+        int l = 1, r = num;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            float curNum = (float)num / (float)m;
+            if((float)m == curNum)
+                return true;
+            
+            if(m > curNum)
+                r = m - 1;
+            else
+                l = m + 1;
+        }
+        return false;
+    }
+};
