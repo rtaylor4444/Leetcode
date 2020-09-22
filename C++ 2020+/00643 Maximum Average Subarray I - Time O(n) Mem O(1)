@@ -1,0 +1,22 @@
+//Run Time: 296ms - 72.88%
+//Memory Usage: 77.7MB - 70.59%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    double findMaxAverage(vector<int>& nums, int k) {
+        //check all subarrays see which one has the highest sum = avg
+        //[1,12,-5,-6,50,3]
+        //[1,12,-5,-6] = 2
+        //[12,-5,-6,50] = 51
+        //Sliding Window keep track of sums of the past k numbers
+        //once we pass k we deduct numbers
+        int maxSum = INT_MIN, curSum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            curSum += nums[i];
+            if(i >= k) curSum -= nums[i-k];
+            if(i >= k-1) maxSum = max(maxSum, curSum);
+        }
+        return (double)maxSum / k;
+    }
+};
