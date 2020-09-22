@@ -1,0 +1,17 @@
+//Run Time: 28ms - 39.27%
+//Memory Usage: 5.8MB - 95.35%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool isPowerOfThree(int n) {
+        //00000011 = 3
+        //00001001 = 9
+        //00011011 = 27
+        //01010001 = 81
+        //Mod maximum power by the number - only works
+        //if the base is prime
+        if(n < 0) return false; 
+        return ((n & 1) && (1162261467 % n == 0));
+    }
+};
