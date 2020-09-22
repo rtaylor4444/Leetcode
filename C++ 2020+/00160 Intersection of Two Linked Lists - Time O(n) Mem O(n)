@@ -1,0 +1,36 @@
+//Run Time: 68ms - 35.21%
+//Memory Usage: 17.7MB - 16.25%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        //Loop through one of them and put nodes in a set
+        //Loop through second head checking nodes looking for a match
+        //O(1)
+        //Loop through to the end, connect end with one of the heads
+        //Keep track of this connection to break it after
+        unordered_set<ListNode*> seenNodes;
+        ListNode* curNode = headA;
+        while(curNode) {
+            seenNodes.emplace(curNode);
+            curNode = curNode->next;
+        }
+        curNode = headB;
+        while(curNode) {
+            if(seenNodes.find(curNode) != seenNodes.end())
+                return curNode;
+            
+            curNode = curNode->next;
+        }
+        return nullptr;
+    }
+};
