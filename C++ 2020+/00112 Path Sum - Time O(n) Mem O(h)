@@ -1,0 +1,40 @@
+//Run Time: 20ms - 37.79%
+//Memory Usage: 21.5MB - 7.84%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        //Iterative
+        if(root == nullptr) return false;
+        TreeNode* curNode;
+        int curSum;
+        stack<pair<TreeNode*, int>> preOrder;
+        preOrder.push({root, root->val});
+        
+        while(!preOrder.empty()) {
+            curNode = preOrder.top().first;
+            curSum = preOrder.top().second;
+            preOrder.pop();
+            
+            if(curNode->left == nullptr && curNode->right == nullptr) {
+                if(curSum == sum) return true;
+            }
+            
+            if(curNode->left) preOrder.push({curNode->left, curNode->left->val + curSum});
+            if(curNode->right) preOrder.push({curNode->right, curNode->right->val + curSum});
+        }
+        return false;
+    }
+};
