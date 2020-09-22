@@ -1,0 +1,25 @@
+//Run Time: 8ms - 95.86%
+//Memory Usage: 7.7MB - 68.99%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //Fast-Slow Pointer
+        ListNode *slow = head, *fast = head;
+        while(fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if(fast == slow) return true;
+        }
+        return false;
+    }
+};
