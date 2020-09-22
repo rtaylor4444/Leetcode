@@ -1,0 +1,18 @@
+//Run Time: 4ms - 60.96%
+//Memory Usage: 6.2MB - 14.02%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t newN = 0, it = UINT_MAX;
+        //Use int max as a mask to iterate through all bits
+        while(it) {
+            newN <<= 1;
+            newN |= (n & 1);
+            n >>= 1;
+            it >>= 1;
+        }
+        return newN;
+    }
+};
