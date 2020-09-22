@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 77.00%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    vector<int> numMovesStones(int a, int b, int c) {
+        //max moves we want to pick stone furthest from the others
+        //*we really only need to change pos of most 2 stones
+        //*min moves 2 or lower
+        //*b is our stationary stone
+        //* we can only achieve 0 move if stones are 2 away from each other
+        
+        //Maximum Distance
+        //get two furthest stones
+        //-/+1 to account of the stone in tje middle
+        int maxStone = max(a, max(b, c))-1;
+        int minStone = min(a, min(b, c))+1;
+        //Minimum Distance
+        //Get distance to our closest stone
+        int aToComp = min(abs(a - b), abs(a - c))-1;
+        int bToComp = min(abs(b - a), abs(b - c))-1;
+        int cToComp = min(abs(c - a), abs(c - b))-1;
+        //Minimum moves is always 2 since we can simply place stones
+        //next to each other
+        int minMoves = 2;
+        //If there are 0 distances we dont need to move that stone
+        if(aToComp == 0 && bToComp == 0 && cToComp == 0) minMoves = 0;
+        //If any stone distance differs less than 2 we only need 1 move
+        else if(aToComp < 2 || bToComp < 2 || cToComp < 2) minMoves = 1;
+        return {minMoves, maxStone - minStone};
+    }
+};
