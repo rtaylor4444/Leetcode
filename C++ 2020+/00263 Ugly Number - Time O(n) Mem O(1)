@@ -1,0 +1,22 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.8MB - 91.98%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isUgly(int num) {
+        //check if num % 2 3 or 5?
+        //every step divide number by 2,3,5
+        //if at any step we cannot perform those op
+        //we are not an ugly number
+        if(num == 0) return false;
+        while(num != 1) {
+            //cout << num << endl;
+            if(num % 2 == 0) num /= 2;
+            else if(num % 3 == 0) num /= 3;
+            else if(num % 5 == 0) num /= 5;
+            else return false;
+        }
+        return true;
+    }
+};
