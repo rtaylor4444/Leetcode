@@ -1,0 +1,56 @@
+//Run Time: 52ms - 72.16%
+//Memory Usage: 14.6MB - 79.10%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        //O(1)
+        //Loop through to the end, connect end with one of the heads
+        //Keep track of this connection to break it after
+        if(headA == nullptr || headB == nullptr) return nullptr;
+        
+        //Get tail node
+        ListNode* curNode = headA, *tailNode;
+        while(curNode->next) {
+            curNode = curNode->next;
+        }
+        tailNode = curNode;
+        //Link tail node
+        tailNode->next = headA;
+        //Fast/Slow Pointers
+        curNode = headB;
+        ListNode* fast = headB;
+        while(fast && fast->next) {
+            curNode = curNode->next;
+            fast = fast->next->next;
+            if(fast == curNode)
+                break;
+        }
+        //Verify that both lists are linked (no nulls)
+        if(fast == nullptr || fast->next == nullptr) {
+            //Break tail link
+            tailNode->next = nullptr;
+            return nullptr;
+        }
+        //fast node has traveled 2x length
+        //curNode only 1, so place curNode at beginning
+        //iterate and they both will meet at intersection point
+        curNode = headB;
+        while(curNode != fast) {
+            fast = fast->next;
+            curNode = curNode->next;
+        }
+        //Break tail link
+        tailNode->next = nullptr;
+        return curNode;
+    }
+};
