@@ -1,0 +1,22 @@
+//Run Time: 16ms - 71.40%
+//Memory Usage: 8.2MB - 16.85%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        unordered_map<char, char> mapping;
+        unordered_set<char> usedChars;
+        for(int i = 0; i < s.size(); ++i) {
+            if(mapping.find(s[i]) == mapping.end()) {
+                //Ensure we are not trying to use a used char
+                if(usedChars.find(t[i]) != usedChars.end()) return false;
+                mapping[s[i]] = t[i];
+                usedChars.emplace(t[i]);
+            }
+            //Ensure its the same character
+            else if(mapping[s[i]] != t[i]) return false;   
+        }
+        return true;
+    }
+};
