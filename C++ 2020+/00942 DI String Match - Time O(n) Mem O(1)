@@ -1,0 +1,21 @@
+//Run Time: 8ms - 89.85%
+//Memory Usage: 8.5MB - 90.89%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> diStringMatch(string S) {
+        //AD HOC
+        //No specific algo basically keep track of numbers
+        //that arent used and try to scop out a pattern before coding
+        int hi = S.size();
+        int lo = 0;
+        vector<int> A(S.size()+1, 0);
+        for(int i = 0; i < S.size(); ++i) {
+            if(S[i] == 'I') A[i] = lo++;
+            else A[i] = hi--;
+        }
+        A[S.size()] = lo;
+        return A;
+    }
+};
