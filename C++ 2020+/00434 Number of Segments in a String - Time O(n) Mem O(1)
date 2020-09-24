@@ -1,0 +1,14 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 85.55%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int countSegments(string s) {
+        int numSegments = 0;
+        istringstream stream(s);
+        string curWord;
+        while(stream >> curWord) ++numSegments;
+        return numSegments;
+    }
+};
