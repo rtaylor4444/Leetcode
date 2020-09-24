@@ -1,0 +1,21 @@
+//Run Time: 48ms - 86.52%
+//Memory Usage: 16.3MB - 91.87%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        //Sliding Window
+        // * - - *
+        //[1,2,3,1] K=3
+        //they have to be the same value
+        //Use a set a remove the numbers that are more than k dist apart
+        unordered_set<int> seenNums;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(seenNums.find(nums[i]) != seenNums.end()) return true;
+            seenNums.emplace(nums[i]);
+            if(i - k >= 0) seenNums.erase(nums[i-k]);
+        }
+        return false;
+    }
+};
