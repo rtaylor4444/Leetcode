@@ -1,0 +1,65 @@
+//Run Time: 28ms - 85.90%
+//Memory Usage: 14.2MB - 65.75%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        //ignore 4 - length is odd
+        //check 2 to 3
+        //check 3 to 2
+        //check 1 to 1
+        //Halfway reverse list?
+        //then reconstruct it back?
+        if(head == nullptr || head->next == nullptr) return true;
+        //Get length of list
+        int length = 0;
+        ListNode* curNode = head;
+        while(curNode) {
+            ++length;
+            curNode = curNode->next;
+        }
+        //Reverse half of the linked list
+        ListNode tempHead;
+        curNode = head;
+        for(int i = 0; i < length/2; ++i) {
+            ListNode* next = curNode->next;
+            curNode->next = tempHead.next;
+            tempHead.next = curNode;
+            curNode = next;
+        }
+        //cout << tempHead.next->val << " vs " << curNode->val << endl;
+        //Check for palindrome
+        ListNode* p1 = tempHead.next;
+        ListNode* p2 = (length % 2) ? curNode->next : curNode;
+        //cout << p1->val << " vs " << p2->val << endl;
+        bool isPalindrome = true;
+        while(p1 && p2) {
+            if(p1->val != p2->val) {
+                isPalindrome = false;
+                break;
+            }
+            p1 = p1->next;
+            p2 = p2->next;
+        }
+        //Reconstruct the linked list
+        for(int i = 0; i < length/2; ++i) {
+            ListNode* prev = tempHead.next;
+            tempHead.next = prev->next;
+            prev->next = curNode;
+            curNode = prev;
+        }
+        //cout << curNode->val << endl;
+        return isPalindrome;
+    }
+};
