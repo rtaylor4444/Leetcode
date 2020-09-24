@@ -1,0 +1,27 @@
+//Run Time: 4ms - 36.08%
+//Memory Usage: 6.6MB - 5.22%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool isValid(string s) {
+        //push back open paren, check closed
+        stack<char> prevChars;
+        //closed -> open
+        unordered_map<char, char> parenthesesMap = { 
+            {'}', '{'},
+            {']', '['}, 
+            {')', '('}
+        };
+        for(int i = 0; i < s.size(); ++i) {
+            char prevChar = (prevChars.empty()) ? ' ' : prevChars.top();
+            //check closed to open
+            if(parenthesesMap[s[i]] == prevChar) {
+                prevChars.pop();
+                continue;
+            }
+            prevChars.push(s[i]);
+        }
+        return prevChars.empty();
+    }
+};
