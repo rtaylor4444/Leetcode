@@ -1,0 +1,40 @@
+//Run Time: 4ms - 55.24%
+//Memory Usage: 6.5MB - 45.54%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isLongPressedName(string name, string typed) {
+        //Two Pointers
+        //loop through both string at the same time
+        //check typed against name, and see if it has the same chars
+        //inn the same order
+        //name: alex
+        //type: aaleex
+        //*scan on typed until we come across a diff letter
+        //*advance pointer on name, repeat above
+        //*return false if non match
+        //*return true if we scan both arrays
+        //testcase: alex aaleexa
+        // "vtkgn" "vttkgnn"
+        int p1 = 0, p2 = 0;
+        while(p1 < name.size() && p2 < typed.size()) {
+            if(name[p1] != typed[p2]) return false;
+            char prevChar = name[p1];
+            //Advance pointers to the next diff char
+            int p1Count = 0, p2Count = 0;
+            while(p2 < typed.size() && prevChar == typed[p2]) {
+                ++p2Count;
+                ++p2;
+            }
+            while(p1 < name.size() && prevChar == name[p1]) {
+                ++p1Count;
+                ++p1;
+            }
+            //typed must contain more or even chars as the name
+            if(p2Count < p1Count) return false;
+        }
+        //cout << "finished iteration" << endl;
+        return (p1 == name.size() && p2 == typed.size());
+    }
+};
