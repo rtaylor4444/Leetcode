@@ -1,0 +1,23 @@
+//Run Time: 8ms - 99.23%
+//Memory Usage: 7.4MB - 55.84%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        //Two Pointers
+        int l = 0;
+        int r = s.size() - 1;
+        while(l < r) {
+            //Get valid chars including digits
+            while(l < r && (!isalpha(s[l]) && !isdigit(s[l]))) ++l;
+            while(l < r && (!isalpha(s[r]) && !isdigit(s[r]))) --r;
+            if(r <= l) break;
+            //cout << s[l] << " " << s[r] << endl;
+            if(tolower(s[l]) != tolower(s[r])) return false;
+            ++l;
+            --r;
+        }
+        return true;
+    }
+};
