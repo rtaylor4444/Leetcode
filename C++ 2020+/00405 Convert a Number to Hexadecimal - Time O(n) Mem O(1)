@@ -1,0 +1,22 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.2MB - 5.20%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string toHex(int num) {
+        if(num == 0) return "0";
+        vector<char> numToHex = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a'
+                                ,'b', 'c', 'd', 'e', 'f'};
+        string hexString;
+        //Convert two comp to unsigned form
+        unsigned int uNum = (num < 0) ? UINT_MAX + num + 1 : (unsigned int)num;
+        while(uNum) {
+            int digit = uNum % 16;
+            hexString.push_back(numToHex[digit]);
+            uNum /= 16;
+        }
+        reverse(hexString.begin(), hexString.end());
+        return hexString;
+    }
+};
