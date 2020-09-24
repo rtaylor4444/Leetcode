@@ -1,0 +1,35 @@
+//Run Time: 4ms - 21.18%
+//Memory Usage: 6.4MB - 77.85%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        //letter -> word
+        //*if we find a mismatch return false
+        //*if we run out of words or chars in aptter return false;
+        vector<string> letterWordMapping(26, "");
+        unordered_set<string> usedWords;
+        istringstream stream(s);
+        string curWord;
+        int curIndex = 0;
+        //BUG - smae char cant map to same word
+        while(stream >> curWord) {
+            //If there are still words and no more chars in pattern 
+            //we cannot match
+            if(curIndex == pattern.size()) return false;
+            
+            if(letterWordMapping[pattern[curIndex] - 'a'].empty()) {
+                if(usedWords.find(curWord) != usedWords.end()) return false;
+                letterWordMapping[pattern[curIndex] - 'a'] = curWord;
+                usedWords.emplace(curWord);
+            }
+            else if(letterWordMapping[pattern[curIndex] - 'a'] != curWord)
+                return false;
+            
+            ++curIndex;
+        }
+        //check if we looped through the enitre pattern
+        return (curIndex == pattern.size());
+    }
+};
