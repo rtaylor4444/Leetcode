@@ -1,0 +1,42 @@
+//Run Time: 32ms - 47.44%
+//Memory Usage: 15.8MB - 5.01%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        if(head == nullptr) return nullptr;
+        //BUG - Edge case head is val
+        //BUG - the whole list is the same value
+        //*Just delete all nodes with value if head is value just return its next
+        //Delete all values
+        ListNode* curNode = head, *prevNode = nullptr;
+        while(curNode) {
+            //1->2->6->3->4->5->6
+            if(prevNode && curNode->val == val) {
+                prevNode->next = curNode->next;
+                delete curNode;
+                curNode = prevNode;
+            }
+            prevNode = curNode;
+            curNode = curNode->next;
+        }
+        //Handle head is value edge case
+        if(head->val == val) {
+            ListNode* newHead = head->next;
+            delete head;
+            return newHead;
+        }
+        return head;
+    }
+};
