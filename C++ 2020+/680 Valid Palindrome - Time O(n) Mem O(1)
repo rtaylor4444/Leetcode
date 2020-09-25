@@ -1,0 +1,45 @@
+//Run Time: 188ms - 74.93%
+//Memory Usage: 19.5MB - 89.79%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isPalindrome(string& s, int skipIndex, int l, int r) {
+        //cout << "checking omitted: " << s[skipIndex] << endl;
+        while(l < r) {
+            if(l == skipIndex) ++l;
+            if(r == skipIndex) --r;
+            if(r <= l) break;
+            if(s[l] != s[r]) return false;
+            ++l;
+            --r;
+        }
+        return true;
+    }
+    bool validPalindrome(string s) {
+        //Get count - no they have to be in an order
+        //Hashset - no they have to be in the same order
+        
+        //I have to determine if palindrome and optimal way is two pointers
+        //test all combos without each letter but letter has to appear only once
+        //*still use count to help me determine which one to pick
+        //"bzbz" -> true
+        //
+        int l = 0;
+        int r = s.size() - 1;
+        if(isPalindrome(s, -1, l, r)) return true;
+        while(l < r) {
+            if(s[l] != s[r]) {
+                //Check and see if getting rid of a character makes this a palin
+                //if it is impossible to make either palin then its impossible
+                if(isPalindrome(s, l, l, r) || isPalindrome(s, r, l, r)) 
+                    return true;
+                else
+                    return false;
+            }
+            ++l;
+            --r;
+        }
+        return false;
+    }
+};
