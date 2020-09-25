@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 22.23%
+//Solved =)
+//Time O(logn) Memory O(1)
+
+// The API isBadVersion is defined for you.
+// bool isBadVersion(int version);
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        //Binary Search but we have to check the next value
+        //curr value = false next value = true is exit condition
+        int l = 0, r = n, badVers = -1;
+        while(l <= r) {
+            int m = l + ((r - l)/2);
+            bool res = isBadVersion(m);
+            if(!res && isBadVersion(m+1)) return m+1;
+            if(res) r = m - 1;
+            else l = m + 1;
+        }
+        return 1;
+    }
+};
