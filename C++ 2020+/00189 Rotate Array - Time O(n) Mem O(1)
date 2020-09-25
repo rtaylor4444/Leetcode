@@ -1,0 +1,29 @@
+//Run Time: 8ms - 85.86%
+//Memory Usage: 10.1MB - 22.96%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        //[1,2,3,4,5,6,7]
+        //*cannot just overwrite the array
+        //*can perform swaps but must mark somehow
+        //[4,2,3,-1,5,6,7] - swap 1 with 4
+        //[7,2,3,-1,5,6,-4] - swap 4 with 7 keep track of its prev pos
+        //[3,2,-7,-1,5,6,-4] - swap 7 with 3 keep track of prev pos
+        //[6,2,-7,-1,5,-3,-4] - swap 3 with 6 keep track of prev pos
+        //[2,-6,-7,-1,5,-3,-4] - swap 6 with 2 keep track of prev pos
+        //[5,-6,-7,-1,-2,-3,-4] - swap 2 with 5 keep track of prev pos
+        //[2,-6,-7,-1,-2,-3,-4] - swap 5 with 5 keep track of prev pos
+        int pos = 0, numRotations = 0, index = 0;
+        while(numRotations < nums.size()) {
+            int newPos = (pos + k) % nums.size();
+            //cout << newPos << endl;
+            swap(nums[index], nums[newPos]);
+            //Fix our position when we swap to ourselves
+            if(newPos == index) newPos = ++index;
+            pos = newPos;
+            ++numRotations;
+        }
+    }
+};
