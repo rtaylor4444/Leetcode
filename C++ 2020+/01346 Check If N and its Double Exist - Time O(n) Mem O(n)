@@ -1,0 +1,25 @@
+//Run Time: 16ms - 45.96%
+//Memory Usage: 11.2MB - 21.41%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool checkIfExist(vector<int>& arr) {
+        //check and see if M * 2 is in a set
+        //avoid N / 2 for rounding issues
+        unordered_set<int> seenNums(arr.begin(), arr.end());
+        int zeroCount = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            //Handle zero edge case
+            if(arr[i] == 0) {
+                ++zeroCount;
+                continue;
+            }
+            if(seenNums.find(arr[i] *2) != seenNums.end()) {
+                return true;
+            }
+        }
+        if(zeroCount > 1) return true;
+        return false;
+    }
+};
