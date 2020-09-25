@@ -1,0 +1,22 @@
+//Run Time: 1176ms - 30.07%
+//Memory Usage: 6.1MB - 41.67%
+//Unoptimal Solution - Time needs improvement
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool checkPerfectNumber(int num) {
+        //*Cannot be prime or negative
+        //iterate get divisors mult them together and see if they match num
+        if(num < 2) return false;
+        int multi = 1;
+        //We only need to iterate through half the values
+        for(int i = 2; i <= num/2; ++i) {
+            if(num % i == 0) {
+                multi += i;
+                //prevent overflow
+                if(multi > num) return false;
+            }
+        }
+        return multi == num;
+    }
+};
