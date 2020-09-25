@@ -1,0 +1,22 @@
+//Run Time: 8ms - 70.98%
+//Memory Usage: 9.3MB - 61.96%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        //Sliding Window 
+        //starting with the largest prefix
+        //working our way down to a smaller matching one
+        if(strs.empty()) return "";
+        int endIndex = strs[0].size();
+        for(int i = 1; i < strs.size(); ++i) {
+            int newEndIndex = 0;
+            for(newEndIndex; newEndIndex < endIndex; ++newEndIndex) {
+                if(strs[i][newEndIndex] != strs[0][newEndIndex]) break;
+            }
+            endIndex = newEndIndex;
+        }
+        return strs[0].substr(0, endIndex);
+    }
+};
