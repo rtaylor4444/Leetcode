@@ -1,0 +1,36 @@
+//Run Time: 152ms - 85.82%
+//Memory Usage: 25.6MB - 27.06%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findRadius(vector<int>& houses, vector<int>& heaters) {
+        //for each heater determine what radius is needed for each house
+        //distance between heaters
+        //maximum dist betwen a heater and house is our answer without
+        //another heater being closer
+        //[1,2,3]
+        //[2]
+        //
+        if(heaters.empty()) return 0;
+        //Sort both houses and heaters
+        sort(houses.begin(), houses.end());
+        sort(heaters.begin(), heaters.end());
+        int i = 0, j = 0, maxDist = 0, minDist;
+        while(i < houses.size()) {
+            //Get distance between current house and heater
+            int curDist = abs(houses[i] - heaters[j]);
+            //If distance surpasses the midpoint to our next heater 
+            //and this house is between the heaters move to the next heater
+            int nextHeater = (j + 1 < heaters.size()) ? heaters[j+1] : INT_MAX;
+            if(heaters[j] + (curDist * 2) >= nextHeater && houses[i] > heaters[j]) ++j;
+            else {
+                //If this distance doesnt reach the next midpoint, it is needed
+                maxDist = max(maxDist, curDist);
+                //Check distance to the next house
+                ++i;
+            }
+        }
+        return maxDist;
+    }
+};
