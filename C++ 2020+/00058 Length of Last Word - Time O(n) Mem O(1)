@@ -1,0 +1,15 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7MB - 7.77%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        istringstream stream(s);
+        string curWord;
+        while(stream >> curWord) {
+            //Do nothing
+        }
+        return curWord.size();
+    }
+};
