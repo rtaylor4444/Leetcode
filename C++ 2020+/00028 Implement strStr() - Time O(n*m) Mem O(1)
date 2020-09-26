@@ -1,0 +1,26 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7MB - 33.54%
+//Unoptimal Solution - Time needs improvement
+//n = size of needle
+//m = size of haystack
+//Time O(n*m) Memory O(1)
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle.empty()) return 0;
+        if(haystack.size() < needle.size()) return -1;
+        //Stop looping once we know our needle wont fit the remaining haystack
+        int size = haystack.size() - needle.size();
+        for(int i = 0; i <= size; ++i) {
+            bool isMatch = true;
+            for(int j = 0; j < needle.size(); ++j) {
+                if(haystack[i+j] != needle[j]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if(isMatch) return i;
+        }
+        return -1;
+    }
+};
