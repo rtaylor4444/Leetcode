@@ -1,0 +1,43 @@
+//Run Time: 28ms - 98.08%
+//Memory Usage: 17.7MB - 40.85%
+//Unoptimal Solution - Time/Memory needs improvement?
+//n = number of cards
+//c = count of cards (which we iterate through and likely less than n)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    bool hasGroupsSizeX(vector<int>& deck) {
+        //possible to split deck into X amount of cards
+        //X = group of 2 or more cards that have same number
+        
+        //Brute Force
+        //*minimum count = 4
+        //loop through all possible group sizes for each count
+        //*count of each integer will help
+        //*2-minimum count loop through
+        
+        //Count number of each integer
+        //value -> count
+        unordered_map<int, int> valCount;
+        int maximumCount = INT_MIN;
+        for(int i = 0; i < deck.size(); ++i) {
+            if(valCount.find(deck[i]) == valCount.end())
+                valCount.emplace(deck[i], 0);
+            
+            maximumCount = max(++valCount[deck[i]], maximumCount);
+        }
+        
+        //Check each count
+        for(int i = 2; i <= maximumCount; ++i) {
+            bool canPartition = true;
+            for(auto it = valCount.begin(); it != valCount.end(); ++it) {
+                if(it->second % i != 0) {
+                    canPartition = false;
+                    break;
+                }
+            }
+            if(canPartition) return true;
+        }
+        return false;
+    }
+};
