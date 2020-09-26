@@ -1,0 +1,44 @@
+//Run Time: 12ms - 94.34%
+//Memory Usage: 9.2MB - 75.39%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& A) {
+        //NO hashset/sorting
+        //"bella","label","roller"
+        //keep track of count
+        //b 1 -> 2
+        //e 1 -> 2
+        //l 2 -> 4 ->
+        //a 1 -> 2
+        //Keep track of a rolling count
+        vector<int> totalCount(26, 0), curCount(26, 0);
+        //get our first count
+        for(int i = 0; i < A[0].size(); ++i) {
+            totalCount[A[0][i] - 'a']++;
+        }
+        //Get other counts
+        for(int i = 1; i < A.size(); ++i) {
+            for(int j = 0; j < A[i].size(); ++j) {
+                curCount[A[i][j] - 'a']++;
+            }
+            //Update total count
+            for(int j = 0; j < 26; ++j) {
+                totalCount[j] = min(totalCount[j], curCount[j]);
+                curCount[j] = 0;
+            }
+        }
+        //Fill string based on counts
+        vector<string> ans;
+        string curChar = "a";
+        for(int i = 0; i < 26; ++i) {
+            if(!totalCount[i]) continue;
+            curChar[0] = 'a' + i;
+            while(totalCount[i]--) {
+                ans.push_back(curChar);
+            }
+        }
+        return ans;
+    }
+};
