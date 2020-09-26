@@ -1,0 +1,32 @@
+//Run Time: 4ms - 63.52%
+//Memory Usage: 6.2MB - 5.06%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x < 2) return x;
+        int sqRoot = 1;
+        int l = 1, r = x/2;
+        while(l <= r) {
+            int m = l + ((r - l)/2);
+            //Exit Condition
+            int curVal = x / m;
+            if(curVal == m)
+                return m;
+            
+            //Update our value based on which two values are closer to x
+            //Divide to prevent integer overflow
+            if(curVal <= x / curVal) {
+                sqRoot = curVal;
+            }
+                
+            if(curVal < m)
+                r = m - 1;
+            else
+                l = m + 1;
+            
+        }
+        return sqRoot;
+    }
+};
