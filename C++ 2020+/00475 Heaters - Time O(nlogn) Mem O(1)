@@ -1,7 +1,7 @@
 //Run Time: 152ms - 85.82%
 //Memory Usage: 25.6MB - 27.06%
 //Solved =)
-//Time O(n) Memory O(1)
+//Time O(nlogn) Memory O(1)
 class Solution {
 public:
     int findRadius(vector<int>& houses, vector<int>& heaters) {
