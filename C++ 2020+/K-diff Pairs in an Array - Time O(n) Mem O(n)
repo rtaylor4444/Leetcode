@@ -1,0 +1,47 @@
+//Run Time: 56ms - 87.73%
+//Memory Usage: 17.9MB - 73.13%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int findPairs(vector<int>& nums, int k) {
+        //abs(nums[i] - nums[j]) == k
+        //find i + k  and i - k
+        //Two sum with that modification
+        //nums set 
+        //num -> count
+        
+        //No negative k since absolute diff cannot be negative
+        if(k < 0) return 0;
+        unordered_map<int, int> numLookUp;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numLookUp.find(nums[i]) == numLookUp.end())
+                numLookUp.emplace(nums[i], 0);
+            
+            numLookUp[nums[i]]++;
+        }
+        
+        int numPairs = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            //Skip used numbers
+            if(numLookUp.find(nums[i]) == numLookUp.end())
+                continue;
+            
+            //Use counts if k is 0
+            if(k == 0) {
+                if(--numLookUp[nums[i]] > 0)
+                    ++numPairs;
+            }
+            else {
+                if(numLookUp.find(nums[i] + k) != numLookUp.end())
+                    ++numPairs;
+
+                if(numLookUp.find(nums[i] - k) != numLookUp.end())
+                    ++numPairs;
+            }
+            //Ensure we dont reuse the same number
+            numLookUp.erase(nums[i]);
+        }
+        return numPairs;
+    }
+};
