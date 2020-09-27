@@ -1,0 +1,32 @@
+//Run Time: 52ms - 97.81%
+//Memory Usage: 22.8MB - 5.10%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool validMountainArray(vector<int>& A) {
+        if(A.size() < 3) return false;
+        //Two Pass
+        //First pass we check strictly increase and find turning point
+        //Second pass we check strict decresing
+        
+        //Find 'peak', skip increasing numbers
+        int i = 0;
+        for(i; i < A.size() - 1; ++i) {
+            //Exit once we find a peak (next is less than us)
+            if(A[i] > A[i+1])
+                break;
+            //If two values are even they arent strictly increasing
+            if(A[i] == A[i + 1])
+                return false;
+        }
+        //Check if there is no peak(i is at start or end)
+        if(i == A.size() - 1 || i == 0) return false;
+        //check decreasing
+        for(i; i < A.size() - 1; ++i) {
+            if(A[i] <= A[i+1])
+                return false;
+        }
+        return true;
+    }
+};
