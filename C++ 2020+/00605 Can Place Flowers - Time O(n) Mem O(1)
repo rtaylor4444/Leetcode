@@ -1,0 +1,23 @@
+//Run Time: 36ms - 81.72%
+//Memory Usage: 20.4MB - 51.97%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        //Loop through array and check for 2 adjacent 0's
+        //I have to mark the array
+        for(int i = 0; i < flowerbed.size(); ++i) {
+            if(n == 0) return true;
+            
+            //Handle bounds egde cases
+            int prevBed = (i-1 >= 0) ? flowerbed[i-1] : 0;
+            int nextBed = (i+1 < flowerbed.size()) ? flowerbed[i+1] : 0;
+            if(prevBed + flowerbed[i] + nextBed == 0) {
+                flowerbed[i] = 1;
+                --n;
+            }
+        }
+        return (n == 0);
+    }
+};
