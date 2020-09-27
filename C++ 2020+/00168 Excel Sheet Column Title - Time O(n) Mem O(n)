@@ -1,0 +1,24 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 6.90%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string convertToTitle(int n) {
+        if(n <= 0) return "";
+        string excelColumn = "";
+        int digit = 0;
+        while(n > 0) {
+            int val = n % 26;
+            //Z edge case
+            if(val == 0) {
+                n -= 26; 
+                excelColumn += 'Z';
+            }
+            else excelColumn += 'A' + val - 1;
+            n /= 26; 
+        }
+        reverse(excelColumn.begin(), excelColumn.end());
+        return excelColumn;
+    }
+};
