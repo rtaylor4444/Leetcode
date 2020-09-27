@@ -1,0 +1,24 @@
+//Run Time: 20ms - 42.40%
+//Memory Usage: 10.6MB - 26.66%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:  
+    int thirdMax(vector<int>& nums) {
+        //Priority Queue size of 3
+        priority_queue<int, vector<int>, std::greater<int>> p_q;
+        unordered_set<int> dupCheck;
+        int maxNum = INT_MIN;
+        for(int i = 0; i < nums.size(); ++i) {
+            maxNum = max(maxNum, nums[i]);
+            //skip redundant characters
+            if(dupCheck.find(nums[i]) != dupCheck.end())
+                continue;
+            
+            dupCheck.emplace(nums[i]);
+            p_q.push(nums[i]);
+            while(p_q.size() > 3) p_q.pop();
+        }
+        return (p_q.size() < 3) ? maxNum : p_q.top();
+    }
+};
