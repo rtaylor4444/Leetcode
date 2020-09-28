@@ -1,0 +1,27 @@
+//Run Time: 284ms - 25.33%
+//Memory Usage: 6.8MB - 48.11%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int countPrimes(int n) {
+        if (n < 3) return 0;
+        //3 has two numbers 0 and 1 which arent prime
+        int numNotPrimes = 0; //n/2;
+        vector<bool> primesList(n, true);
+        primesList[0] = primesList[1] = false;
+        for(int i = 0; i < primesList.size(); i++) {
+            //Keep track of numbers that arent prime
+            if(!primesList[i]) {
+                ++numNotPrimes;
+                continue;
+            }
+            //All multiples of this prime number are not prime
+            int primeNum = i;
+            for(int j = 2; j*primeNum < n; j++) {              
+                primesList[j*primeNum] = false;
+            }
+        }
+        return n - numNotPrimes;
+    }
+};
