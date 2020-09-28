@@ -1,0 +1,25 @@
+//Run Time: 12ms - 66.07%
+//Memory Usage: 11.7MB - 5.03%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minOperations(vector<string>& logs) {
+        int depth = 0;
+        unordered_map<string, int> logMapping = {
+            {"../", 1},
+            {"./", 2}
+        };
+        //./ -> do nothing we can ignore this
+        //x/ -> push on stack
+        //../ -> pop off stack
+        for(int i = 0; i < logs.size(); ++i) {
+            int op = logMapping[logs[i]];
+            if(op == 2) continue;
+            else if(op == 1) {
+                if(depth > 0) depth--;
+            }
+            else depth++;
+        }
+        return depth;
+    }
