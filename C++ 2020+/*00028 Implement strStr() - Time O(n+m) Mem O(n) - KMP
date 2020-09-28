@@ -1,0 +1,73 @@
+/Run Time: 4ms - 98.28%
+//Memory Usage: 7.3MB - 11.88%
+//Solved =)
+//n = size of needle
+//m = size of haystack
+//Time O(n+m) Memory O(n)
+//good ref: https://www.youtube.com/watch?v=4jY57Ehc14Y
+class Solution {
+public:
+    void computeLPSArray(string needle, vector<int>& lps) { 
+        int len = 0, size = needle.size(); 
+        lps[0] = 0; 
+        int i = 1;
+        //*looking for matching prefix and suffix of the current string
+        //*index in lps represents the substring
+        //*len marks beginning; i marks the end of current string
+        
+        //While loop for better control of pointers
+        while(i < size) {
+            //we found a match
+            if(needle[i] == needle[len]) {
+                //maintain substring size (i - len) and check next character
+                //Set to len since there is a suffix and prefix match
+                //Ex: A B A
+                //    *   *
+                //   [0 0 1]  
+                lps[i++] = ++len;
+            }
+            //No match found
+            else {
+                //We need to decrement our length (i - len) to check a diff substring
+                if(len == 0) {
+                    //we cant decrement len so we have to increment i
+                    lps[i++] = 0;
+                }
+                //We have advanced length
+                else {
+                    //Set length to previously calculated length
+                    //since what we matched previously could possible match in new substring
+                    len = lps[len-1];
+                }
+            }
+        }
+    };
+ 
+    int strStr(string haystack, string needle) {
+        if(needle.empty()) return 0;
+        if(haystack.size() < needle.size()) return -1;
+        vector<int> lps(needle.size(), 0);
+        computeLPSArray(needle, lps);
+        
+        int i = 0, j = 0;
+        while(i < haystack.size()) {
+            //Increment pointers
+            while(j < needle.size() && haystack[i] == needle[j]) {
+                ++i;
+                ++j;
+            }
+            
+            //Handle mismatch or end of string
+            if(j == needle.size()) return i - j;
+            else {
+                //If we progressed in length set to calced value
+                if(j != 0)
+                    j = lps[j - 1];
+                //otherwise just incrment i
+                else
+                    ++i;
+            }
+        }
+        return -1;
+    }
+};
