@@ -1,0 +1,23 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 17.23%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int reverse(int x) {
+        //testcase
+        //-2147483648
+        //1463847412
+        int reverse = 0;
+        while(x) {
+            //Handle Overflow
+            if(reverse > INT_MAX / 10 ||
+               reverse < INT_MIN / 10) return 0;
+            reverse *= 10;
+            //mod neg numbers return neg numbers in C++
+            reverse += x % 10;
+            x /= 10;
+        }
+        return reverse;
+    }
+};
