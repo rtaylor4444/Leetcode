@@ -1,0 +1,16 @@
+//Run Time: 4ms - 71.36%
+//Memory Usage: 10.3MB - 10.80%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool isBoomerang(vector<vector<int>>& points) {
+        //baiscally the points cannot form a straight line
+        //or if area of triangle is zero it cannot be a boomerang
+        //Area of triangle: x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)
+        int area = points[0][0] * (points[1][1] - points[2][1]);
+        area += points[1][0] * (points[2][1] - points[0][1]);
+        area += points[2][0] * (points[0][1] - points[1][1]);
+        return (area != 0);
+    }
+};
