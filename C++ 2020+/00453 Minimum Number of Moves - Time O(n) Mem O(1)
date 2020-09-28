@@ -1,0 +1,22 @@
+//Run Time: 68ms - 98.92%
+//Memory Usage: 28.7MB - 5.30%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        //incrementing n-1 elements is the same as reducing just 1
+        //Each move decrments any element
+        //Loop through find minimum element then make all elements
+        //equal the min one
+        int minNum = INT_MAX;
+        for(int i = 0; i < nums.size(); ++i) {
+            minNum = min(minNum, nums[i]);
+        }
+        int numMoves = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            numMoves += nums[i] - minNum;
+        }
+        return numMoves;
+    }
+};
