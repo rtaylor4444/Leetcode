@@ -1,0 +1,129 @@
+//Run Time: 148ms - 99.35%
+//Memory Usage: 48.6MB - 63.87%
+//Solved =)
+//Time O(n) Memory O(n)
+class MyHashMap {
+    struct HashNode {
+        int key, value;
+        HashNode* next;
+        HashNode(int k, int v) {
+            key = k;
+            value = v;
+            next = nullptr;
+        }
+        HashNode(HashNode* c) {
+            key = c->key;
+            value = c->value;
+            next = nullptr;
+        }
+    };
+    int spaceTaken;
+    vector<HashNode*> hash;
+public:
+    /** Initialize your data structure here. */
+    MyHashMap() {
+        spaceTaken = 0;
+        hash.resize(4);
+        for(int i = 0; i < hash.size(); ++i) {
+            hash[i] = nullptr;
+        }
+    }
+    
+    ~MyHashMap() {
+        for(int i = 0; i < hash.size(); ++i) {
+            HashNode* curNode = hash[i], *prevNode;
+            while(curNode) {
+                prevNode = curNode;
+                curNode = curNode->next;
+                delete prevNode;
+            }
+        }
+    }
+    
+    /** value will always be non-negative. */
+    void put(int key, int value) {
+        int pos = key % hash.size();
+        //Empty list edge case
+        if(hash[pos] == nullptr) {
+            hash[pos] = new HashNode(key, value);
+            ++spaceTaken;
+            return;
+        }
+        HashNode *curNode = hash[pos], *prevNode;
+        while(curNode) {
+            //Update existing value
+            if(curNode->key == key) {
+                curNode->value = value;
+                return;
+            }
+            prevNode = curNode;
+            curNode = curNode->next;
+        }
+        prevNode->next = new HashNode(key, value);
+        //If we surpass 75% of size resize the hashMap
+        if(++spaceTaken * 4 > hash.size() * 3)
+            resize(hash.size() * 2);
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    int get(int key) {
+        int pos = key % hash.size();
+        HashNode* curNode = hash[pos]; 
+        while(curNode) {
+            if(curNode->key == key) return curNode->value;
+            curNode = curNode->next;
+        }
+        return -1;
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    void remove(int key) {
+        int pos = key % hash.size();
+        HashNode* curNode = hash[pos], *prevNode = nullptr; 
+        while(curNode) {
+            if(curNode->key == key) {
+                //Value is our head
+                if(!prevNode) hash[pos] = curNode->next;
+                else prevNode->next = curNode->next;
+                delete curNode;
+                break;
+            }
+            prevNode = curNode;
+            curNode = curNode->next;
+        }
+        --spaceTaken;
+    }
+    
+    void resize(int newSize) {
+        //Place new elements in the hash
+        //cout << "resizing hash" << endl;
+        vector<HashNode*> newHash(newSize, nullptr);
+        for(int i = 0; i < hash.size(); ++i) {
+            HashNode* curNode = hash[i];
+            while(curNode) {
+                //Create new node for our new hash
+                int newPos = curNode->key % newSize;
+                if(!newHash[newPos])
+                    newHash[newPos] = new HashNode(curNode);
+                else {
+                    HashNode* curNewNode = newHash[newPos];
+                    while(curNewNode->next) curNewNode = curNewNode->next;
+                    curNewNode->next = new HashNode(curNode);
+                }
+                //Delete this node
+                HashNode* nextNode = curNode->next;
+                delete curNode;
+                curNode = hash[i] = nextNode;
+            }
+        }
+        hash = newHash;
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
