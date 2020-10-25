@@ -1,0 +1,35 @@
+//Run Time: 48ms - 99.37%
+//Memory Usage: 19.3MB - 92.58%
+//Solved =)
+//u = number of updates
+//Time O(u) Memory O(u)
+class SubrectangleQueries {
+    vector<vector<int>> rect, updates;
+public:
+    SubrectangleQueries(vector<vector<int>>& rectangle) {
+        rect = rectangle;
+    }
+    
+    void updateSubrectangle(int row1, int col1, int row2, int col2, int newValue) {
+        updates.push_back({row1, col1, row2, col2, newValue});
+    }
+    
+    int getValue(int row, int col) {
+        //Check our updates in reverse order
+        for(int i = updates.size() - 1; i >= 0; --i) {
+            //Check bounds (row)
+            if(row < updates[i][0] || row > updates[i][2]) continue;
+            if(col < updates[i][1] || col > updates[i][3]) continue;
+            return updates[i][4];
+        }
+        //If value is not in updates just return original value
+        return rect[row][col];
+    }
+};
+
+/**
+ * Your SubrectangleQueries object will be instantiated and called as such:
+ * SubrectangleQueries* obj = new SubrectangleQueries(rectangle);
+ * obj->updateSubrectangle(row1,col1,row2,col2,newValue);
+ * int param_2 = obj->getValue(row,col);
+ */
