@@ -1,0 +1,25 @@
+//Run Time: 16ms - 96.00%
+//Memory Usage: 12.9MB - 12.11%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<vector<int>> groupThePeople(vector<int>& groupSizes) {
+        vector<vector<int>> ans;
+        unordered_map<int, vector<int>> sizeToArray;
+        for(int i = 0; i < groupSizes.size(); ++i) {
+            if(sizeToArray.find(groupSizes[i]) == sizeToArray.end()){
+                sizeToArray.emplace(groupSizes[i], vector<int>());
+                sizeToArray[groupSizes[i]].reserve(groupSizes[i]);
+            }
+            
+            vector<int>& curArray = sizeToArray[groupSizes[i]];
+            curArray.push_back(i);
+            if(curArray.size() == groupSizes[i]) {
+                ans.push_back(curArray);
+                curArray.clear();
+            }
+        }
+        return ans;
+    }
+};
