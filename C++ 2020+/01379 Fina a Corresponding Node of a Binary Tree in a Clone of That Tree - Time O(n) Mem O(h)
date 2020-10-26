@@ -1,0 +1,34 @@
+//Run Time: 704ms - 88.86%
+//Memory Usage: 166.2MB - 7.26%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+class Solution {
+public:
+    TreeNode* getTargetCopy(TreeNode* original, TreeNode* cloned, TreeNode* target) {
+        //DFS
+        //Orig, Copy
+        if(original == nullptr || cloned == nullptr) return nullptr;
+        TreeNode *curOrig, *curClone;
+        stack<pair<TreeNode*, TreeNode*>> dfs;
+        dfs.push({original, cloned});
+        while(!dfs.empty()) {
+            curOrig = dfs.top().first;
+            curClone = dfs.top().second;
+            dfs.pop();
+            if(curOrig == target) return curClone;
+            if(curOrig->left) dfs.push({curOrig->left, curClone->left});
+            if(curOrig->right) dfs.push({curOrig->right, curClone->right});
+        }
+        return nullptr;
+    }
+};
