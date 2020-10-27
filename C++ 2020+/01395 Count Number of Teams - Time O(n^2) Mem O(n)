@@ -1,0 +1,43 @@
+//Run Time: 4ms - 98.78%
+//Memory Usage: 8.3MB - 90.16%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int numTeams(vector<int>& rating) {
+        //three nested loops?
+        //indices must be greater than previous one
+        //so i < j < k
+        //ratings must be in increasing or decreasing order
+        //Find number of elements greater than
+        vector<int> numGreaterThan(rating.size(), 0);
+        for(int i = 0; i < rating.size(); ++i) {
+            int numGreater = 0;
+            for(int j = i+1; j < rating.size(); ++j) {
+                if(rating[i] < rating[j]) ++numGreater;
+            }
+            numGreaterThan[i] = numGreater;
+        }
+        
+        //Find number of elements less than
+        vector<int> numSmallerThan(rating.size(), 0);
+        for(int i = 0; i < rating.size(); ++i) {
+            int numSmaller = 0;
+            for(int j = i+1; j < rating.size(); ++j) {
+                if(rating[i] > rating[j]) ++numSmaller;
+            }
+            numSmallerThan[i] = numSmaller;
+        }
+        
+        int numTeams = 0;
+        for(int i = 0; i < rating.size(); ++i) {
+            for(int j = i+1; j < rating.size(); ++j) {
+                if(rating[i] > rating[j]) 
+                    numTeams += numSmallerThan[j];
+                if(rating[i] < rating[j]) 
+                    numTeams += numGreaterThan[j];
+            }
+        }
+        return numTeams;
+    }
+};
