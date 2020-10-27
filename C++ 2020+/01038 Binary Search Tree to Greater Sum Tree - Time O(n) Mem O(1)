@@ -1,0 +1,57 @@
+//Run Time: 4ms - 62.29%
+//Memory Usage: 8.5MB - 28.59%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* getSuccessor(TreeNode* node) {
+        //Find next greatest node
+        TreeNode* succ = node->right;
+        while(succ->left && succ->left != node) {
+            succ = succ->left;
+        }
+        return succ;
+    }
+    TreeNode* bstToGst(TreeNode* root) {
+        //Use Morris after this
+        int curSum = 0, curValue;
+        TreeNode* curNode = root;
+        while(curNode) {
+            if(curNode->right) {
+                TreeNode* succ = getSuccessor(curNode);
+                //Check if there is a link
+                if(succ->left == curNode) {
+                    //process node & traverse and break link
+                    curValue = curNode->val;
+                    curNode->val += curSum;
+                    curSum += curValue;
+                    curNode = curNode->left;
+                    succ->left = nullptr;
+                }
+                else {
+                    //Establish link
+                    succ->left = curNode;
+                    curNode = curNode->right;
+                }
+            }
+            else {
+                curValue = curNode->val;
+                curNode->val += curSum;
+                curSum += curValue;
+                curNode = curNode->left;
+            }
+        }
+        return root;
+    }
+};
