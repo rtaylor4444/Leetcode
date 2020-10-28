@@ -1,26 +1,17 @@
-//Run Time: 16ms - 83.65%
-//Memory Usage: 9.9MB - 6.21%
+//Run Time: 8ms - 97.14%
+//Memory Usage: 9MB - 6.21%
 //Solved =)
 //Time O(m + n*m) Memory O(m + n)
 class LinkedList {
     struct ListNode {
-        ListNode *next, *prev;
+        ListNode *next;
         int val;
         ListNode(int v) {
             val = v;
-            next = prev = nullptr;
+            next = nullptr;
         }
     };
     ListNode* head;
-    unordered_map<int, ListNode*> valueToNode;
-    void detatchNode(ListNode* node) {
-        ListNode* prevNode = node->prev; 
-        ListNode* nextNode = node->next; 
-        if(node == head) head = nextNode;
-        if(prevNode) prevNode->next = nextNode;
-        if(nextNode) nextNode->prev = prevNode;
-        node->prev = node->next = nullptr;
-    }
 public:
     LinkedList() {
         head = nullptr;
@@ -33,27 +24,24 @@ public:
             delete prevNode;
         }
     }
-    void setHead(int value) {
-        ListNode* nodeToMove;
-        if(valueToNode.find(value) != valueToNode.end()) {
-            nodeToMove = valueToNode[value];
-            detatchNode(nodeToMove);
-        }
-        else {
-            nodeToMove = new ListNode(value);
-            valueToNode.emplace(value, nodeToMove);
-        }
-        
-        if(head) head->prev = nodeToMove;
-        nodeToMove->next = head;
-        head = nodeToMove;
+    void addFront(int value) {
+        ListNode* newNode = new ListNode(value);
+        newNode->next = head;
+        head = newNode;
     }
     int findValuePos(int value) {
-        ListNode* curNode = head;
+        ListNode* curNode = head, *prevNode = nullptr;
         int pos = 0;
         while(curNode && curNode->val != value) {
+            prevNode = curNode;
             curNode = curNode->next;
             ++pos;
+        }
+        //Set curNode as the head
+        if(prevNode && curNode) {
+            prevNode->next = curNode->next;
+            curNode->next = head;
+            head = curNode;
         }
         return (curNode) ? pos : -1;
     }
@@ -72,14 +60,13 @@ public:
     vector<int> processQueries(vector<int>& queries, int m) {
         LinkedList permutations;
         while(m) {
-            permutations.setHead(m--);
+            permutations.addFront(m--);
         }
         //permutations.printList();
         
         vector<int> results(queries.size(), 0);
         for(int i = 0; i < queries.size(); ++i) {
             results[i] = permutations.findValuePos(queries[i]);
-            permutations.setHead(queries[i]);
             //permutations.printList();
         }
         return results;
