@@ -1,0 +1,39 @@
+//Run Time: 24ms - 50.90%
+//Memory Usage: 9.1MB - 6.07%
+//Solved =)
+//Time O(n*mlogm) Memory O(n)
+class Solution {
+public:
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        //Iterate diagnoally starting at top row and left
+        //col place elements inside of a custom heap
+        //Heap sort each diagnol and place elements where they belong
+        //Or quick sort them
+        priority_queue<int, vector<int>, greater<int>> p_q;
+        //Top row
+        for(int i = 0; i < mat[0].size() - 1; ++i) {
+            //fill the priority queue
+            for(int j = 0; (j+i) < mat[0].size() && j < mat.size(); ++j) {
+                p_q.push(mat[j][j+i]);
+            }
+            //set the new sorted values
+            for(int j = 0; (j+i) < mat[0].size() && j < mat.size(); ++j) {
+                mat[j][j+i] = p_q.top();
+                p_q.pop();
+            }
+        }
+        //Front column
+        for(int i = 1; i < mat.size() - 1; ++i) {
+            //fill the priority queue
+            for(int j = 0; j < mat[0].size() && (j+i) < mat.size(); ++j) {
+                p_q.push(mat[i+j][j]);
+            }
+            //set the new sorted values
+            for(int j = 0; j < mat[0].size() && (j+i) < mat.size(); ++j) {
+                mat[i+j][j] = p_q.top();
+                p_q.pop();
+            }
+        }
+        return mat;
+    }
+};
