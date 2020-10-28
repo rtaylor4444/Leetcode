@@ -1,0 +1,25 @@
+//Run Time: 156ms - 76.12%
+//Memory Usage: 8.2MB - 5.21%
+//Solved =)
+//Time O(n * nlogn) Memory O(n)
+class Solution {
+public:
+    bool isArithmetic(vector<int>& arr) {
+        int curDiff = arr[1] - arr[0];
+        for(int i = 2; i < arr.size(); ++i) {
+            if(arr[i] - arr[i-1] != curDiff) return false;
+        }
+        return true;
+    }
+    vector<bool> checkArithmeticSubarrays(vector<int>& nums, vector<int>& l, vector<int>& r) {
+        //array l and r are the bounds of the subarray
+        vector<bool> results(l.size(), false);
+        for(int i = 0; i < l.size(); ++i) {
+            //take subarray and sort it
+            vector<int> temp(nums.begin() + l[i], nums.begin() + r[i] + 1);
+            sort(temp.begin(), temp.end());
+            results[i] = isArithmetic(temp);
+        }
+        return results;
+    }
+};
