@@ -1,0 +1,32 @@
+//Run Time: 16ms - 91.84%
+//Memory Usage: 12.5MB - 5.24%
+//Solved =)
+//e = edges
+//n = nodes
+//Time O(e) Memory O(n)
+class Solution {
+    int target;
+    vector<vector<int>> paths, _graph;
+public:
+    void dfs(int start, vector<int>& curPath) {
+        curPath.push_back(start);
+        if(start == target) {
+            paths.push_back(curPath);
+            curPath.pop_back();
+            return;
+        }
+        
+        for(int i = 0; i < _graph[start].size(); ++i) {
+            dfs(_graph[start][i], curPath);
+        }
+        curPath.pop_back();
+    }
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        paths.clear();
+        _graph = graph;
+        target = graph.size() - 1;
+        vector<int> curPath;
+        dfs(0, curPath);
+        return paths;
+    }
+};
