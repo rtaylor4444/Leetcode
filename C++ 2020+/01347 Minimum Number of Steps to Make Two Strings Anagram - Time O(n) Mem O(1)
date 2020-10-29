@@ -1,0 +1,30 @@
+//Run Time: 56ms - 91.46%
+//Memory Usage: 17.1MB - 92.31%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minSteps(string s, string t) {
+        vector<int> charCount(26, 0);
+        //turn t into a anagram of s
+        //s
+        //b=>2
+        //a=>1
+        //t
+        //a=>2
+        //b=>1
+        //combine them +s chars and -t chars
+        //b=>1
+        //a=>-1
+        for(int i = 0; i < s.size(); ++i) {
+            charCount[s[i] - 'a']++;
+            charCount[t[i] - 'a']--;
+        }
+        int numDiffChars = 0;
+        for(int i = 0; i < charCount.size(); ++i) {
+            if(charCount[i] >= 0) continue;
+            numDiffChars += abs(charCount[i]);
+        }
+        return numDiffChars;
+    }
+};
