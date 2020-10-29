@@ -1,0 +1,26 @@
+//Run Time: 4ms - 94.23%
+//Memory Usage: 6.9MB - 6.71%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> partitionLabels(string S) {
+        //store each letters last position
+        int charToEndPos[26] = {0};
+        vector<int> partitions;
+        for(int i = 0; i < S.size(); ++i) {
+            charToEndPos[S[i] - 'a'] = i;
+        }
+        //iterate through a second time and once we reach our maxlength
+        //add that as a partition
+        int curEndPos = INT_MIN, prevPos = 0;
+        for(int i = 0; i < S.size(); ++i) {
+            curEndPos = max(curEndPos, charToEndPos[S[i] - 'a']);
+            if(curEndPos == i) {
+                partitions.push_back(i+1 - prevPos);
+                prevPos = i+1;
+            }
+        }
+        return partitions;
+    }
+};
