@@ -1,0 +1,75 @@
+//Run Time: 48ms - 95.10%
+//Memory Usage: 8.2MB - 8.04%
+//Solved =)
+//Time O(n) Memory O(n)
+class CustomStack {
+    struct LinkedNode {
+        int val;
+        LinkedNode* next;
+        LinkedNode(int v) {
+            val = v;
+            next = nullptr;
+        }
+    };
+    
+    int MaxSize;
+    int curSize;
+    LinkedNode* head;
+    
+    void addFront(LinkedNode* node) {
+        node->next = head;
+        head = node;
+        ++curSize;
+    }
+    int removeFront() {
+        int val = head->val;
+        LinkedNode* toDelete = head;
+        head = head->next;
+        --curSize;
+        delete toDelete;
+        return val;
+    }
+public:
+    CustomStack(int maxSize) {
+        MaxSize = maxSize;
+        head = nullptr;
+        curSize = 0;
+    }
+    ~CustomStack() {
+        while(head) {
+            LinkedNode* prevNode = head;
+            head = head->next;
+            delete prevNode;
+        }
+    }
+    
+    void push(int x) {
+        if(curSize == MaxSize) return;
+        addFront(new LinkedNode(x));
+    }
+    
+    int pop() {
+        if(curSize == 0) return -1;
+        return removeFront();
+    }
+    
+    void increment(int k, int val) {
+        LinkedNode* curNode = head;
+        int startPos = max(0, curSize - k);
+        while(startPos--) {
+            curNode = curNode->next;
+        }
+        while(curNode) {
+            curNode->val += val;
+            curNode = curNode->next;
+        }
+    }
+};
+
+/**
+ * Your CustomStack object will be instantiated and called as such:
+ * CustomStack* obj = new CustomStack(maxSize);
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * obj->increment(k,val);
+ */
