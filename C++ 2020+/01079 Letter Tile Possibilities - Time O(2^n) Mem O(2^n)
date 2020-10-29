@@ -1,0 +1,30 @@
+//Run Time: 8ms - 81.58%
+//Memory Usage: 8.2MB - 5.07%
+//Solved?
+//Time O(2^n) Memory O(2^n)
+class Solution {
+    int totalCount;
+public:
+    void getPossibilities(vector<int>& charCount, string& tiles, int pos) {
+        if(pos == tiles.size()) return;
+        for(int i = 0; i < charCount.size(); ++i) {
+            if(!charCount[i]) continue;
+            //Each letter used goes toward a count
+            ++totalCount;
+            --charCount[i];
+            getPossibilities(charCount, tiles, pos+1);
+            ++charCount[i];
+        }
+    }
+    int numTilePossibilities(string tiles) {
+        //Backtracking dfs
+        //Get our count
+        totalCount += 0;
+        vector<int> charCount(26, 0);
+        for(int i = 0; i < tiles.size(); ++i) {
+            charCount[tiles[i] - 'A']++;
+        }
+        getPossibilities(charCount, tiles, 0);
+        return totalCount;
+    }
+};
