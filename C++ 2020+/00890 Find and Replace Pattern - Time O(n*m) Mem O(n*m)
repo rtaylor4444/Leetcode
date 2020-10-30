@@ -1,0 +1,36 @@
+//Run Time: 8ms - 59.36%
+//Memory Usage: 9MB - 70.38%
+//Solved =)
+//n = number of words
+//m = size of word
+//Time O(m * n) Memory O(n * m)
+class Solution {
+public:
+    bool patternMatch(string& word, string& pattern) {
+        //every char in pattern must map to the same char in word
+        //every char in pattern must map to a diff char
+        unordered_map<char, char> patToWord;
+        unordered_set<char> takenChars;
+        for(int i = 0; i < word.size(); ++i) {
+            if(patToWord.find(pattern[i]) == patToWord.end()) {
+                //We cannot reuse a character that has already been mapped
+                if(takenChars.find(word[i]) != takenChars.end()) return false;
+                takenChars.emplace(word[i]);
+                patToWord.emplace(pattern[i], word[i]);
+            }
+            
+            if(patToWord[pattern[i]] != word[i]) return false;
+        }
+        return true;
+    }
+    vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
+        //loop through each word and map a char in pattern to 
+        //a char in the word
+        vector<string> matchingStrings;
+        for(int i = 0; i < words.size(); ++i) {
+            if(patternMatch(words[i], pattern))
+                matchingStrings.push_back(words[i]);
+        }
+        return matchingStrings;
+    }
+};
