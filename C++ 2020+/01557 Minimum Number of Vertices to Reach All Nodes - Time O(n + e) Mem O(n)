@@ -1,0 +1,20 @@
+//Run Time: 500ms - 92.87%
+//Memory Usage: 94MB - 5.87%
+//Solved =)
+//Time O(n + e) Memory O(n)
+class Solution {
+public:
+    vector<int> findSmallestSetOfVertices(int n, vector<vector<int>>& edges) {
+        //vertices that have no indegree are the answer
+        //since we are dealing with a dag
+        vector<bool> isZeroIndegree(n, true);
+        for(int i = 0; i < edges.size(); ++i) {
+            isZeroIndegree[edges[i][1]] = false;
+        }
+        vector<int> vertices;
+        for(int i = 0; i < n; ++i) {
+            if(isZeroIndegree[i]) vertices.push_back(i);
+        }
+        return vertices;
+    }
+};
