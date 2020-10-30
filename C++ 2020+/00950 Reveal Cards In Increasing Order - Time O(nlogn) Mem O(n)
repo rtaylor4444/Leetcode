@@ -1,0 +1,35 @@
+//Run Time: 8ms - 79.75%
+//Memory Usage: 9.8MB - 79.60%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    vector<int> deckRevealedIncreasing(vector<int>& deck) {
+        //Goal is to reveal cards in increasing order
+        //Add numbers to the deck in reverse order meaning reverse the process
+        //Add 17 top => [17]
+        //put 17(bottom) front => [17] add 13 top => [13,17]
+        //put 17(bottom) front => [17,13] add 11 top => [11,17,13]
+        //put 13(bottom) front => [13,11,17] add 7 top => [7,13,11,17]
+        //put 17(bottom) front => [17,7,13,11] add 5 top => [5,17,7,13,11]
+        
+        //Simulate the process backwards
+        sort(deck.begin(), deck.end());
+        list<int> linkedList;
+        for(int i = deck.size() - 1; i >= 0; --i) {
+            if(!linkedList.empty()) {
+                int val = linkedList.back();
+                linkedList.pop_back();
+                linkedList.push_front(val);
+            }
+            linkedList.push_front(deck[i]);
+        }
+        //Copy over result to a vector
+        vector<int> result;
+        while(!linkedList.empty()) {
+            result.push_back(linkedList.front());
+            linkedList.pop_front();
+        }
+        return result;
+    }
+};
