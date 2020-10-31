@@ -1,0 +1,48 @@
+//Run Time: 12ms - 97.37%
+//Memory Usage: 8.2MB - 13.93%
+//Solved =)
+//CombinationIterator() -> Time O(2^n) Memory O(2^n)
+//next() -> Time O(1) Mem O(1)
+//hasNext -> Time O(1) Mem O(1)
+class CombinationIterator {
+    string chars;
+    //BUG - later put inside of a Trie to save memory
+    //but we lose a bit of speed
+    int index;
+    vector<string> combos;
+    void generateCombos(string& curString, int start, int curlength) {
+        if(curlength == 0) {
+            combos.push_back(curString);
+            return;
+        }
+        
+        for(int i = start; i < chars.size(); ++i) {
+            curString.push_back(chars[i]);
+            generateCombos(curString, i+1, curlength-1);
+            curString.pop_back();
+        }
+    }
+public:
+    CombinationIterator(string characters, int combinationLength) {
+        chars = characters;
+        index = 0;
+        string s;
+        generateCombos(s, 0, combinationLength);
+    }
+    
+    string next() {
+        if(hasNext()) return combos[index++];
+        return "";
+    }
+    
+    bool hasNext() {
+        return (index < combos.size());
+    }
+};
+
+/**
+ * Your CombinationIterator object will be instantiated and called as such:
+ * CombinationIterator* obj = new CombinationIterator(characters, combinationLength);
+ * string param_1 = obj->next();
+ * bool param_2 = obj->hasNext();
+ */
