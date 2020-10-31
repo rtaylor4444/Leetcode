@@ -1,0 +1,54 @@
+//Run Time: 4ms - 87.80%
+//Memory Usage: 8.5MB - 36.59%
+//Solved =)
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    void flipRow(vector<int>& row) {
+        for(int i = 0; i < row.size(); ++i) {
+            row[i] ^= 1;
+        }
+    }
+    int matrixScore(vector<vector<int>>& A) {
+        //any number of flips - get highest possible value
+        //0 0 1 1    1 0 1 1    1 1 1 1    1 1 1 1    1 1 1 1
+        //1 0 1 0 => 0 0 1 0 => 0 1 1 0 => 0 1 1 0 => 1 0 0 1 
+        //1 1 0 0    0 1 0 0    0 0 0 0    1 1 1 1    1 1 1 1 
+        //  25         17
+        //flip 0th column
+        //flip 1th column
+        //flip 2nd row
+        //options are
+        //flip 0,1,2 row
+        //flip 0,1,2,3 col
+        //Flip all 0s on first row first col, the flip rows?
+        //strategy is get the most significant bits on
+        //Flip rows - get most significant bits on
+        for(int i = 0; i < A.size(); ++i) {
+            if(!A[i][0]) flipRow(A[i]);
+        }
+        //Flip cols - flip the ones that increase our score
+        for(int i = 1; i < A[0].size(); ++i) {
+            int oneCount = 0;
+            for(int j = 0; j < A.size(); ++j) {
+                if(A[j][i]) ++oneCount;
+            }
+            //Skip if flipping these bits would decrease score
+            if(oneCount > A.size() / 2) continue;
+            for(int j = 0; j < A.size(); ++j) {
+                A[j][i] ^= 1;
+            }
+        }
+        //Get final score
+        int score = 0;
+        for(int i = 0; i < A.size(); ++i) {
+            int rowScore = 0;
+            for(int j = 0; j < A[i].size(); ++j) {
+                rowScore <<= 1;
+                rowScore |= A[i][j];
+            }
+            score += rowScore;
+        }
+        return score;
+    }
+};
