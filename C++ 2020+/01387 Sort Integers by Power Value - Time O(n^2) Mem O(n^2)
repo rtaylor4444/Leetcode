@@ -1,0 +1,33 @@
+//Run Time: 284ms - 27.67%
+//Memory Usage: 41.9MB - 5.16%
+//Solved =)
+//Using memoization is slow for this problem due to a small range
+//however it would scale better with higher range
+//Time O(n^2) Memory O(n^2)
+class Solution {
+    unordered_map<int, int> valueToSteps;
+public:
+    int calcSteps(int val) {
+        if(valueToSteps.find(val) != valueToSteps.end()) return valueToSteps[val];
+        int nextVal;
+        if(val % 2 == 0) nextVal = val / 2;
+        else nextVal = (val * 3) + 1;
+        int stepsTaken = calcSteps(nextVal)+1;
+        valueToSteps.emplace(val, stepsTaken);
+        return stepsTaken;
+    }
+    int getKth(int lo, int hi, int k) {
+        //build this array then sort using quick sort
+        //to quickly get k
+        valueToSteps.clear();
+        valueToSteps.emplace(1, 0);
+        //[power, value]
+        vector<vector<int>> powerValues((hi-lo)+1, vector<int>());
+        for(int i = lo; i <= hi; ++i) {
+            powerValues[i-lo] = {calcSteps(i), i};
+        }
+        //Quickselect techinque since we dont have to sort whole array
+        nth_element(powerValues.begin(), powerValues.begin()+(k-1), powerValues.end());
+        return powerValues[k-1][1];
+    }
+};
