@@ -1,0 +1,34 @@
+//Run Time: 8ms - 100.00%
+//Memory Usage: 8.7MB - 29.99%
+//Solved =)
+//Time O(m * n) Memory O(1)
+class Solution {
+public:
+    void markBattleShip(vector<vector<char>>& board, int x, int y) {
+        bool isHorz = (x+1 < board[y].size() && board[y][x+1] == 'X');
+        while(y < board.size() && x < board[y].size()  && board[y][x] == 'X') {
+            board[y][x] = 'O';
+            if(isHorz) ++x;
+            else ++y;
+        }
+    }
+    int countBattleships(vector<vector<char>>& board) {
+        //board is always valid
+        //battle ships must be 1xN or Nx1
+        //X
+        //X  OR XXX
+        //X
+        //seperated by a .
+        //Multiple pass with modification
+        int numShips = 0;
+        for(int i = 0; i < board.size(); ++i) {
+            for(int j = 0; j < board[i].size(); ++j) {
+                if(board[i][j] == 'X') {
+                    markBattleShip(board, j, i);
+                    ++numShips;
+                }
+            }
+        }
+        return numShips;
+    }
+};
