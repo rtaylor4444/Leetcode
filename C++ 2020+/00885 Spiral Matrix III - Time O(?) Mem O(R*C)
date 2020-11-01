@@ -1,0 +1,37 @@
+//Run Time: 24ms - 81.58%
+//Memory Usage: 12.5MB - 5.00%
+//Solved =)
+//Time O(??) Memory O(r*c)
+class Solution {
+public:
+    vector<vector<int>> spiralMatrixIII(int R, int C, int r0, int c0) {
+        //right 1
+        //down 1
+        //left 2
+        //up 2
+        //right 3
+        //down 3
+        //keep going until a total of r*c points are visited
+        vector<vector<int>> pointsVisited;
+        int dir = 1, dist = 1, numPoints = R * C;
+        pointsVisited.push_back({r0, c0});
+        while(pointsVisited.size() < numPoints) {
+            //Right/Left
+            for(int i = 0; i < dist; ++i) {
+                c0 += dir;
+                if(r0 < R && r0 >= 0 && c0 < C && c0 >= 0) 
+                    pointsVisited.push_back({r0, c0});
+            }
+            //Up/Down
+            for(int i = 0; i < dist; ++i) {
+                r0 += dir;
+                if(r0 < R && r0 >= 0 && c0 < C && c0 >= 0) 
+                    pointsVisited.push_back({r0, c0});
+            }
+            dir *= -1;
+            ++dist;
+        }
+        return pointsVisited;
+        
+    }
+};
