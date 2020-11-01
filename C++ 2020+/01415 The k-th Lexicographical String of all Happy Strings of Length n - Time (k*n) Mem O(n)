@@ -1,0 +1,38 @@
+//Run Time: 4ms - 80.46%
+//Memory Usage: 6MB - 7.54%
+//Solved =)
+//Time O(k * n) Memory O(n)
+class Solution {
+    int numStringGen, maxSize, targetIndex;
+    string happyString;
+public:
+    void genStrings(string& curString, char prevChar) {
+        if(numStringGen >= targetIndex) return;
+        
+        if(curString.size() == maxSize) {
+            //Only set String once
+            if(++numStringGen == targetIndex) {
+                happyString = curString;
+            }
+            return;
+        }
+        
+        for(int i = 0; i < 3; ++i) {
+            char curChar = 'a' + i;
+            if(curChar == prevChar) continue;
+            curString.push_back(curChar);
+            genStrings(curString, curChar);
+            curString.pop_back();
+        }
+        
+    }
+    string getHappyString(int n, int k) {
+        numStringGen = 0;
+        maxSize = n;
+        targetIndex = k;
+        happyString = "";
+        string curString;
+        genStrings(curString, ' ');
+        return happyString;
+    }
+};
