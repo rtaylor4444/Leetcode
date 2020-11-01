@@ -1,0 +1,53 @@
+//Run Time: 12ms - 19.87%
+//Memory Usage: 8.3MB - 36.74%
+//Unoptimal Solution - Time needs improvement
+//Time O(n*sizeof(n)) Memory O(n)
+class Solution {
+public:
+    int count(int temp) {
+        int numBits = 0;
+        while(temp) {
+            if(temp & 1) ++numBits;
+            temp >>= 1;
+        }
+        return numBits;
+    }
+    vector<int> countBits(int num) {
+        //keep track of a running bit count?
+        //start at reverse and get count of the highest num
+        //even to odd is always +1
+        //odd to even is num even bits
+        //*reversed
+        //odd number to even is simply -1
+        //15 => 1111 => 4
+        //14 => 1110 => 3
+        //13 => 1101 => 3
+        //12 => 1100 => 2
+        //11 => 1011 => 3
+        //10 => 1010 => 2
+        //9 => 1001 => 2
+        //8 => 1000 => 1
+        //7 => 0111 => 3
+        //max bits = 3
+        //6 => 0110 => 2
+        //5 => 0101 => 2
+        //4 => 0100 => 1 when number reaches one next value = max bits - 1 which is updated
+        //3 => 0011 => 2
+        //max bits = 2
+        //2 => 0010 => 1
+        //1 => 0001 => 1
+        
+        vector<int> bitCount(num+1, 0);
+        /*int numBits = 0, maxBits = 0, temp = num;
+        while(temp) {
+            if(temp & 1) ++numBits;
+            temp >>= 1;
+            ++maxBits;
+        }
+        bitCount[num] = numBits;*/
+        for(int i = num; i >= 0; --i) {
+            bitCount[i] = count(i);
+        }
+        return bitCount;
+    }
+};
