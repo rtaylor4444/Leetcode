@@ -1,0 +1,18 @@
+//Run Time: 208ms - 13.72%
+//Memory Usage: 48.3MB - 7.76%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector<int> dups;
+        unordered_set<int> seenNums;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(seenNums.find(nums[i]) != seenNums.end())
+                dups.push_back(nums[i]);
+            
+            seenNums.emplace(nums[i]);
+        }
+        return dups;
+    }
+};
