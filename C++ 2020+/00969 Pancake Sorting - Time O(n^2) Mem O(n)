@@ -1,0 +1,45 @@
+//Run Time: 8ms - 56.64%
+//Memory Usage: 11.5MB - 40.51%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    void pancakeFlip(vector<int>& arr, int k) {
+        int l = 0, r = k - 1;
+        while(l < r) {
+            swap(arr[l++], arr[r--]);
+        }
+    }
+    vector<int> pancakeSort(vector<int>& arr) {
+        //multiple valid answers
+        //find maximum number given length and place it at
+        //the end of the array
+        //[3,2,4,1]
+        //[4,2,3,1] flip 3
+        //[1,3,2,4] flip 4
+        //[]
+        
+        int length = arr.size();
+        vector<int> flipsUsed;
+        while(length) {
+            int maxNum = INT_MIN, maxPos = -1;
+            for(int i = 0; i < length; ++i) {
+                if(arr[i] > maxNum) {
+                    maxNum = arr[i];
+                    maxPos = i;
+                }
+            }
+            //cout << "max number is: " << maxNum << endl;
+            //cout << "maxPos is: " << maxPos+1 << endl;
+            //place maximum number at the end of the array if it isnt already
+            if(maxPos+1 != length) {
+                pancakeFlip(arr, maxPos+1);
+                flipsUsed.push_back(maxPos+1);
+                pancakeFlip(arr, length);
+                flipsUsed.push_back(length);
+            }
+            --length;
+        }
+        return flipsUsed;
+    }
+};
