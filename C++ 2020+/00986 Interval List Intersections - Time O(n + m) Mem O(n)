@@ -1,0 +1,29 @@
+//Run Time: 56ms - 86.33%
+//Memory Usage: 8.2MB - 5.67%
+//Solved =)
+//Time O(m + n) Memory O(n)
+class Solution {
+public:
+    vector<vector<int>> intervalIntersection(vector<vector<int>>& A, vector<vector<int>>& B) {
+        //merge?
+        //edges cases?
+        //Unequal lists do not matter since we only want intervals between A and B
+        vector<vector<int>> merged;
+        int i = 0, j = 0;
+        while(i < A.size() && j < B.size()) {
+            //Check if intervals overlap
+            if((A[i][0] <= B[j][1] && A[i][0] >= B[j][0]) || 
+               (B[j][0] <= A[i][1] && B[j][0] >= A[i][0]))
+                merged.push_back({max(A[i][0], B[j][0]), min(A[i][1], B[j][1])});
+            
+            //Advance the earliest interval
+            if(A[i][1] == B[j][1]) {
+                i++;
+                j++;
+            }
+            else if(A[i][1] < B[j][1]) i++;
+            else j++;
+        }
+        return merged;
+    }
+};
