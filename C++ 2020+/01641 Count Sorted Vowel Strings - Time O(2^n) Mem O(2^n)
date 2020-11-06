@@ -1,0 +1,26 @@
+//Run Time: 448ms - 5.03%
+//Memory Usage: 6.2MB - 37.48%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(2^n) Memory O(2^n)
+class Solution {
+    string vowels;
+    int count;
+public:
+    void generateCount(int n, char curChar) {
+        if(n == 0) {
+            ++count;
+            return;
+        }
+        
+        for(int i = 0; i < vowels.size(); ++i) {
+            if(curChar > vowels[i]) continue;
+            generateCount(n-1, vowels[i]);
+        }
+    }
+    int countVowelStrings(int n) {
+        count = 0;
+        vowels = "aeiou";
+        generateCount(n, ' ');
+        return count;
+    }
+};
