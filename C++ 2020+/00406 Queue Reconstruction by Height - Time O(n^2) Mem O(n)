@@ -1,0 +1,74 @@
+//Run Time: 68ms - 91.46%
+//Memory Usage: 13MB - 5.29%
+//Solved =)
+//Time O(n^2) Memory O(n)
+bool sortFunction(vector<int>& a, vector<int>& b) {
+    //greater heights come first
+    if(a[0] > b[0]) return true;
+    else if(a[0] < b[0]) return false;
+    //values are equal
+    //those who have fewer people taller than come first
+    if(a[1] < b[1]) return true;
+    return false;
+}
+
+class Solution {
+    struct LinkedNode {
+        int index;
+        LinkedNode* next;  
+        LinkedNode(int i) {
+            index = i;
+            next = nullptr;
+        }
+    };
+    LinkedNode* head;
+public:
+
+    void placeInList(int index, vector<vector<int>>& people) {
+        LinkedNode* newNode = new LinkedNode(index);
+        if(head == nullptr) {
+            head = newNode;
+            return;
+        }
+        int numTaller = people[index][1];
+        LinkedNode *curNode = head, *prevNode = nullptr;
+        while(curNode) {
+            vector<int>& curPerson = people[curNode->index];
+            if(numTaller <= 0) break;
+            if(curPerson[0] >= people[index][0]) --numTaller;
+            prevNode = curNode;
+            curNode = curNode->next;
+        }
+        //PLace new node inside of the list
+        //curNode is the head
+        if(prevNode == nullptr) {
+            newNode->next = head;
+            head = newNode;
+        }
+        else {
+            prevNode->next = newNode;
+            newNode->next = curNode;
+        }
+    }
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        //sorting function?
+        //can be done in n^2 with linked list
+        //true a ordered before b
+        //sort the queue with tallest people on top then construct it
+        head = nullptr;
+        sort(people.begin(), people.end(), sortFunction);
+        vector<vector<int>> ans;
+        for(int i = 0; i < people.size(); ++i) {
+            placeInList(i, people);
+        }
+        //Construct our final list
+        LinkedNode* curNode = head, *prevNode = nullptr;
+        while(curNode) {
+            prevNode = curNode;
+            ans.push_back(people[curNode->index]);
+            curNode = curNode->next;
+            delete prevNode;
+        }
+        return ans;
+    }
+};
