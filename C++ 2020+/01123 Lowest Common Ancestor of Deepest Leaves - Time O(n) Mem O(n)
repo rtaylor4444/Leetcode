@@ -1,0 +1,62 @@
+//Run Time: 24ms - 38.40%
+//Memory Usage: 23.3MB - 9.11%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        //First pass
+        //-get node -> parent hashmap to find the lca
+        //-find deepest nodes 
+        //backtrack to find the lca
+        //single deepest node is a lca of itself
+        int numLevels = 0;
+        unordered_map<TreeNode*, TreeNode*> nodeToParent;
+        vector<TreeNode*> deepestNodes;
+        queue<TreeNode*> levelOrder;
+        levelOrder.push(root);
+        while(!levelOrder.empty()) {
+            deepestNodes.clear();
+            for(int i = levelOrder.size() - 1; i >= 0; --i) {
+                TreeNode* curNode = levelOrder.front();
+                levelOrder.pop();
+                deepestNodes.push_back(curNode);
+                if(curNode->left) {
+                    nodeToParent.emplace(curNode->left, curNode);
+                    levelOrder.push(curNode->left);
+                }
+                if(curNode->right) {
+                    nodeToParent.emplace(curNode->right, curNode);
+                    levelOrder.push(curNode->right);  
+                } 
+            }
+            ++numLevels;
+        }
+        //one node can be lca of itself
+        if(deepestNodes.size() == 1) return deepestNodes[0];
+        //Backtrack to find the lca
+        while(--numLevels) {
+            //BUG - iterate backwards so we can mutate the list?
+            bool sameNode = true;
+            TreeNode* prevNode = nullptr;
+            for(int i = 0; i < deepestNodes.size(); ++i) {
+                deepestNodes[i] = nodeToParent[deepestNodes[i]];
+                if(prevNode && deepestNodes[i] != prevNode) sameNode = false;
+                prevNode = deepestNodes[i];
+            }
+            if(sameNode) break;
+        }
+        return deepestNodes[0];
+    }
+};
