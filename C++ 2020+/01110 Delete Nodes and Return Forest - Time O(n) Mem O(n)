@@ -1,0 +1,40 @@
+//Run Time: 32ms - 79.63%
+//Memory Usage: 26.9MB - 5.23%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    vector<TreeNode*> roots;
+public:
+    TreeNode* findAndDelete(TreeNode* node, unordered_set<int>& to_delete) {
+        //Post Order for deletion
+        if(node == nullptr) return nullptr;
+        node->left = findAndDelete(node->left, to_delete);
+        node->right = findAndDelete(node->right, to_delete);
+        //Check our value
+        if(to_delete.find(node->val) != to_delete.end()) {
+            //Add roots and set to null
+            if(node->left) roots.push_back(node->left);
+            if(node->right) roots.push_back(node->right);
+            return nullptr;
+        }
+        return node;
+    }
+    vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+        roots.clear();
+        unordered_set<int> valToDelete(to_delete.begin(), to_delete.end());
+        TreeNode* newRoot = findAndDelete(root, valToDelete);
+        if(newRoot) roots.push_back(newRoot);
+        return roots;
+    }
+};
