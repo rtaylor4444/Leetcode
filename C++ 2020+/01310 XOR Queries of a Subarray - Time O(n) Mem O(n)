@@ -1,0 +1,24 @@
+//Run Time: 140ms - 95.52%
+//Memory Usage: 38.2MB - 9.06%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> xorQueries(vector<int>& arr, vector<vector<int>>& queries) {
+        //precalc the xor
+        //padd zero for easy modifications for subarrays
+        //[0,1,2,6,14]
+        vector<int> calcedXor(arr.size() + 1, 0);
+        int runningXOR = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            runningXOR ^= arr[i];
+            calcedXor[i+1] = runningXOR;
+        }
+        vector<int> results;
+        results.reserve(queries.size());
+        for(int i = 0; i < queries.size(); ++i) {
+            results.push_back(calcedXor[queries[i][0]] ^ calcedXor[queries[i][1] + 1]);
+        }
+        return results;
+    }
+};
