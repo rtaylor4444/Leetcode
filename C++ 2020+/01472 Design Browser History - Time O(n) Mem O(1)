@@ -1,0 +1,45 @@
+//Run Time: 164ms - 98.11%
+//Memory Usage: 55.1MB - 10.18%
+//Solved =)
+//Time O(n) Memory O(n)
+//visit: Time O(n)
+//back: Time O(1)
+//forward: Time O(1)
+class BrowserHistory {
+    int pos;
+    vector<string> history;
+public:
+    BrowserHistory(string homepage) {
+        //Doubly linked list
+        //or I could use a vector for O(1) for back and forward since i can index
+        pos = 0;
+        history.push_back(homepage);
+    }
+    
+    void visit(string url) {
+        //pop back all elements that are ahead of pos 
+        for(int i = history.size() - 1; i > pos; --i) {
+            history.pop_back();
+        }
+        history.push_back(url);
+        ++pos;
+    }
+    
+    string back(int steps) {
+        pos = max(0, pos - steps);
+        return history[pos];
+    }
+    
+    string forward(int steps) {
+        pos = min((int)history.size() - 1, pos + steps);
+        return history[pos];
+    }
+};
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory* obj = new BrowserHistory(homepage);
+ * obj->visit(url);
+ * string param_2 = obj->back(steps);
+ * string param_3 = obj->forward(steps);
+ */
