@@ -1,0 +1,46 @@
+//Run Time: 192ms - 88.62%
+//Memory Usage: 67.7MB - 6.50%
+//Solved =)
+//n = number of orders
+//i = number of food items
+//Time O(n+i) Memory O(n*i)
+//Due to the large constant size of 500 there is constant overhead
+//this is good for large numbers of ordered but bad for smaller ones
+class Solution {
+public:
+    vector<vector<string>> displayTable(vector<vector<string>>& orders) {
+        //table number -> (food item -> count)
+        vector<unordered_map<string, int>> tableToOrder(501, unordered_map<string, int>());
+        set<string> itemQueries;
+        for(int i = 0; i < orders.size(); ++i) {
+            int tableIndex = stoi(orders[i][1]);
+            if(tableToOrder[tableIndex].find(orders[i][2]) == tableToOrder[tableIndex].end())
+                tableToOrder[tableIndex].emplace(orders[i][2], 0);
+            
+            itemQueries.emplace(orders[i][2]);
+            tableToOrder[tableIndex][orders[i][2]]++;
+        }
+        vector<vector<string>> displayTable;
+        //Populate first row - items in sorted order
+        vector<string> firstRow;
+        firstRow.push_back("Table");
+        for(auto it = itemQueries.begin(); it != itemQueries.end(); ++it) {
+           firstRow.push_back(*it);
+        }
+        displayTable.push_back(firstRow);
+        //Fill all other table rows
+        for(int i = 0; i < tableToOrder.size(); ++i) {
+            if(tableToOrder[i].empty()) continue;
+            vector<string> curRow;
+            curRow.push_back(to_string(i));
+            for(auto it = itemQueries.begin(); it != itemQueries.end(); ++it) {
+                if(tableToOrder[i].find(*it) != tableToOrder[i].end()) {
+                    curRow.push_back(to_string(tableToOrder[i][*it]));
+                }
+                else curRow.push_back("0");
+            }
+            displayTable.push_back(curRow);
+        }
+        return displayTable;
+    }
+};
