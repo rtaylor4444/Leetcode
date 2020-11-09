@@ -1,0 +1,24 @@
+//Run Time: 340ms - 67.56%
+//Memory Usage: 12MB - 6.00%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    bool canBreak(string& s1, string& s2) {
+        for(int i = 0; i < s1.size(); ++i) {
+            if(s1[i] < s2[i]) return false;
+        }
+        return true;
+    }
+    bool checkIfCanBreak(string s1, string s2) {
+        //each chars has to be greater than or equal to
+        //the chars in the other string
+        //Ex: "xya" and "cba"
+        //for each char find the lowest possible char we can break
+        //(one that is equal or closest to our value as possible)
+        //n^2
+        sort(s1.begin(), s1.end());
+        sort(s2.begin(), s2.end());
+        return (canBreak(s1, s2) || canBreak(s2, s1));
+    }
+};
