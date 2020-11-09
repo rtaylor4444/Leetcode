@@ -1,0 +1,45 @@
+//Run Time: 104ms - 71.12%
+//Memory Usage: 33.7MB - 5.10%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+class Solution {
+public:
+    vector<vector<int>> restoreMatrix(vector<int>& rowSum, vector<int>& colSum) {
+        //start by placing the column sum inside of the matrix
+        //[4,7]
+        //[0,0]
+        //We know we can only decrease values and move the difference down one cell
+        //But how do we know what to move?
+        //test row by row
+        //[8,6,8]
+        //[0,0,0]
+        //[0,0,0]
+        //First row has to equal 5
+        //[5,0,0]
+        //[3,6,8]
+        //[0,0,0]
+        //Second row has to equal 7
+        //[5,0,0]
+        //[3,4,0]
+        //[0,2,8]
+        //Third row has to equal 10
+        vector<vector<int>> matrix(rowSum.size(), vector<int>(colSum.size(), 0));
+        //Initialize columns
+        for(int i = 0; i < colSum.size(); ++i) {
+            matrix[0][i] = colSum[i];
+        }
+        //Fix matrix row by row
+        for(int i = 0; i < rowSum.size(); ++i) {
+            int reqSum = rowSum[i];
+            for(int j = 0; j < colSum.size(); ++j) {
+                int curDiff = matrix[i][j] - reqSum;
+                if(curDiff > 0) { 
+                    matrix[i+1][j] = curDiff;
+                    matrix[i][j] -= curDiff;
+                }
+                reqSum -= matrix[i][j];
+            }
+        }
+        return matrix;
+    }
+};
