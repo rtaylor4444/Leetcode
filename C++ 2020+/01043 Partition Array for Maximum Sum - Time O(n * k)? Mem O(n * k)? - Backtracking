@@ -1,0 +1,34 @@
+//Run Time: 36ms - 34.20%
+//Memory Usage: 8.2MB - 8.22%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n * k) Memory O(n * k)
+//Complexity may be off esp since stack space
+class Solution {
+public:
+    //return sum so far
+    int backtrackMaxSum(vector<int>& arr, vector<int>& memo, int k, int start) {
+        if(start >= arr.size()) return 0;
+        if(memo[start] != INT_MIN) return memo[start];
+        int maxNum = INT_MIN, maxSum = INT_MIN, curSum = 0;
+        for(int i = start; (i < start + k) && (i < arr.size()); ++i) {
+            maxNum = max(maxNum, arr[i]);
+            curSum = maxNum * (i+1 - start);
+            maxSum = max(maxSum, backtrackMaxSum(arr, memo, k, i+1) + curSum);
+        }
+        memo[start] = maxSum;
+        return maxSum;
+    }
+    int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        //subarrays of k or less
+        //[1,15,7,9,2,5,10]
+        //start with size 1 than work our way up
+        //keep track of running sum
+        //49
+        //we want subarrays that increase the total - only care about max total
+        //Dynamic Programming/Backtracking w memo
+        //test various sizes of subarrys until we get to k
+        vector<int> memo(arr.size(), INT_MIN);
+        backtrackMaxSum(arr, memo, k, 0);
+        return memo[0];
+    }
+};
