@@ -1,0 +1,24 @@
+//Run Time: 4ms - 98.81%
+//Memory Usage: 10.6MB - 5.40%
+//Solved =)
+//a = number of alpha chars
+//Time O(n*a) Memory O(a)
+class Solution {
+    vector<string> permutations;
+public:
+    void generate(string& S, int start) {
+        permutations.push_back(S);
+        for(int i = start; i < S.size(); ++i) {
+            if(!isalpha(S[i])) continue;
+            char prev = S[i];
+            S[i] ^= 32;
+            generate(S, i + 1);
+            S[i] = prev;
+        }
+    }
+    vector<string> letterCasePermutation(string S) {
+        permutations.clear();
+        generate(S, 0);
+        return permutations;
+    }
+};
