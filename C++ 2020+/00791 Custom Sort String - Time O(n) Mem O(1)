@@ -1,0 +1,24 @@
+//Run Time: 4ms - 59.14%
+//Memory Usage: 8.2MB - 5.58%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+    struct CustomSort {
+        vector<int> placement;
+        CustomSort(vector<int>& p) {
+            placement = p;
+        }
+        bool operator()(char a, char b) {
+            return (placement[a - 'a'] < placement[b - 'a']);
+        }
+    };
+public:
+    string customSortString(string S, string T) {
+        vector<int> letterToPlacement(26, INT_MAX);
+        for(int i = 0; i < S.size(); ++i) {
+            letterToPlacement[S[i] - 'a'] = i;
+        }
+        sort(T.begin(), T.end(), CustomSort(letterToPlacement));
+        return T;
+    }
+};
