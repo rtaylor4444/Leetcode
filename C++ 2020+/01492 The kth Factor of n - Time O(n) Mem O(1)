@@ -1,0 +1,16 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.3MB - 7.27%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int kthFactor(int n, int k) {
+        if(k == 1) return 1;
+        int numFactors = 1;
+        for(int i = 2; i <= n; ++i) {
+            if(n % i == 0) ++numFactors;
+            if(numFactors == k) return i;
+        }
+        return -1;
+    }
+};
