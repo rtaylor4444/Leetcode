@@ -1,0 +1,22 @@
+//Run Time: 4ms - 78.58%
+//Memory Usage: 8.2MB - 5.01%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    bool stoneGame(vector<int>& piles) {
+        //Greedy or dp?
+        //does picking the best choice in each step always lead to
+        //the best answer
+        //[6,7,1,5]
+        //a: 6 5
+        //l: 7 1
+        //
+        //a: 5 7
+        //l: 6 1
+        //So can alex always win no matter what?
+        //Hes always going to pick an optimal move each time
+        //and he always goes first giving him control over what Lee picks
+        return true;
+    }
+};
