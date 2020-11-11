@@ -1,0 +1,63 @@
+//Run Time: 4ms - 81.61%
+//Memory Usage: 12.5MB - 54.33%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool flipEquiv(TreeNode* root1, TreeNode* root2) {
+        TreeNode *curNode1, *curNode2;
+        stack<TreeNode*> dfs1, dfs2;
+        dfs1.push(root1);
+        dfs2.push(root2);
+        while(!dfs1.empty() && !dfs2.empty()) {
+            curNode1 = dfs1.top();
+            dfs1.pop();
+            curNode2 = dfs2.top();
+            dfs2.pop();
+            
+            //Check nodes
+            if(!curNode1 && !curNode2) continue;
+            else if(!curNode1 || !curNode2) return false;
+            //cout << curNode1->val << " " << curNode2->val << endl;
+            if(curNode1->val != curNode2->val) return false;
+            
+            
+            //check if we need to/can swap to match tree2
+            TreeNode* leftNode1 = curNode1->left;
+            TreeNode* leftNode2 = curNode2->left;
+            //Try a swap if our nodes values dont match
+            if(leftNode1 && leftNode2) {
+                if(leftNode1->val != leftNode2->val) {
+                    //cout << "attempting swap: value mismatch" << endl;
+                    swap(curNode1->left, curNode1->right);
+                }
+            }
+            //Try a swap on a null to node mismatch
+            else {
+                if(leftNode1 || leftNode2) {
+                    //cout << "attempting swap: node mismatch" << endl;
+                    swap(curNode1->left, curNode1->right);
+                }
+            }
+            
+
+            dfs1.push(curNode1->left);
+            dfs1.push(curNode1->right);
+            
+            dfs2.push(curNode2->left);
+            dfs2.push(curNode2->right);
+        }
+        return dfs1.size() == dfs2.size();
+    }
+};
