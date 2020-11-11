@@ -1,0 +1,45 @@
+//Run Time: 56ms - 90.79%
+//Memory Usage: 7.6MB - 5.23%
+//Solved =)
+//Time O(k * 3 ^ k) Memory O(k)
+class Solution {
+public:
+    //return maxGold
+    int dfs(vector<vector<int>>& grid, int i, int j) {
+        if(grid[i][j] <= 0) return 0;
+        
+        int localMaxGold = grid[i][j], curGold = grid[i][j];
+        grid[i][j] *= -1;
+        //Up
+        if(i-1 >= 0 && grid[i-1][j] > 0) {
+            localMaxGold = max(localMaxGold, curGold + dfs(grid, i-1, j));
+        }
+            
+        //Left
+        if(j-1 >= 0 && grid[i][j-1] > 0) {
+            localMaxGold = max(localMaxGold, curGold + dfs(grid, i, j-1));
+        }
+        
+        //Down
+        if(i+1 < grid.size() && grid[i+1][j] > 0) {
+            localMaxGold = max(localMaxGold, curGold + dfs(grid, i+1, j));
+        }
+
+        //Right
+        if(j+1 < grid[i].size() && grid[i][j+1] > 0) {
+            localMaxGold = max(localMaxGold, curGold + dfs(grid, i, j+1));
+        }
+        grid[i][j] *= -1;
+        return localMaxGold;
+    }
+    int getMaximumGold(vector<vector<int>>& grid) {
+        int maxGold = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                maxGold = max(maxGold, dfs(grid, i, j));
+            }
+        }
+        return maxGold;
+    }
+};
