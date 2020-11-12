@@ -1,0 +1,33 @@
+//Run Time: 4ms - 84.49%
+//Memory Usage: 8.3MB - 8.35%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+class Solution {
+public:
+    void recursion(vector<vector<int>>& perm, vector<int>& curPerm,
+                   vector<bool>& takenNums, vector<int>& nums) {
+        if(curPerm.size() == nums.size()) {
+            perm.push_back(curPerm);
+        }
+        
+        for(int i = 0; i < nums.size(); ++i) {
+            if(takenNums[i]) continue;
+            takenNums[i] = true;
+            curPerm.push_back(nums[i]);
+            recursion(perm, curPerm, takenNums, nums);
+            curPerm.pop_back();
+            takenNums[i] = false;
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        //I can easily solve via recursion by picking a unused
+        //number in the nums every time; but this is fairly slow
+        //O(n) each time we want a new value
+        //loop through 1,2,3
+        vector<vector<int>> perm;
+        vector<int> curPerm;
+        vector<bool> takenNums(nums.size(), false);
+        recursion(perm, curPerm, takenNums, nums);
+        return perm;
+    }
+};
