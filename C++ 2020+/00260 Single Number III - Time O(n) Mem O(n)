@@ -1,0 +1,30 @@
+//Run Time: 16ms - 67.19%
+//Memory Usage: 11.1MB - 30.50%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        //XOR?  this would work if there was only one diff element
+        //Array Marking?
+        //-No because the numbers can be negative or out of bounds
+        //easy solve with a hashset
+        //place element then remove it the second time
+        //
+        //5 ^ 3 = 6
+        //5 ^ 6 = 3
+        unordered_set<int> remainingNums;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(remainingNums.find(nums[i]) == remainingNums.end())
+                remainingNums.emplace(nums[i]);
+            else
+                remainingNums.erase(nums[i]);
+        }
+        
+        vector<int> ans;
+        for(auto it = remainingNums.begin(); it != remainingNums.end(); ++it) {
+            ans.push_back(*it);
+        }
+        return ans;
+    }
+};
