@@ -1,0 +1,84 @@
+//Run Time: 148ms - 48.45%
+//Memory Usage: 8.2MB - 5.46%
+//Unoptimal Solution - Time/Memory needs improvement
+//s = size of search string
+//n = number of words
+//Time O(s*n) Memory O(s*n)
+class Trie { 
+    struct TrieNode {
+        TrieNode* children[26];
+        TrieNode* parent;
+        bool isWord;
+        TrieNode(TrieNode* p) {
+            parent = p;
+            for(int i = 0; i < 26; ++i)
+                children[i] = nullptr;
+            isWord = false;
+        }
+        ~TrieNode() {
+            for(int i = 0; i < 26; ++i)
+                if(children[i]) delete children[i];
+        }
+    };
+    TrieNode *root, *curNode;
+    void dfs(vector<string>& toFill, string& curWord) {
+        if(toFill.size() == 3) return;
+        if(curNode->isWord) toFill.push_back(curWord);
+        for(int i = 0; i < 26; ++i) {
+            if(!curNode->children[i]) continue;
+            curNode = curNode->children[i];
+            curWord.push_back('a' + i);
+            dfs(toFill, curWord);
+            curWord.pop_back();
+            curNode = curNode->parent;
+        }
+    }
+public:
+    Trie() {
+        root = new TrieNode(nullptr);
+    }
+    ~Trie() {
+        delete root;
+    }
+    void addWords(vector<string>& words) {
+        for(int i = 0; i < words.size(); ++i) {
+            addWord(words[i]);
+        }
+    }
+    void addWord(string& word) {
+        curNode = root;
+        for(int i = 0; i < word.size(); ++i) {
+            if(!curNode->children[word[i] - 'a'])
+                curNode->children[word[i] - 'a'] = new TrieNode(curNode);
+            
+            curNode = curNode->children[word[i] - 'a'];
+            //cout << word[i];
+        }
+        //cout << endl;
+        curNode->isWord = true;
+    }
+    void find(vector<string>& toFill, string& search, int end) {
+        curNode = root;
+        string wordSoFar;
+        for(int i = 0; i <= end; ++i) {
+            if(!curNode->children[search[i] - 'a']) return;
+            wordSoFar += search[i];
+            curNode = curNode->children[search[i] - 'a'];
+        }
+        dfs(toFill, wordSoFar);
+    }
+};
+class Solution {
+public:
+    vector<vector<string>> suggestedProducts(vector<string>& products, string searchWord) {
+        //Trie
+        //Only display 3 item lexographic order
+        Trie trie;
+        trie.addWords(products);
+        vector<vector<string>> searchAns(searchWord.size(), vector<string>());
+        for(int i = 0; i < searchWord.size(); ++i) {
+            trie.find(searchAns[i], searchWord, i);
+        }
+        return searchAns;
+    }
+};
