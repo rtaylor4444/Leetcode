@@ -1,0 +1,24 @@
+//Run Time: 12ms - 98.50%
+//Memory Usage: 10.7MB - 5.01%
+//Solved =)
+//Time O(n + e) Memory O(n)
+class Solution {
+    int numRoomsVisited;
+public:
+    void dfs(vector<vector<int>>& rooms, vector<bool>& visited, int curRoom) {
+        if(visited[curRoom]) return;
+        visited[curRoom] = true;
+        ++numRoomsVisited;
+        
+        for(int i = 0; i < rooms[curRoom].size(); ++i) {
+            dfs(rooms, visited, rooms[curRoom][i]);
+        }
+    }
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        //graph dfs
+        numRoomsVisited = 0;
+        vector<bool> visited(rooms.size(), false);
+        dfs(rooms, visited, 0);
+        return numRoomsVisited == rooms.size();
+    }
+};
