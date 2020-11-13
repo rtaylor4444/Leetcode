@@ -1,0 +1,23 @@
+//Run Time: 148ms - 97.73%
+//Memory Usage: 55.7MB - 35.91%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numOfSubarrays(vector<int>& arr, int k, int threshold) {
+        //Use sliding window
+        //count first subarray of size k
+        int i, curSum = 0, numSubArrays = 0; 
+        for(i = 0; i < k; ++i) {
+            curSum += arr[i];
+        }
+        if(curSum / k >= threshold) ++numSubArrays;
+        //if first subarray meets criteria they all meet criteria
+        for(i; i < arr.size(); ++i) {
+            curSum += arr[i];
+            curSum -= arr[i-k];
+            if(curSum / k >= threshold) ++numSubArrays;
+        }
+        return numSubArrays;
+    }
+};
