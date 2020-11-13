@@ -1,0 +1,37 @@
+//Run Time: 40ms - 87.30%
+//Memory Usage: 16MB - 51.59%
+//Solved =)
+//Time O(nlogn) Memory O(logn)
+class Solution {
+public:
+    void printArray(vector<int>& nums, int l, int r) {
+        for(int i = l; i <= r; ++i) {
+            cout << nums[i] << " ";
+        }
+        cout << endl;
+    }
+    int partition(vector<int>& nums, int l, int r) {
+        int pivot = nums[l];
+        int start = l, end = r;
+        //printArray(nums, l, r);
+        while(start <= end) {
+            if(nums[start] > pivot && nums[end] <= pivot)
+                swap(nums[start], nums[end]);
+            
+            if(nums[start] <= pivot) ++start;
+            if(nums[end] > pivot) --end;
+        }
+        swap(nums[l], nums[end]);
+        return end;
+    }
+    void quickSort(vector<int>& nums, int l, int r) {
+        if(l >= r) return;
+        int sortedIndex = partition(nums, l, r);
+        quickSort(nums, l, sortedIndex - 1);
+        quickSort(nums, sortedIndex + 1, r);
+    }
+    vector<int> sortArray(vector<int>& nums) {
+        quickSort(nums, 0, nums.size() - 1);
+        return nums;
+    }
+};
