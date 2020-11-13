@@ -1,0 +1,34 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 11.9MB - 77.65%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+class Solution {
+public:
+    void genParenthsisHelper(vector<string>& ans, string& cur, int nOpen, int nClosed) {
+        if(nOpen == 0 && nClosed == 0) {
+            ans.push_back(cur);
+            return;
+        }
+        
+        //Recurse for both possibilities
+        //we can place open par anywhere since they are used first
+        if(nOpen) {
+            cur.push_back('(');
+            genParenthsisHelper(ans, cur, nOpen-1, nClosed);
+            cur.pop_back();
+        }
+        //closed count must be greater than open count
+        if(nClosed && nClosed > nOpen) {
+            cur.push_back(')');
+            genParenthsisHelper(ans, cur, nOpen, nClosed-1);
+            cur.pop_back();
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        //always start open
+        string parenthsis = "(";
+        genParenthsisHelper(ans, parenthsis, n-1, n);
+        return ans;
+    }
+};
