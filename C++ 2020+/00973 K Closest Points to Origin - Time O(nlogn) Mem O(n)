@@ -1,0 +1,50 @@
+//Run Time: 252ms - 95.69%
+//Memory Usage: 50.2MB - 83.82%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    int sqDist(vector<int>& point) {
+        return (point[0] * point[0]) + (point[1] * point[1]);
+    }
+    int partition(vector<vector<int>>& points, vector<int>& dist, int l, int r) {
+        int start = l;
+        int pivot = dist[start];
+        while(l <= r) {
+            if(dist[l] > pivot && dist[r] <= pivot) {
+                swap(dist[l], dist[r]);
+                swap(points[l], points[r]);
+            }
+            if(dist[l] <= pivot) ++l;
+            if(dist[r] > pivot) --r;
+        }
+        swap(dist[start], dist[r]);
+        swap(points[start], points[r]);
+        return r;
+    }
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
+        //Quick Sort - only need partially sorted data since order
+        // doesnt matter
+        if(K >= points.size()) return points;
+        //PreCalc dist to origin
+        vector<int> sqDistArr;
+        sqDistArr.reserve(points.size());
+        for(int i = 0; i < points.size(); ++i) {
+            sqDistArr.push_back(sqDist(points[i]));
+        }
+        //Partially sort 
+        int lo = 0, hi = points.size() - 1;
+        while(lo < hi) {
+            int sortedIndex = partition(points, sqDistArr, lo, hi);
+            if(sortedIndex < K) lo = sortedIndex+1;
+            else if(sortedIndex > K) hi = sortedIndex-1;
+            else break;
+        }
+        //Get our answer
+        vector<vector<int>> ans(K, vector<int>());
+        for(int i = 0; i < K; ++i) {
+            ans[i] = points[i];
+        }
+        return ans;
+    }
+};
