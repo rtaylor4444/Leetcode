@@ -1,0 +1,51 @@
+//Run Time: 112ms - 40.75%
+//Memory Usage: 6.5MB - 79.13%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    void reverse(string& s, int l, int r) {
+        while(l < r) {
+            swap(s[l++], s[r--]);
+        }
+    }
+    void print(string& s) {
+        for(int i = 0; i < s.size(); ++i)
+            cout << s[i];
+        
+        cout << endl;
+    }
+    void recursiveReverse(string &s, int startPos, int& i) {
+        while(i < s.size()) {
+            //Enter new layer of recursion on (
+            if(s[i] == '(') {
+                recursiveReverse(s, i, ++i);
+            }
+            //Reverse characters inside ( ) and exit
+            else if(s[i] == ')') {
+                reverse(s, startPos, i++);
+                cout << "flipped: " << startPos << " " << i << endl;
+                print(s);
+                return;
+            }
+            //Otherwise just increment i
+            else i++;
+        }
+    }
+    string reverseParentheses(string s) {
+        //Each time we hit a '(' enter to a new layer of recursion
+        // on ')' we exit recursion
+        int i = 0;
+        recursiveReverse(s, 0, i);
+        //Create new string by ridding '(' and ')'
+        string newString;
+        newString.reserve(s.size());
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == ')' || s[i] == '(')
+                continue;
+            
+            newString.push_back(s[i]);
+        }
+        return newString;
+    }
+};
