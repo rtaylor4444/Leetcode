@@ -1,0 +1,38 @@
+//Run Time: 256ms - 8.32%
+//Memory Usage: 376.4MB - 6.09%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(nlogn) Memory O(n)
+class CustomSort {
+    vector<int> letterToCount;
+public:
+    CustomSort() {
+        
+    }
+    void createCount(string& s) {
+        //letter -> count
+        letterToCount = vector<int>(256, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            letterToCount[s[i]]++;
+        }
+    }
+    bool operator()(char a, char b) {
+        //Order by letter count
+        if(letterToCount[a] > letterToCount[b])
+            return true;
+        else if(letterToCount[a] < letterToCount[b])
+            return false;
+        
+        //If count is even order by char itself
+        return (a < b);
+    }
+};
+class Solution {
+public:
+    string frequencySort(string s) {
+        //Count
+        CustomSort freqSort;
+        freqSort.createCount(s);
+        sort(s.begin(), s.end(), freqSort);
+        return s;
+    }
+};
