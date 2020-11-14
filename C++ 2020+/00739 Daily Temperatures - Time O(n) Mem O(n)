@@ -1,0 +1,23 @@
+//Run Time: 108ms - 90.15%
+//Memory Usage: 40.6MB - 47.91%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        //mono-stack?
+        //Keep track of all temperatures popping off colder temps 
+        //on the stack
+        stack<int> monoStack;
+        vector<int> ans(T.size(), 0);
+        for(int i = T.size() - 1; i >= 0; --i) {
+            //Pop off smaller temperatures
+            while(!monoStack.empty() && T[monoStack.top()] <= T[i]) {
+                monoStack.pop();
+            }
+            if(!monoStack.empty()) ans[i] = monoStack.top() - i;
+            monoStack.push(i);
+        }
+        return ans;
+    }
+};
