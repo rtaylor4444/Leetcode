@@ -1,0 +1,23 @@
+//Run Time: 128ms - 40.97%
+//Memory Usage: 39MB - 27.72%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int numTimesAllBlue(vector<int>& light) {
+        //Keep track of number of left consec lights and the max one on
+        int timesBlue = 0, maxBulb = 0, consecLeft = -1;
+        vector<bool> lightStates(light.size(), false);
+        for(int i = 0; i < light.size(); ++i) {
+            int curLight = light[i]-1;
+            lightStates[curLight] = true;
+            //Keep track of number fo consecutive lights on
+            while(consecLeft+1 < light.size() && lightStates[consecLeft+1]) 
+                ++consecLeft;
+            //Keep track of max bulb
+            maxBulb = max(maxBulb, curLight);
+            if(consecLeft == maxBulb) ++timesBlue;
+        }
+        return timesBlue;
+    }
+};
