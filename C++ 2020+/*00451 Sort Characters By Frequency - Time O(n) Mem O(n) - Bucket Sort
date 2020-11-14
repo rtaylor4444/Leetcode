@@ -1,0 +1,32 @@
+//Run Time: 12ms - 96.46%
+//Memory Usage: 376.4MB - 14.83%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string frequencySort(string s) {
+        //Bucket Sort
+        //Get frequency of characters
+        //letter -> count
+        int maxCount = 0;
+        vector<int> letterToCount(256, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            maxCount = max(maxCount, ++letterToCount[s[i]]);
+        }
+        //count -> letter(s)
+        vector<string> countToLetters(maxCount+1, "");
+        for(int i = 0; i < 256; ++i) {
+            if(letterToCount[i] == 0) continue;
+            countToLetters[letterToCount[i]].push_back((char)i); 
+        }
+        //build our string
+        int index = 0;
+        for(int i = maxCount; i >= 0; --i) {
+            for(int j = 0; j < countToLetters[i].size(); ++j) {
+                int curCount = i;
+                while(curCount--) s[index++] = countToLetters[i][j];
+            }
+        }
+        return s;
+    }
+};
