@@ -1,0 +1,22 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.5MB - 54.13%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+class Solution {
+    vector<vector<int>> ans;
+public:
+    void recursiveSubset(vector<int>& curSet, vector<int>& nums, int i) {
+        ans.push_back(curSet);
+        for(i; i < nums.size(); ++i) {
+            curSet.push_back(nums[i]);
+            recursiveSubset(curSet, nums, i+1);
+            curSet.pop_back();
+        }
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<int> set;
+        ans.clear();
+        recursiveSubset(set, nums, 0);
+        return ans;
+    }
+};
