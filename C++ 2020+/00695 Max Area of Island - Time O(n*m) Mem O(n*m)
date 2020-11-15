@@ -1,0 +1,58 @@
+//Run Time: 36ms - 43.72%
+//Memory Usage: 30.7MB - 7.47%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+class Solution {
+public:
+    int bfs(vector<vector<int>>& grid, int i, int j) {
+        int curArea = 0;
+        queue<int> yQueue, xQueue;
+        yQueue.push(i);
+        xQueue.push(j);
+        grid[i][j] *= -1;
+        while(!yQueue.empty() && !xQueue.empty()) {
+            i = yQueue.front();
+            yQueue.pop();
+            j = xQueue.front();
+            xQueue.pop();
+            
+            ++curArea;
+            
+            //UP
+            if(i-1 >= 0 && grid[i-1][j] > 0) {
+                grid[i-1][j] *= -1;
+                yQueue.push(i-1);
+                xQueue.push(j);
+            }
+            //LEFT
+            if(j-1 >= 0 && grid[i][j-1] > 0) {
+                grid[i][j-1] *= -1;
+                yQueue.push(i);
+                xQueue.push(j-1);
+            }
+            //DOWN
+            if(i+1 < grid.size() && grid[i+1][j] > 0) {
+                grid[i+1][j] *= -1;
+                yQueue.push(i+1);
+                xQueue.push(j);
+            }
+            //RIGHT
+            if(j+1 < grid[i].size() && grid[i][j+1] > 0) {
+                grid[i][j+1] *= -1;
+                yQueue.push(i);
+                xQueue.push(j+1);
+            }
+        }
+        return curArea;
+    }
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int maxArea = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] < 1) continue;
+                maxArea = max(maxArea, bfs(grid, i, j));
+            }
+        }
+        return maxArea;
+    }
+};
