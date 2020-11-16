@@ -1,0 +1,28 @@
+//Run Time: 4ms - 70.97%
+//Memory Usage: 7MB - 13.88%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int findMinFibonacciNumbers(int k) {
+        //Generate fib numbers
+        vector<int> fibNums = {1, 1};
+        int curIndex = 1;
+        while(fibNums[fibNums.size() - 1] < k) {
+            int nextNum = fibNums[curIndex] + fibNums[curIndex-1];
+            fibNums.push_back(nextNum);
+            ++curIndex;
+        }
+        int usedNums = 0;
+        curIndex = fibNums.size() - 1;
+        while(k) {
+            if(fibNums[curIndex] <= k) {
+                usedNums++;
+                //cout << k << endl;
+                k -= fibNums[curIndex];
+            }
+            --curIndex;
+        }
+        return usedNums;
+    }
+};
