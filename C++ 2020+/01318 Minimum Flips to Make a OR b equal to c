@@ -1,0 +1,31 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.1MB - 64.27%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minFlips(int a, int b, int c) {
+        int numFlips = 0, curBit = 1;
+        while((a | b) != c) {
+            int curNum = a | b;
+            if(c & curBit) {
+                if(!(curNum & curBit)) {
+                    a |= curBit;
+                    ++numFlips; 
+                }
+            }
+            else {
+                if(a & curBit) {
+                    a &= ~curBit;
+                    ++numFlips;
+                }
+                if(b & curBit) {
+                    b &= ~curBit;
+                    ++numFlips;
+                }
+            }
+            curBit <<= 1;
+        }
+        return numFlips;
+    }
+};
