@@ -1,0 +1,109 @@
+//Run Time: 108ms - 90.30%
+//Memory Usage: 26.4MB - 5.42%
+//Solved =)
+//Time O(m*n * n) Memory O(n*m)
+class UnionFind {
+    vector<int> dsu, size;
+public:
+    UnionFind(vector<vector<int>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        dsu = vector<int>((n*m), 0);
+        size = vector<int>((n*m), 1);
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < m; ++j) {
+                dsu[(i*m)+j] = (i*m)+j;
+            }
+        }
+    }
+    
+    void uniteServers(vector<vector<int>>& grid, int y, int x) {
+        int n = grid[0].size(), curNode = (y*n)+x;
+        //mark node so we skip it in the main function
+        grid[y][x] = -1;
+        //Left
+        for(int i = x-1; i >= 0; --i) {
+            if(grid[y][i] == 0) continue;
+            grid[y][i] = -1;
+            unite(curNode, (y*n)+i);
+            break;
+        }
+        //Right
+        for(int i = x+1; i < grid[y].size(); ++i) {
+            if(grid[y][i] == 0) continue;
+            grid[y][i] = -1;
+            unite(curNode, (y*n)+i);
+            break;
+        }
+        //Up
+        for(int i = y-1; i >= 0; --i) {
+            if(grid[i][x] == 0) continue;
+            grid[i][x] = -1;
+            unite(curNode, (i*n)+x);
+            break;
+        }
+        //Down
+        for(int i = y+1; i < grid.size(); ++i) {
+            if(grid[i][x] == 0) continue;
+            grid[i][x] = -1;
+            unite(curNode, (i*n)+x);
+            break;
+        }
+    }
+    
+    bool unite(int node1, int node2) {
+        int root1 = find(node1), root2 = find(node2);
+        //These nodes are already united in this case
+        if(root1 == root2) return false;
+        //Merge components based on which one is larger
+        //if node2 is larger merge node1 to it
+        if(size[root2] > size[root1]) {
+            dsu[root1] = root2;
+            size[root2] += size[root1];
+        }
+        else {
+            dsu[root2] = root1;
+            size[root1] += size[root2];
+        }
+        return true;
+    }
+    
+    int find(int node) {
+        int root = dsu[node];
+        while(root != dsu[root]) {
+            root = dsu[root];
+        }
+        //Path compression
+        while(dsu[node] != root) {
+            int prevNode = node;
+            node = dsu[node];
+            dsu[prevNode] = root;
+            size[prevNode] = size[root];
+        }
+        return root;
+    }
+    
+    int getServerCount() {
+        int count = 0;
+        for(int i = 0; i < dsu.size(); ++i) {
+            int curRoot = dsu[i];
+            if(size[curRoot] < 2) continue;
+            ++count;
+        }
+        return count;
+    }
+};
+
+class Solution {
+public:
+    int countServers(vector<vector<int>>& grid) {
+        //BFS or Union find
+        UnionFind unionFind(grid);
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] < 1) continue;
+                unionFind.uniteServers(grid, i, j);
+            }
+        }
+        return unionFind.getServerCount();
+    }
+};
