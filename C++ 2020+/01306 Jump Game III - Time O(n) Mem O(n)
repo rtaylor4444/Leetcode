@@ -1,0 +1,22 @@
+//Run Time: 60ms - 94.67%
+//Memory Usage: 26.5MB - 70.86%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool canReach(vector<int>& arr, int start) {
+        //DFS
+        if(arr[start] == 0) return true;
+        int jumpDist = arr[start];
+        bool canReachForward = false, canReachBackward = false;
+        //Mark position as visited
+        arr[start] *= -1;
+        //Forward jump
+        if(start + jumpDist < arr.size() && arr[start + jumpDist] >= 0)
+            canReachForward = canReach(arr, start + jumpDist);
+        //Backward jump
+        if(start - jumpDist >= 0 && arr[start - jumpDist] >= 0)
+            canReachBackward = canReach(arr, start - jumpDist);
+        return (canReachForward || canReachBackward);
+    }
+};
