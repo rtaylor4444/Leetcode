@@ -1,0 +1,33 @@
+//Run Time: 44ms - 92.98%
+//Memory Usage: 13.8MB - 59.53%
+//Solved =)
+//Time O(e+v) Memory O(e)
+class Solution {
+public:
+    bool dfs(vector<vector<int>>& graph, vector<int> &colors, int curColor,
+            int parent, int node) {
+        //if color matches our expecting color - we visited it before
+        if(colors[node] == curColor) return true;
+        //Return if color exists and does not match our expecting color
+        if(colors[node] > -1 && colors[node] != curColor)
+            return false;
+        
+        
+        colors[node] = curColor;
+        for(int i = 0; i < graph[node].size(); ++i) {
+            if(graph[node][i] == parent) continue;
+            if(!dfs(graph, colors, curColor ^ 1, node, graph[node][i])) return false;
+        }
+        return true;
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+        //graph is an adj list
+        //initialize colors to empty = -1
+        vector<int> colors(graph.size(), -1);
+        for(int i = 0; i < graph.size(); ++i) {
+            if(colors[i] > -1) continue;
+            if(!dfs(graph, colors, 0, -1, i)) return false;
+        }
+        return true;
+    }
+};
