@@ -1,0 +1,65 @@
+//Run Time: 1036ms - 5.05%
+//Memory Usage: 39.1MB - 5.13%
+//Solved =)
+//Time O(n*nlog(e)) Memory O(n^2)
+struct NodeInfo {
+    int node, dist;
+    NodeInfo() {
+        
+    }
+    NodeInfo(int n, int d) {
+        node = n;
+        dist = d;
+    }
+    bool operator()(NodeInfo& a, NodeInfo& b) {
+        return (a.dist > b.dist);
+    }
+};
+
+class Solution {
+    
+public:
+    //return number of neighbors reachable
+    int dijkstra(vector<vector<int>>& matrix, vector<int>& visited, int root, int curThreshold) {
+        int numReached = 0;
+        priority_queue<NodeInfo, vector<NodeInfo>, NodeInfo> p_q;
+        p_q.push(NodeInfo(root, 0));
+        while(!p_q.empty()) {
+            NodeInfo curNode = p_q.top();
+            p_q.pop();
+            if(visited[curNode.node]) continue;
+            visited[curNode.node] = true;
+            //Exit once we start reaching distances greater than threshold
+            if(curNode.dist > curThreshold) break;
+            if(curNode.node != root) ++numReached;
+            
+            for(int i = 0; i < matrix[curNode.node].size(); ++i) {
+                if(matrix[curNode.node][i] == 0) continue;
+                p_q.push(NodeInfo(i, curNode.dist + matrix[curNode.node][i]));
+            }
+        }
+        return numReached;
+    }
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        //AdjList vs adjMatrix
+        //n => (edge, weight), (edge, weight)
+        //n1, n2 => weight
+        //make martrix
+        vector<vector<int>> adjMatrix(n, vector<int>(n, 0));
+        for(int i = 0; i < edges.size(); ++i) {
+            adjMatrix[edges[i][0]][edges[i][1]] = edges[i][2];
+            adjMatrix[edges[i][1]][edges[i][0]] = edges[i][2];
+        }
+        
+        int minReached = n, cityMinReach = -1;
+        for(int i = 0; i < n; ++i) {
+            vector<int> visited(n, false);
+            int numReached = dijkstra(adjMatrix, visited, i, distanceThreshold);
+            if(numReached <= minReached) {
+                minReached = numReached;
+                cityMinReach = i;
+            }
+        }
+        return cityMinReach;
+    }
+};
