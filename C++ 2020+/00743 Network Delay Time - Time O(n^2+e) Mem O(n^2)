@@ -1,0 +1,39 @@
+//Run Time: 276ms - 34.65%
+//Memory Usage: 39.1MB - 85.38%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n^2+e)) Memory O(n^2)
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int N, int K) {
+        //Dijkstra's algorithm
+        //Build matrix
+        vector<vector<int>> adjMatrix(N+1, vector<int>(N+1, -1));
+        for(int i = 0; i < times.size(); ++i) {
+            //Edges are directed so onyl set this once
+            adjMatrix[times[i][0]][times[i][1]] = times[i][2];
+        }
+        //Use bfs and keep track of visited nodes and distance
+        int numVisited = 0, maxDist = 0;
+        vector<bool> visited(N+1, false);
+        //(dist so far, node)
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> bfs;
+        bfs.push({0, K});
+        while(!bfs.empty()) {
+            int curDist = bfs.top().first;
+            int curNode = bfs.top().second;
+            bfs.pop();
+            if(visited[curNode]) continue;
+            
+            maxDist = max(maxDist, curDist);
+            visited[curNode] = true;
+            ++numVisited;
+            
+            for(int i = 0; i < adjMatrix[curNode].size(); ++i) {
+                if(adjMatrix[curNode][i] < 0) continue;
+                bfs.push({curDist + adjMatrix[curNode][i], i});
+            }
+        }
+        if(numVisited != N) return -1;
+        return maxDist;
+    }
+};
