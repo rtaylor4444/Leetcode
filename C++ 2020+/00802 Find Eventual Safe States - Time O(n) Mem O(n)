@@ -1,0 +1,38 @@
+//Run Time: 272ms - 61.27%
+//Memory Usage: 46.8 - 98.44%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool isSafe(vector<vector<int>>& graph, vector<bool>& seenSafeNodes,
+               vector<bool>& visited, int curNode) {
+        //If this node is a safe node the previous one is safe too
+        if(seenSafeNodes[curNode]) return true;
+        //Otherwise we would enter a cycle 
+        if(visited[curNode]) return false;
+        
+        visited[curNode] = true;
+        bool safe = true;
+        for(int i = 0; i < graph[curNode].size(); ++i) {
+            if(!isSafe(graph, seenSafeNodes, visited, graph[curNode][i])) {
+                safe = false;
+                break;
+            }
+        }
+        seenSafeNodes[curNode] = safe;
+        return safe;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        //Run dfs and keep trck of the nodes we visited
+        vector<bool> visited(graph.size(), false), seenSafeNodes(graph.size(), false);
+        vector<int> safeNodes;
+        safeNodes.reserve(graph.size());
+        for(int i = 0; i < graph.size(); ++i) {
+            //cout << i << " -> ";
+            if(isSafe(graph, seenSafeNodes, visited, i)) 
+                safeNodes.push_back(i);
+            //cout << endl;
+        }
+        return safeNodes;
+    }
+};
