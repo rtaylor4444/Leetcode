@@ -1,0 +1,42 @@
+//Run Time: 352ms - 73.93%
+//Memory Usage: 64.7MB - 89.97%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+class Solution {
+public:
+    bool canBipartition(vector<vector<int>>& adjList, vector<char>& colors, 
+                        int curNode, int expectedColor) {
+        if(colors[curNode] >= 0 && colors[curNode] != expectedColor)
+            return false;
+        if(colors[curNode] == expectedColor) return true;
+        
+        colors[curNode] = expectedColor;
+        //cout << curNode << " color: " << expectedColor << endl;
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            if(!canBipartition(adjList, colors, adjList[curNode][i], expectedColor ^ 1))
+                return false;
+        }
+        return true;
+    }
+    bool possibleBipartition(int N, vector<vector<int>>& dislikes) {
+        //DFS
+        //Create adj List
+        vector<vector<int>> adjList(N+1, vector<int>());
+        for(int i = 0; i < dislikes.size(); ++i) {
+            //undirected
+            adjList[dislikes[i][0]].push_back(dislikes[i][1]);
+            adjList[dislikes[i][1]].push_back(dislikes[i][0]);
+        }
+        //Use colors as a visited array
+        //-1 = uncolored, 0 = blue, 1 = red
+        vector<char> colors(N+1, -1);
+        //Loop dfs just incase there a seperate components or graphs
+        for(int i = 0; i <= N; ++i) {
+            //Skip nodes already colored
+            if(colors[i] >= 0) continue;
+            if(!canBipartition(adjList, colors, i, 0))
+                return false;
+        }
+        return true;
+    }
+};
