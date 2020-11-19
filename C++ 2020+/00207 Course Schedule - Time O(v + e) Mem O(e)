@@ -1,0 +1,37 @@
+//Run Time: 28ms - 99.35%
+//Memory Usage: 13.5MB - 78.31%
+//Solved =)
+//Time O(v + e) Memory O(e)
+class Solution {
+public:
+    bool dfs(vector<vector<int>>& adjList, vector<int>& visited, int curNode) {
+        if(visited[curNode] < 0) return false;
+        else if(visited[curNode] == 0) return true;
+        
+        bool isCycle = false;
+        visited[curNode] = 0;
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            if(dfs(adjList, visited, adjList[curNode][i])) {
+                isCycle = true;
+                break;
+            }
+        }
+        visited[curNode] = -1;
+        return isCycle;
+    }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        //Basically if there are no cycles we can finish
+        //We could construct adj list and do dfs/bfs
+        vector<vector<int>> adjList(numCourses, vector<int>());
+        for(int i = 0; i < prerequisites.size(); ++i) {
+            adjList[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+        //-1 = processed, 0 = processing, 1 = unprocessed
+        vector<int> visited(numCourses, 1);
+        for(int i = 0; i < numCourses; ++i) {
+            if(visited[i] < 0) continue;
+            if(dfs(adjList, visited, i)) return false;
+        }
+        return true;
+    }
+};
