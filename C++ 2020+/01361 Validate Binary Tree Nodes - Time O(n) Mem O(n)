@@ -1,0 +1,51 @@
+//Run Time: 88ms - 66.85%
+//Memory Usage: 32.1MB - 87.36%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool validateBinaryTreeNodes(int n, vector<int>& leftChild, vector<int>& rightChild) {
+        //Iterate through lists marking nodes visited
+        //This must be a tree meaning no cycles
+        //Tree always has n - 1 edges
+        //^Would work if there were no seperate possible trees must use bfs
+        //Must find the real root
+        
+        //Get our starting point
+        vector<bool> visited(n, false);
+        for(int i = 0; i < leftChild.size(); ++i) {
+            if(leftChild[i] > -1) {
+                visited[leftChild[i]] = true;
+            } 
+            
+            if(rightChild[i] > -1) {
+                visited[rightChild[i]] = true;
+            }
+        }
+        
+        int root = -1;
+        for(int i = 0; i < n; ++i) {
+            if(!visited[i]) root = i;
+            visited[i] = false;
+        }
+        if(root == -1) return false;
+        
+        //Check if we visit all of the nodes
+        int numVisited = 0;
+        queue<int> bfs;
+        bfs.push(root);
+        while(!bfs.empty()) {
+            int curNode = bfs.front();
+            bfs.pop();
+            
+            if(visited[curNode]) return false;
+            visited[curNode] = true;
+            ++numVisited;
+            
+            //Add nodes
+            if(leftChild[curNode] > -1) bfs.push(leftChild[curNode]);
+            if(rightChild[curNode] > -1) bfs.push(rightChild[curNode]);
+        }
+        return (numVisited == n);
+    }
+};
