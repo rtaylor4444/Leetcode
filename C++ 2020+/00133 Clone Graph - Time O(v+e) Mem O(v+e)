@@ -1,0 +1,57 @@
+//Run Time: 12ms - 49.96%
+//Memory Usage: 8.8MB - 82.25%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if(node == nullptr) return nullptr;
+        
+        Node *curNode, *curClone;
+        unordered_map<Node*, Node*> nodeToClone;
+        nodeToClone.emplace(node, new Node(node->val));
+        queue<Node*> bfs;
+        bfs.push(node);
+        
+        while(!bfs.empty()) {
+            curNode = bfs.front();
+            bfs.pop();
+            curClone = nodeToClone[curNode];
+            
+            for(int i = 0; i < curNode->neighbors.size(); ++i) {
+                //Do not traverse already visited nodes
+                if(nodeToClone.find(curNode->neighbors[i]) == nodeToClone.end()) {
+                    nodeToClone.emplace(curNode->neighbors[i], new Node(curNode->neighbors[i]->val));
+                    bfs.push(curNode->neighbors[i]);
+                }
+                //Add neighbors no matter what
+                curClone->neighbors.push_back(nodeToClone[curNode->neighbors[i]]);
+            }
+        }
+        return nodeToClone[node];
+    }
+};
