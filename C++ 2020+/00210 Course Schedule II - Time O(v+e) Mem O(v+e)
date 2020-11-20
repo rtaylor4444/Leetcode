@@ -1,0 +1,41 @@
+//Run Time: 32ms - 96.53%
+//Memory Usage: 14.9MB - 39.17%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+class Solution {
+public:
+    bool dfs(vector<vector<int>>& adjList, vector<bool>& visited, vector<bool>& VInCycle,
+             vector<int>& topSort, int &curIndex, int curNode) {
+        
+        if(VInCycle[curNode]) return false;
+        VInCycle[curNode] = true;
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            if(visited[adjList[curNode][i]]) continue;
+            if(!dfs(adjList, visited, VInCycle, topSort, curIndex, adjList[curNode][i]))
+                return false;
+        }
+        visited[curNode] = true;
+        topSort[curIndex--] = curNode;
+        return true;
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        //Topo sort
+        //Make adj list for traversal
+        vector<vector<int>> adjList(numCourses, vector<int>());
+        for(int i = 0; i < prerequisites.size(); ++i) {
+            adjList[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+        
+        int curIndex = numCourses - 1;
+        vector<bool> visited(numCourses, false);
+        vector<int> topSort(numCourses, -1);
+        for(int i = 0; i < numCourses; ++i) {
+            if(visited[i]) continue;
+            vector<bool> visitedThisCycle(numCourses, false);
+            //If there is a cycle there can be no top ordering
+            if(!dfs(adjList, visited, visitedThisCycle, topSort, curIndex, i))
+                return {};
+        }
+        return topSort;
+    }
+};
