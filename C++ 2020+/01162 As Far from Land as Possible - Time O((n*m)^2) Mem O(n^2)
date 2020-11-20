@@ -1,0 +1,63 @@
+//Run Time: 420ms - 11.74%
+//Memory Usage: 123.2MB - 5.15%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O((n*m)^2) Memory O(n^2)
+class Solution {
+public:
+    void bfs(vector<vector<int>>& grid, vector<vector<int>>& distGrid, int i, int j) {
+        int maxDistance = 0;
+        queue<pair<int, int>> bfs;
+        bfs.push({i, j});
+        distGrid[i][j] = 0;
+        while(!bfs.empty()) {
+            ++maxDistance;
+            for(int l = bfs.size() - 1; l >= 0; --l) {
+                i = bfs.front().first;
+                j = bfs.front().second;
+                bfs.pop();
+                
+                //Do not revisit a node unless we can update with a smaller distance
+                //Up
+                if(i - 1 >= 0 && grid[i-1][j] == 0 && maxDistance < distGrid[i-1][j]) {
+                    distGrid[i-1][j] = maxDistance;
+                    bfs.push({i - 1, j});
+                }
+                //Left
+                if(j - 1 >= 0 && grid[i][j-1] == 0 && maxDistance < distGrid[i][j-1]) {
+                    distGrid[i][j-1] = maxDistance;
+                    bfs.push({i, j - 1});
+                }
+                //Down
+                if(i + 1 < grid.size() && grid[i+1][j] == 0 && maxDistance < distGrid[i+1][j]) {
+                    distGrid[i+1][j] = maxDistance;
+                    bfs.push({i + 1, j});
+                }
+                //Right
+                if(j + 1 < grid[i].size() && grid[i][j+1] == 0 && maxDistance < distGrid[i][j+1]) {
+                    distGrid[i][j+1] = maxDistance;
+                    bfs.push({i, j + 1});
+                }
+            }
+            
+        }
+    }
+    int maxDistance(vector<vector<int>>& grid) {
+        int maxDistance = 0;
+        vector<vector<int>> distGrid(grid.size(), vector<int>(grid[0].size(), INT_MAX));
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] != 1) continue;
+                bfs(grid, distGrid, i, j);
+            }
+        }
+        for(int i = 0; i < distGrid.size(); ++i) {
+            for(int j = 0; j < distGrid[i].size(); ++j) {
+                //cout << distGrid[i][j] << " ";
+                maxDistance = max(maxDistance, distGrid[i][j]);
+            }
+            //cout << endl;
+        }
+        //Check is map is full of 0's or 1's
+        return (maxDistance == INT_MAX || maxDistance == 0) ? -1 : maxDistance;
+    }
+};
