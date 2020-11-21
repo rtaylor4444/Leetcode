@@ -1,0 +1,69 @@
+//Run Time: 360ms - 77.87%
+//Memory Usage: 20.6MB - 70.22%
+//Solved =)
+//Time O(v*eloge) Memory O(v+e)
+struct CellInfo {
+  int i, j, curEffort;
+    CellInfo() {
+      i = j = curEffort = 0;   
+    }
+    CellInfo(int _i, int _j, int _e) {
+        i = _i;
+        j = _j;
+        curEffort = _e;
+    }
+    bool operator()(CellInfo &a, CellInfo &b) {
+        return (a.curEffort > b.curEffort);
+    }
+};
+
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        //Greedy Backtracking Algo
+        //Dijkstra's?
+        //CellInfo (i, j, curEffort)
+        int minEffort = INT_MAX;
+        priority_queue<CellInfo, vector<CellInfo>, CellInfo> p_q;
+        p_q.push(CellInfo());
+        while(!p_q.empty()) {
+            CellInfo curCell = p_q.top();
+            p_q.pop();
+            
+            //mark as visited - negative hieghts
+            if(heights[curCell.i][curCell.j] < 0) continue;
+            int curEffort, curHeight = heights[curCell.i][curCell.j];
+            heights[curCell.i][curCell.j] *= -1;
+            
+            //Check reach destination exit condition
+            //cout << curHeight << " -> " << curCell.curEffort << endl;
+            if(curCell.i == heights.size() - 1 && curCell.j == heights[0].size() - 1) {
+                minEffort = curCell.curEffort;
+                break;
+            }
+            
+            //Traverse other cells
+            //Up
+            if(curCell.i - 1 >= 0 && heights[curCell.i - 1][curCell.j] >= 0) {
+                curEffort = abs(heights[curCell.i - 1][curCell.j] - curHeight);
+                p_q.push(CellInfo(curCell.i-1, curCell.j, max(curEffort, curCell.curEffort)));
+            }
+            //Left
+            if(curCell.j - 1 >= 0 && heights[curCell.i][curCell.j - 1] >= 0) {
+                curEffort = abs(heights[curCell.i][curCell.j - 1] - curHeight);
+                p_q.push(CellInfo(curCell.i, curCell.j-1, max(curEffort, curCell.curEffort)));
+            }
+            //Down
+            if(curCell.i + 1 < heights.size() && heights[curCell.i + 1][curCell.j] >= 0) {
+                curEffort = abs(heights[curCell.i + 1][curCell.j] - curHeight);
+                p_q.push(CellInfo(curCell.i+1, curCell.j, max(curEffort, curCell.curEffort)));
+            }
+            //Right
+            if(curCell.j + 1 < heights[0].size() && heights[curCell.i][curCell.j + 1] >= 0) {
+                curEffort = abs(heights[curCell.i][curCell.j + 1] - curHeight);
+                p_q.push(CellInfo(curCell.i, curCell.j+1, max(curEffort, curCell.curEffort)));
+            }
+        }
+        return minEffort;
+    }
+};
