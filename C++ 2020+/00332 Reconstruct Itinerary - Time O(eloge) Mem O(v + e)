@@ -1,0 +1,50 @@
+//Run Time: 56ms - 21.82%
+//Memory Usage: 13.9MB - 97.63%
+//Solved =)
+//Time O(eloge) Memory O(v + e)
+class TicketSort {
+ public:
+    TicketSort() {
+        
+    }
+    bool operator()(vector<string>& a, vector<string>& b) {
+        return (a[1].compare(b[1]) < 0);
+    }
+};
+
+class Solution {
+    unordered_map<string, vector<int>> airportToTickets;
+public:
+    void dfs(vector<vector<string>>& tickets, string& curAirport,
+            vector<bool>& completedTickets, vector<string>& itinerary) {
+        for(int i = 0; i < airportToTickets[curAirport].size(); ++i) {
+            int ticketIndex = airportToTickets[curAirport][i];
+            if(completedTickets[ticketIndex]) continue;
+            completedTickets[ticketIndex] = true;
+            dfs(tickets, tickets[ticketIndex][1], completedTickets, itinerary);
+        }
+        itinerary.push_back(curAirport);
+    }
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        //Parse it ticket by ticket and obv run a dfs
+        //Always start at JFK + lexicalorder
+        //sort tickets by to lex order
+        sort(tickets.begin(), tickets.end(), TicketSort());
+        //Create adjList for
+        //string -> ticket indices
+        airportToTickets.clear();
+        for(int i = 0; i < tickets.size(); ++i) {
+            if(airportToTickets.find(tickets[i][0]) == airportToTickets.end())
+                airportToTickets.emplace(tickets[i][0], vector<int>());
+            
+            airportToTickets[tickets[i][0]].push_back(i);
+        }
+        //Generate itinerary
+        vector<bool> completedTickets(tickets.size(), false);
+        string curAirport = "JFK";
+        vector<string> itinerary;
+        dfs(tickets, curAirport, completedTickets, itinerary); 
+        reverse(itinerary.begin(), itinerary.end());
+        return itinerary;
+    }
+};
