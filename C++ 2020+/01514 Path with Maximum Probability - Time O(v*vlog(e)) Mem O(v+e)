@@ -1,0 +1,67 @@
+//Run Time: 420ms - 31.47%
+//Memory Usage: 67.4MB - 52.59%
+//Solved =)
+//Time O(n*nlog(e)) Memory O(v+e)
+class Solution {
+    struct EdgeInfo {
+        int to;
+        double prob;
+        EdgeInfo(int t, double p) {
+            to = t;
+            prob = p;
+        }
+    };
+    struct NodeInfo {
+        int node;
+        double curProb;
+        NodeInfo() {
+            
+        }
+        NodeInfo(int n, double c) {
+            node = n;
+            curProb = c;
+        }
+        bool operator()(NodeInfo& a, NodeInfo& b) {
+            //Large prob first - reverse with pq
+            return (a.curProb < b.curProb);
+        }
+    };
+    
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        //dijkstra but with a twist
+        //we want to traverse nodes with the greatest prob
+        //edge traversal = prob * prob
+        
+        //Create adjList
+        vector<vector<EdgeInfo>> adjList(n, vector<EdgeInfo>());
+        for(int i = 0; i < edges.size(); ++i) {
+            //undirected
+            adjList[edges[i][0]].push_back(EdgeInfo(edges[i][1], succProb[i])); 
+            adjList[edges[i][1]].push_back(EdgeInfo(edges[i][0], succProb[i])); 
+        }
+        vector<double> probList(n, 0.0);
+        priority_queue<NodeInfo, vector<NodeInfo>, NodeInfo> p_q;
+        p_q.push(NodeInfo(start, 1.0));
+        while(!p_q.empty()) {
+            NodeInfo curNode = p_q.top();
+            p_q.pop();
+            
+            //cout << curNode.node << " -> " << curNode.curProb << endl;
+            if(curNode.curProb <= probList[curNode.node])
+                continue;
+            
+            probList[curNode.node] = curNode.curProb;
+            
+            for(int i = 0; i < adjList[curNode.node].size(); ++i) {
+                //Skip nodes we visited and have less prob of reaching
+                double newProb = adjList[curNode.node][i].prob * curNode.curProb;
+                if(newProb <= probList[adjList[curNode.node][i].to]) 
+                    continue;
+                
+                p_q.push(NodeInfo(adjList[curNode.node][i].to, newProb));
+            }
+        }
+        return probList[end];
+    }
+};
