@@ -1,0 +1,47 @@
+//Run Time: 884ms - 25.14%
+//Memory Usage: 60.9MB - 74.45%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O((v+e)*v) Memory O(v^2)
+class Solution {
+public:
+    void getPreqs(vector<vector<int>>& adjList, vector<bool>& visited, 
+                  vector<vector<bool>>& hasPreq, int curNode) {
+        visited[curNode] = true;
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            int nextNode = adjList[curNode][i];
+            //Traverse to nextNode only if we havent visited it
+            if(!visited[nextNode]) {
+                getPreqs(adjList, visited, hasPreq, nextNode);
+            }
+            hasPreq[curNode][nextNode] = true;
+            //Merge list with the nextNode's list
+            for(int i = 0; i < hasPreq[curNode].size(); ++i) {
+                hasPreq[curNode][i] = (hasPreq[curNode][i] | hasPreq[nextNode][i]);
+            }
+        }
+    }
+    vector<bool> checkIfPrerequisite(int n, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        //Precalc ALL preq for all courses
+        //the O(1) look them up for each query
+        //Make adjList, use topo sort to fill isPreq node -> all preq
+        
+        //Create adjList for traversal
+        vector<vector<int>> adjList(n, vector<int>());
+        for(int i = 0; i < prerequisites.size(); ++i) {
+            adjList[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        }
+        vector<bool> visited(n, false);
+        vector<vector<bool>> hasPreq(n, vector<bool>(n, false));
+        //Fill hasPreq hashset using topo sort
+        for(int i = 0; i < n; ++i) {
+            if(visited[i]) continue;
+            getPreqs(adjList, visited, hasPreq, i); 
+        }
+        //Get results for queries
+        vector<bool> results(queries.size(), false);
+        for(int i = 0; i < queries.size(); ++i) {
+            results[i] = hasPreq[queries[i][0]][queries[i][1]];
+        }
+        return results;
+    }
+};
