@@ -1,0 +1,72 @@
+//Run Time: 32ms - 86.14%
+//Memory Usage: 15.1MB - 84.94%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+class Solution {
+    struct EdgeColor {
+        int to;
+        bool isBlue;
+        EdgeColor(int t, bool c) {
+            to = t;
+            isBlue = c;
+        }
+    };
+    
+    struct NodeInfo {
+        int curNode;
+        int curColor;
+        NodeInfo(int n, int c) {
+            curNode = n;
+            curColor = c;
+        }
+    };
+    
+public:
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& red_edges, vector<vector<int>>& blue_edges) {
+        //0 = no color, 1 = red, 2 = blue
+        //bfs but only adding nodes we can reach
+        //When we first start at node 0 we can pick either red or blue
+        //Build adjList for traversal
+        //Red Edges
+        vector<vector<EdgeColor>> adjList(n, vector<EdgeColor>());
+        for(int i = 0; i < red_edges.size(); ++i) {
+            adjList[red_edges[i][0]].push_back(EdgeColor(red_edges[i][1], false));
+        }
+        //Blue Edges
+        for(int i = 0; i < blue_edges.size(); ++i) {
+            adjList[blue_edges[i][0]].push_back(EdgeColor(blue_edges[i][1], true));
+        }
+        //Get our paths using bfs
+        int curLevel = 0;
+        //1st bit means we visted red, 2nd bit means visted blue
+        vector<int> visited(n, 0);
+        vector<int> pathLengths(n, -1);
+        queue<NodeInfo> bfs;
+        bfs.push(NodeInfo(0, 0));
+        while(!bfs.empty()) {
+            //Loop through current nodes
+            for(int i = bfs.size() - 1; i >= 0; --i) {
+                NodeInfo node = bfs.front();
+                bfs.pop();
+                //Set distance - dont re-visit nodes with the same color
+                //cout << node.curNode << " -> " << node.curColor << endl;
+                if(visited[node.curNode] & node.curColor) continue;
+                visited[node.curNode] |= node.curColor;
+                if(pathLengths[node.curNode] > -1) 
+                    pathLengths[node.curNode] = min(pathLengths[node.curNode], curLevel);
+                else
+                    pathLengths[node.curNode] = curLevel;
+                
+                //Add adjacent nodes
+                for(int j = 0; j < adjList[node.curNode].size(); ++j) {
+                    //If colors match we must skip
+                    int color = adjList[node.curNode][j].isBlue ? 2 : 1;
+                    if(node.curColor == color) continue;
+                    bfs.push(NodeInfo(adjList[node.curNode][j].to, color));
+                }
+            }
+            ++curLevel;
+        }
+        return pathLengths;
+    }
+};
