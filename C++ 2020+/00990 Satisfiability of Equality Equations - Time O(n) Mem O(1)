@@ -1,0 +1,76 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 11.6MB - 74.21%
+//Solved =)
+//Time O(n) Memory O(1)
+class UnionFind { 
+    vector<int> dsu, size;
+public:
+    UnionFind() {
+        dsu = vector<int>(26, 0);
+        for(int i = 0; i < dsu.size(); ++i) {
+            dsu[i] = i;
+        }
+        size = vector<int>(26, 1);
+    }
+    
+    bool isUnited(int node1, int node2) {
+        return (find(node1) == find(node2));
+    }
+    
+    void unite(int node1, int node2) {
+        int root1 = find(node1), root2 = find(node2);
+        if(root1 == root2) return;
+        //Unite by size
+        if(size[root2] > size[root1]) {
+            dsu[root1] = root2;
+            size[root2] += size[root1];
+        }
+        else {
+            dsu[root2] = root1;
+            size[root1] += size[root2];
+        }
+    }
+    
+    int find(int node) {
+        int root = dsu[node];
+        while(root != dsu[root]) {
+            root = dsu[root];
+        }
+        //Path compression
+        while(node != root) {
+            int prevNode = node;
+            node = dsu[node];
+            dsu[prevNode] = root;
+            size[prevNode] = size[root];
+        }
+        return root;
+    }
+};
+class Solution {
+public:
+    bool equationsPossible(vector<string>& equations) {
+        //Union find map chars to indices
+        UnionFind unionFind;
+        //Perform equation operations
+        for(int i = 0; i < equations.size(); ++i) {
+            //Check ==
+            if(equations[i][1] == equations[i][2]) {
+                unionFind.unite(equations[i][0] - 'a', equations[i][3] - 'a');
+            }
+        }
+        //Verify equation operations
+        for(int i = 0; i < equations.size(); ++i) {
+            //Check ==
+            if(equations[i][1] == equations[i][2]) {
+                if(!unionFind.isUnited(equations[i][0] - 'a', equations[i][3] - 'a'))
+                    return false;
+            }
+            //Check !=
+            else {
+                if(unionFind.isUnited(equations[i][0] - 'a', equations[i][3] - 'a'))
+                    return false;
+            }
+        }
+        return true;
+    }
+};
