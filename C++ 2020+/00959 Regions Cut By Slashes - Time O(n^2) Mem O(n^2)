@@ -1,0 +1,105 @@
+//Run Time: 12ms - 82.14%
+//Memory Usage: 11.1MB - 64.46%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class UnionFind {
+    int numRegions;
+    vector<int> dsu, size;
+public:
+    UnionFind(int s) {
+        numRegions = s;
+        dsu = vector<int>(s, 0);
+        size = vector<int>(s, 1);
+        for(int i = 0; i < s; ++i)
+            dsu[i] = i;
+    }
+    
+    void unite(int node1, int node2) {
+        int root1 = find(node1), root2 = find(node2);
+        //Already united
+        if(root1 == root2) return;
+        //Otherwise unite by size
+        if(size[root2] > size[root1]) {
+            dsu[root1] = root2;
+            size[root2] += size[root1];
+        }
+        else {
+            dsu[root2] = root1;
+            size[root1] += size[root2];
+        }
+        --numRegions;
+    }
+    
+    int find(int node) {
+        int root = dsu[node];
+        while(root != dsu[root]) {
+            root = dsu[root];
+        }
+        //Path Compression
+        while(node != dsu[root]) {
+            int prevNode = node;
+            node = dsu[node];
+            dsu[prevNode] = root;
+            size[prevNode] = size[root];
+        }
+        return root;
+    }
+    
+    int getRegions() {
+        return numRegions;
+    }
+};
+class Solution {
+public:
+    int regionsBySlashes(vector<string>& grid) {
+        //represent each square as
+        //  \0/
+        // 1 X 3
+        //  /2\
+        //top = 0, left = 1, down = 2, right = 3
+        //Then use union-find
+        int N = grid.size();
+        UnionFind unionFind(4 * N * N);
+        for(int i = 0; i < N; ++i) {
+            for(int j = 0; j < N; ++j) {
+                int pos = (i * (N * 4)) + (j * 4);
+                //Unite our internal cells
+                //unite all four triangles when space is empty
+                //cout << pos << " l: " << pos-1 << " t: " << (pos-(N*4))+2 << endl;
+                if(grid[i][j] == ' ') {
+                    unionFind.unite(pos, pos+1);
+                    unionFind.unite(pos+2, pos+3);
+                    unionFind.unite(pos, pos+2);
+                }
+                //Only unite two (top + left) and (bottom + right)
+                else if(grid[i][j] == '/') {
+                    unionFind.unite(pos, pos+1);
+                    unionFind.unite(pos+2, pos+3);
+                }
+                //Same as above but (top + right) and bottom + left
+                else if(grid[i][j] == '\\') {
+                    unionFind.unite(pos, pos+3);
+                    unionFind.unite(pos+1, pos+2);
+                }
+                
+                //Unite with neighboring cells
+                //Unite with left cell
+                if(j - 1 >= 0) {
+                    //current pos 1 and prev 3 will always be united
+                    //regardless of symbol //, \/, /\
+                    //cout << "attempting" << pos-1 << " " << pos+1 << endl;
+                    unionFind.unite(pos-1, pos+1);
+                }
+                //Unite with top cell
+                if(i - 1 >= 0) {
+                    //current pos 0 and prev 2 will always be united
+                    //regardless of symbol / / \ \
+                    //                     / \ / \
+                    //cout << "attempting" <<  (pos-(N*4))+2 << " " << pos << endl;
+                    unionFind.unite((pos-(N*4))+2, pos);
+                }
+            }
+        }
+        return unionFind.getRegions();
+    }
+};
