@@ -1,0 +1,46 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.5MB - 72.88%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+class Solution {
+public:
+    double dfs(unordered_map<string, unordered_map<string, double>>& adjList,
+               unordered_set<string>& visited, const string& cur, string& end, double curValue) {
+        
+        if(adjList.find(cur) == adjList.end()) return -1.0;
+        //Check self loop
+        if(cur == end) return curValue;
+        
+        visited.emplace(cur);
+        double finalValue = -1.0;
+        for(auto it = adjList[cur].begin(); it != adjList[cur].end(); ++it) {
+            if(visited.find(it->first) != visited.end()) continue;
+            double nextValue = curValue * it->second;
+            finalValue = dfs(adjList, visited, it->first, end, nextValue);
+            if(finalValue != -1.0) break;
+        }
+        return finalValue;
+    }
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        //dependancy
+        //a -> b -> c
+        //build adj list?
+        //PreCalc adj list
+        unordered_map<string, unordered_map<string, double>> adjList;
+        for(int i = 0; i < values.size(); ++i) {
+            // ->
+            adjList.emplace(equations[i][0], unordered_map<string, double>());
+            adjList[equations[i][0]].emplace(equations[i][1], values[i]);
+            // <-
+            adjList.emplace(equations[i][1], unordered_map<string, double>());
+            adjList[equations[i][1]].emplace(equations[i][0], 1/values[i]);
+        }
+        //Use dfs per query for now
+        vector<double> result(queries.size(), -1.0);
+        for(int i = 0; i < queries.size(); ++i) {
+            unordered_set<string> visited;
+            result[i] = dfs(adjList, visited, queries[i][0], queries[i][1], 1.0);
+        }
+        return result;
+    }
+};
