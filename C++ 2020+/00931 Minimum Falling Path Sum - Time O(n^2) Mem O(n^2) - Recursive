@@ -1,0 +1,42 @@
+//Run Time: 24ms - 38.92%
+//Memory Usage: 39.1MB - 5.73%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int recursiveSol(vector<vector<int>>& A, vector<vector<int>>& memo,
+                     int minIndex, int curIndex, int maxIndex, int row) {
+        int localMin = INT_MAX;
+        //Get proper bounds
+        minIndex = max(0, minIndex);
+        maxIndex = min(maxIndex, (int)A.size() - 1);
+        for(int i = minIndex; i <= maxIndex; ++i) {
+            //Check for previously calculated results
+            int result;
+            if(memo[row+1][i] == INT_MAX) result = recursiveSol(A, memo, i-1, i, i+1, row+1);
+            else result = memo[row+1][i];
+            //Fill memo table to avoid recalc
+            memo[row][curIndex] = min(A[row][curIndex] + result, memo[row][curIndex]);
+        }
+        return memo[row][curIndex];
+    }
+    int minFallingPathSum(vector<vector<int>>& A) {
+        vector<vector<int>> memo(A.size()+1, vector<int>(A[0].size(), INT_MAX));
+        //Pad last row with 0s
+        for(int i = 0; i < A.size(); ++i) {
+            memo[A.size()][i] = 0;
+        }
+        int ans = INT_MAX;
+        for(int i = 0; i < A.size(); ++i) {
+            ans = min(ans, recursiveSol(A, memo, i-1, i, i+1, 0));
+        }
+        
+        /*for(int i = 0; i < memo.size(); ++i) {
+            for(int j = 0; j < memo[i].size(); ++j) {
+                cout << memo[i][j] << " ";
+            }
+            cout << endl;
+        }*/
+        return ans;
+    }
+};
