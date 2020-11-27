@@ -1,0 +1,29 @@
+//Run Time: 4ms - 86.45%
+//Memory Usage: 9.7MB - 81.11%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int mincostTickets(vector<int>& days, vector<int>& costs) {
+        vector<int> memo(days.size(), INT_MAX);
+        for(int i = memo.size() - 1; i >= 0; --i) {
+            for(int j = 0; j < costs.size(); ++j) {
+                int numDays;
+                if(j == 0) numDays = 1;
+                else if(j == 1) numDays = 7;
+                else if(j == 2) numDays = 30;
+                
+                //Get the index our current day maps to
+                int curIndex = i;
+                while(days[i] + numDays > days[curIndex]) {
+                    ++curIndex;
+                    if(curIndex >= days.size()) break;
+                }
+                //get previous calculated results
+                int result = (curIndex >= days.size()) ? 0 : memo[curIndex];
+                memo[i] = min(memo[i], costs[j] + result);
+            }
+        }
+        return memo[0];
+    }
+};
