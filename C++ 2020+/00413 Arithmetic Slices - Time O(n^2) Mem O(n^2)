@@ -1,0 +1,44 @@
+//Run Time: 360ms - 5.05%
+//Memory Usage: 149.2MB - 5.04%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int numberOfArithmeticSlices(vector<int>& A) {
+        if(A.size() < 3) return 0;
+        //INT_MAX = not arithmetic subseq
+        vector<vector<int>> dp(A.size()+1, vector<int>(A.size(), INT_MAX));
+        int sliceSize = 3, numSlices = 0;
+        //test slice sizes of size 3 then work my way up
+        //[1, 2, 3, 4]
+        //dp[slice size][index] = diff between elements
+        //next slice = dp[slice size - 1][index] & dp[slice size - 1][index+1]
+        //the difference between all elements must be the same
+        //Use size 3 as a base case then build up to larger slices using formula
+        for(int i = A.size() - 3; i >= 0; --i) {
+            //Get starting sequence and determine if it matches entire subarray
+            int startSeq = A[i] - A[i+1];
+            int j;
+            for(j = i; j < i+2; ++j) {
+                if(A[j] - A[j+1] != startSeq) break; 
+            }
+            //if we iterate through the whole array the seq is valid
+            if(j == i+2) {
+                dp[3][i] = startSeq;
+                ++numSlices;
+            }
+        }
+        //Compute other sizes
+        while(++sliceSize <= A.size()) {
+            for(int i = 0; i + sliceSize <= A.size(); ++i) {
+                //Ex: [1,2,3,4]
+                //check if [1,2,3] and [2,3,4] are same seq if not skip
+                if(dp[sliceSize-1][i] != dp[sliceSize-1][i+1])
+                    continue;
+                dp[sliceSize][i] = dp[sliceSize-1][i];
+                if(dp[sliceSize][i] != INT_MAX) ++numSlices;
+            }
+        }
+        return numSlices;
+    }
+};
