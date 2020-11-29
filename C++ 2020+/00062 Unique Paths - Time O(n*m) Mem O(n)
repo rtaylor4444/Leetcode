@@ -1,0 +1,17 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.5MB - 54.40%
+//Solved =)
+//Time O(n*m) Memory O(n)
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        //Fill dp array with base cases
+        vector<int> dp(n, 1);
+        for(int i = 1; i < m; ++i) {
+            for(int j = 1; j < n; ++j) {
+                dp[j] += dp[j-1];
+            }
+        }
+        return dp[n-1];
+    }
+};
