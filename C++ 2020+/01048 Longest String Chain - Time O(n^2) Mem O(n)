@@ -1,0 +1,57 @@
+//Run Time: 100ms - 68.20%
+//Memory Usage: 19.8MB - 56.87%
+//Solved =)
+//Time O(n^2) Memory O(n)
+struct SortWords {
+      SortWords() {
+
+      }
+
+     bool operator()(string& a, string& b) {
+         return (a.size() < b.size());
+     }
+};
+
+class Solution {
+public:
+    int longestStrChain(vector<string>& words) {
+        //Place all strings in a trie for quick lookup
+        //Move backwards removing one letter at a time
+        //Exmaple we process larger words first and see if we can find a match
+        //in the trie
+        //Can use a set for now since its faster to code
+        //word -> chain count
+        //smaller word chain = max( smaller word chain, larger word chain + 1 )
+        
+        //BUG - Use a trie for all of this
+        //Create hashtables for quick lookup
+        unordered_set<string> isWord;
+        unordered_map<string, int> wordToChainCount;
+        for(int i = 0; i < words.size(); ++i) {
+            isWord.emplace(words[i]);
+            wordToChainCount.emplace(words[i], 1);
+        }
+        //Sort words so we cna process larger ones first
+        int longestChain = 1;
+        sort(words.begin(), words.end(), SortWords());
+        for(int i = words.size() - 1; i >= 0; --i) {
+            //Omit one character at a time as wee if we can find in trie
+            //cout << "starting: " << words[i] << endl;
+            for(int j = 0; j < words[i].size(); ++j) {
+                //First half of new word
+                string newWord = (j - 1 >= 0) ? words[i].substr(0, j) : "";
+                //second half
+                newWord += (j+1 < words[i].size()) ? words[i].substr(j+1, words[i].size() - j) : "";
+                if(isWord.find(newWord) != isWord.end()) {
+                    wordToChainCount[newWord] = max(wordToChainCount[newWord], 
+                                                    wordToChainCount[words[i]] + 1);
+                    longestChain = max(longestChain, wordToChainCount[newWord]);
+                }
+            }
+        }
+        /*for(auto it = wordToChainCount.begin(); it != wordToChainCount.end(); ++it) {
+            cout << it->first << " -> " << it->second << endl;
+        }*/
+        return longestChain;
+    }
+};
