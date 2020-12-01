@@ -1,0 +1,98 @@
+//Run Time: 12ms - 90.79%
+//Memory Usage: 10.7MB - 80.26%
+//Solved =)
+//Time O(n^2) Memory O(n)
+
+class Solution {
+    int needSize;
+    vector<int> powerList, specialKeys, priceKeys;
+public:
+    void generatePowerList() {
+        powerList = vector<int>(needSize, 1);
+        for(int i = needSize-2; i >= 0; --i) {
+            powerList[i] = powerList[i+1]*10;
+        }
+    }
+    int get_key(vector<int>& needs) {
+        int key = 0;
+        for (int i = needSize-1, p = 1; i >= 0; i--, p *= 10)
+            key += needs[i]*p;
+        return key;
+    }   
+    bool deductNeeds(int& key, vector<vector<int>>& special, int index) {
+        for(int i = needSize - 1; i >= 0; --i) {
+            int keyDigit = (key % (powerList[i]*10)) / powerList[i];
+            //int specialDigit = (specialKeys[index] % (powerList[i]*10)) / powerList[i];
+            if(keyDigit < special[index][i]) {
+                return false;
+            }
+        }
+        key -= specialKeys[index];
+        return true;
+    }
+    void rollbackNeeds(int& key, int index) {
+        key += specialKeys[index];
+    }
+    int calcNeeds(unordered_map<int, int>& keyToPrice, vector<int>& price, 
+                  vector<vector<int>>& special, int needKey) {
+        
+        if(keyToPrice.find(needKey) != keyToPrice.end()) 
+            return keyToPrice[needKey];
+        
+        //Try all specials
+        int minPrice = INT_MAX;
+        for(int i = 0; i < special.size(); ++i) {
+            //Check if we can use this special
+            if(!deductNeeds(needKey, special, i)) continue;
+            int result = calcNeeds(keyToPrice, price, special, needKey);
+            minPrice = min(minPrice, special[i][needSize] + result);
+            rollbackNeeds(needKey, i);
+        }
+        //Try all normal prices
+        //Calc leftover prices to get rid of extra branch
+        int leftPrice = 0;
+        for(int i = 0; i < price.size(); ++i) {
+            //Check if we need this item
+            int keyDigit = (needKey % (powerList[i]*10))/powerList[i];
+            if(keyDigit == 0) continue;
+            leftPrice += (price[i] * keyDigit);
+        }
+        minPrice = min(minPrice, leftPrice);
+        keyToPrice.emplace(needKey, minPrice); 
+        return minPrice;
+    }
+    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
+        //try them all
+        //try all combinations of offers until an item surpasses needs
+        //then backtrack - reminds me of knacsack problem
+        
+        //Set up base cases
+        needSize = needs.size();
+        generatePowerList();
+        unordered_map<int, int> keyToPrice;
+        
+        //Normal Prices
+        vector<int> baseNeeds(price.size(), 0);
+        priceKeys.clear();
+        for(int i = 0; i < price.size(); ++i) {
+            baseNeeds[i] = 1;
+            priceKeys.push_back(get_key(baseNeeds));
+            keyToPrice.emplace(priceKeys[i], price[i]); 
+            baseNeeds[i] = 0;
+        }
+        //Offers
+        specialKeys.clear();
+        for(int i = 0; i < special.size(); ++i) {
+            specialKeys.push_back(get_key(special[i]));
+            //Check if this offer is worth it compared to normal prices
+            int otherPrice = 0;
+            for(int j = 0; j < price.size(); ++j) {
+                otherPrice += (special[i][j] * price[j]);
+            }
+            keyToPrice[specialKeys[i]] = min(otherPrice, special[i][price.size()]);   
+        }
+        int needKey = get_key(needs);
+        int minPrice = calcNeeds(keyToPrice, price, special, needKey);
+        return (minPrice == INT_MAX) ? 0 : minPrice;
+    }
+};
