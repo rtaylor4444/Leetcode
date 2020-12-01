@@ -1,0 +1,29 @@
+//Run Time: 340ms - 44.03%
+//Memory Usage: 23.3MB - 38.33%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+bool sortPairs(vector<int>& a, vector<int>& b) {
+        return (a[0] > b[0]);
+}
+
+class Solution {
+public:
+    
+    int findLongestChain(vector<vector<int>>& pairs) {
+        int maxPair = 1;
+        sort(pairs.begin(), pairs.end(), sortPairs);
+        vector<int> pairIndexToLength(pairs.size(), 1);
+        for(int i = 0; i < pairs.size(); ++i) {
+            //cout << "checking " << pairs[i][0] << ", " << pairs[i][1] << endl;
+            for(int j = i - 1; j >= 0; --j) {
+                //check if this pair can form a chain
+                //cout << " to " << pairs[j][0] << ", " << pairs[j][1] << endl;
+                if(pairs[i][1] >= pairs[j][0]) continue;
+                //cout << "passed test " << endl;
+                pairIndexToLength[i] = max(pairIndexToLength[i], pairIndexToLength[j] + 1);
+                maxPair = max(maxPair, pairIndexToLength[i]);
+            }
+        }
+        return maxPair;
+    }
+};
