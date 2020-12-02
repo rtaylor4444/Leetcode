@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.5MB - 47.51%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int integerBreak(int n) {
+        //Given 10 we can choose 2-8 and mult those together
+        //break 10 into 2 numbers pick the one that gives best result
+        //we pick 8 -> 8 * 2 = 16
+        //lets break 8, we pick 6 -> 6 * 2 = 12
+        //so: 2 * 2 * 6 = 24
+        //lets break 6, we pick 4 -> 4 * 2 = 8
+        //so: 2 * 2 * 2 * 4 = 32
+        //Formula:
+        //we number leftover * max split product of number picked
+        //however we can pick between current number or max split
+        //so we pick the one that is more
+        vector<int> dp(n+1, 0);
+        dp[2] = 1; 
+        //Bottom Up
+        for(int i = 3; i <= n; ++i) {
+            for(int j = i-1; j >= 2; --j) {
+                int remainingNum = i - j;
+                //cout << i << " -> testing " << remainingNum << " * " << j << endl;
+                //We can chose to break j or not
+                int pickedMax = max(j, dp[j]);
+                dp[i] = max(dp[i], remainingNum * pickedMax);
+            }
+        }
+        return dp[n];
+    }
+};
