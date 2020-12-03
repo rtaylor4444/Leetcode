@@ -1,0 +1,44 @@
+//Run Time: 12ms - 83.65%
+//Memory Usage: 9.3MB - 11.83%
+//Solved =)
+//Time O(k*n^2) Memory O(n^2)
+class Solution {
+public:
+    double largestSumOfAverages(vector<int>& A, int K) {
+        //calc all averages from A given size K
+        //Base cases best average of size 1 is that number
+        //avg[index][size] = avg
+        int arraySize = A.size();
+        vector<vector<double>> avg(arraySize, vector<double>(arraySize+2, 0.0));
+        for(int i = arraySize - 1; i >= 0; --i) {
+            int curSize;
+            double curSum = 0;
+            for(int j = i; j < arraySize; ++j) {
+                curSum += A[j];
+                curSize = (j-i)+1; 
+                avg[i][curSize] = curSum / (double)curSize;
+            }
+        }
+
+        //dp[i][k] = max amount given one group partion size
+        vector<vector<double>> dp(arraySize+1, vector<double>(K, -1.0));
+        //Calc dp in reverse
+        //Start with the base last group
+        for(int i = arraySize-1; i >= (K-1); --i) {
+            dp[i][K-1] = avg[i][(arraySize-i)];
+        }
+        
+        //Calculate all groups
+        int windowSize = (arraySize+1) - K;
+        for(int k = K - 2; k >= 0; k--) {
+            //Check all window sizes
+            for(int size = 1; size <= windowSize; ++size) {
+                for(int i = k; i+(size-1) < k+windowSize; ++i) {
+                    //add current group and next group avg together
+                    dp[i][k] = max(dp[i][k], avg[i][size] + dp[i+size][k+1]);
+                }
+            }
+        }
+        return dp[0][0];  
+    }
+};
