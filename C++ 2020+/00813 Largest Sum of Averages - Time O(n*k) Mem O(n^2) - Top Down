@@ -1,0 +1,55 @@
+//Run Time: 24ms - 35.83%
+//Memory Usage: 9.3MB - 11.83%
+//Solved =)
+//Time O(n*k) Memory O(n^2)
+class Solution {
+    int maxGroups;
+public:
+    //return average from previous group
+    double topDown(vector<vector<double>>& dp, vector<vector<double>>& avg,
+                  int start, int k) {
+        //Groups must cover end of the array and cannot have more than max
+        if(k == maxGroups) return (start < dp.size()-1) ? -1.0 : 0.0;
+        //Return precalced results
+        if(dp[start][k] > -1.0) return dp[start][k];
+        
+        //Try all possbilities
+        double localMax = 0.0;
+        for(int i = start; i < avg.size(); ++i) {
+            int size = (i-start)+1;
+            double curAvg = avg[start][size];
+            double result = topDown(dp, avg, i+1, k+1);
+            if(result > -1.0) localMax = max(localMax, result + curAvg);
+        }
+        dp[start][k] = localMax;
+        return localMax;
+    }
+    double largestSumOfAverages(vector<int>& A, int K) {
+        //calc all averages from A given size K
+        //Base cases best average of size 1 is that number
+        //avg[index][size] = avg
+        maxGroups = K;
+        int arraySize = A.size();
+        vector<vector<double>> avg(arraySize, vector<double>(arraySize+2, 0.0));
+        for(int i = arraySize - 1; i >= 0; --i) {
+            //avg[i][1] = A[i];
+            int curSize;
+            double curSum = 0;
+            for(int j = i; j < arraySize; ++j) {
+                curSum += A[j];
+                curSize = (j-i)+1; 
+                avg[i][curSize] = curSum / (double)curSize;
+            }
+        }
+        
+        /*for(int i = 0; i < arraySize; ++i) {
+            for(int j = 0; j < arraySize+1; ++j) {
+                cout << avg[i][j] << " ";
+            }
+            cout << endl;
+        }*/
+        //dp[i][k] = max amount given one group partion size
+        vector<vector<double>> dp(arraySize+1, vector<double>(K+1, -1.0));
+        return topDown(dp, avg, 0, 0);   
+    }
+};
