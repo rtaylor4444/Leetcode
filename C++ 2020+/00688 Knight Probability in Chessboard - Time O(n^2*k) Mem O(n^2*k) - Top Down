@@ -1,0 +1,41 @@
+//Run Time: 12ms - 66.14%
+//Memory Usage: 8.2MB - 65.31%
+//Solved =)
+//Time O(8*K) Memory O(n^2*K)
+class Solution {
+public:
+    double calcProb(vector<vector<vector<double>>>& board, int r, int c, int movesLeft) {
+        //Check bounds
+        if(r < 0 || r >= board.size()) return 0.0;
+        if(c < 0 || c >= board.size()) return 0.0;
+        //We are still on the board if we get here
+        if(movesLeft == 0) return 1.0;
+        //Dont visit cells we have been to in this dfs
+        if(board[c][r][movesLeft] < 0.0) return 1.0;
+        //Return pre calced results
+        if(board[c][r][movesLeft] != 10.0) return board[c][r][movesLeft];
+        
+        
+        //Mark visited cells (neg number)
+        board[c][r][movesLeft] *= -1;
+        //Test all possbilities (8)
+        double prob = 0.0;
+        //Loop to execite all L-shaped moves
+        for(int rowOffset = -2; rowOffset <= 2; ++rowOffset) {
+            if(rowOffset == 0) continue;
+            for(int colOffset = -2; colOffset <= 2; ++colOffset) {
+                if(colOffset == 0) continue;
+                if(abs(colOffset) == abs(rowOffset)) continue;
+                prob += calcProb(board, r+rowOffset, c+colOffset, movesLeft-1);
+            }
+        }
+        
+        board[c][r][movesLeft] = prob / 8.0;
+        return board[c][r][movesLeft];
+    }
+    double knightProbability(int N, int K, int r, int c) {
+        //Init with some high constant
+        vector<vector<vector<double>>> board(N, vector<vector<double>>(N, vector<double>(K+1, 10.0)));
+        return calcProb(board, r, c, K);
+    }
+};
