@@ -1,0 +1,68 @@
+//Run Time: 64ms - 11.73%
+//Memory Usage: 14.4MB - 11.28%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string pushDominoes(string dominoes) {
+        //Two Pass?
+        //Get starting points and push one domino at a time
+        //Simulate process using original string to hold data
+        //Keep track to state so we know when each domino has fallen
+        vector<int> timePushed(dominoes.size(), 0);
+        queue<int> levelOrder;
+        queue<bool> isLeft;
+        for(int i = 0; i < dominoes.size(); ++i) {
+            if(dominoes[i] != '.') {
+                //this domino was pushed on the first second
+                timePushed[i] = 1;
+                levelOrder.push(i);
+                if(dominoes[i] == 'R') isLeft.push(false);
+                else isLeft.push(true);
+            }
+        }
+        
+        int curLevel = 2;
+        while(!levelOrder.empty() && !isLeft.empty()) {
+            for(int i = levelOrder.size() -1; i >= 0; --i) {
+                int curPos = levelOrder.front();
+                bool left = isLeft.front();
+                levelOrder.pop();
+                isLeft.pop();
+
+                //Simulate push
+                //Check bounds to ensure there is even a domino to push
+                int toPush = curPos + ((left) ? -1 : 1);
+                if(toPush < 0 && toPush >= dominoes.size())
+                    continue;
+                //If domino has already fallen dont do anything
+                if(dominoes[toPush] != '.') continue;
+
+                //Check two positions over to ensure we can push left/right domino
+                int toCheck = curPos + ((left) ? -2 : 2);
+                //Check out of bounds
+                if(toCheck < 0 && toCheck >= dominoes.size()) {
+                    //just push over this domino and dont add it to the queue
+                    dominoes[toPush] = (left) ? 'L' : 'R';
+                    timePushed[toPush] = curLevel;
+                    continue;
+                }
+                //Check if forces are equal
+                bool isNextLeft = (dominoes[toCheck] == 'L');
+                if(dominoes[toCheck] != '.' && isNextLeft != left) {
+                    //only skip if this domino was pushed at the same time or before us
+                    if(timePushed[toCheck] <= timePushed[curPos]) continue;
+                }
+                
+                //Push domino
+                dominoes[toPush] = (left) ? 'L' : 'R';
+                timePushed[toPush] = curLevel;
+                //Add next to the queue
+                levelOrder.push(toPush);
+                isLeft.push(left);
+            }
+            ++curLevel;
+        }
+        return dominoes;
+    }
+};
