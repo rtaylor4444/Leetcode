@@ -1,0 +1,31 @@
+//Run Time: 4ms - 63.54%
+//Memory Usage: 8.1MB - 26.47%
+//Unoptimal Solution - Memory/Time needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int getMaxScore(vector<vector<int>>& dp, vector<int>& nums, 
+                    int start, int end) {
+        if(start > end) return 0;
+        if(dp[start][end] != INT_MIN) return dp[start][end];
+        
+        //test first choice
+        int choice1 = nums[start];
+        choice1 -= getMaxScore(dp, nums, start+1, end);
+        
+        //test second choice
+        int choice2 = nums[end];
+        choice2 -= getMaxScore(dp, nums, start, end-1);
+        
+        dp[start][end] = max(choice1, choice2);
+        return dp[start][end];
+    }
+    bool PredictTheWinner(vector<int>& nums) {
+        //Recursive backtracking function
+        //try all the possible options        
+        //dp[start][end] = maxScore
+        vector<vector<int>> dp(nums.size(), vector<int>(nums.size(), INT_MIN));
+        int ourScore = getMaxScore(dp, nums, 0, nums.size() - 1);
+        return (ourScore >= 0);
+    }
+};
