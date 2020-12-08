@@ -1,0 +1,39 @@
+//Run Time: 1372ms - 5.04%
+//Memory Usage: 282.6MB - 5.02%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+    int startPos;
+    vector<int> perfectSqs;
+public:
+    Solution() {
+        //Generate perfect squares
+        int bounds = sqrt(INT_MAX);
+        for(int i = 1; i < bounds; ++i) {
+            perfectSqs.push_back(i*i);
+        }
+    }
+    
+    int getLeastSquares(vector<int>& dp, int curNum) {
+        if(curNum == 0) return 0;
+        if(dp[curNum] != INT_MAX) return dp[curNum];
+        int localMin = INT_MAX;
+        for(int i = startPos; i >= 0; --i) {
+            if(perfectSqs[i] > curNum) continue;
+            localMin = min(localMin, 1 + getLeastSquares(dp, curNum - perfectSqs[i]));
+        }
+        dp[curNum] = localMin;
+        return localMin;
+    }
+    int numSquares(int n) {
+        vector<int> dp(n+1, INT_MAX);
+        //set base cases
+        for(int i = perfectSqs.size() - 1; i >= 0; --i) {
+            if(perfectSqs[i] > n) continue;
+            startPos = i;
+            break;
+        }
+        getLeastSquares(dp, n);
+        return dp[n];
+    }
+};
