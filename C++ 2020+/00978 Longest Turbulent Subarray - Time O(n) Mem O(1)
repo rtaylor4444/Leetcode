@@ -1,0 +1,39 @@
+//Run Time: 132ms - 81.52%
+//Memory Usage: 40.1MB - 82.50%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxTurbulenceSize(vector<int>& arr) {
+        //Sliding Window
+        //[9,4,2,10,7,8,8,1,9]
+        // > < > <
+        // < > < >
+        //Test each number and as soon as one number breaks turbulence
+        //reset and start testings at number than broke turbulence
+        if(arr.size() < 2) return arr.size();
+        int i = 0, maxLength = 1;
+        while(i < arr.size() - 1) {
+            if(arr[i] == arr[i+1]) {
+                ++i;
+                continue;
+            }
+            //true = next element must be smaller
+            //false = next element must be larger
+            bool compSign = (arr[i] < arr[i+1]);
+            int curLength = 2, j = i+1;
+            
+            while(j < arr.size() - 1) {
+                //next element must be less
+                if(compSign && arr[j] <= arr[j+1]) break;
+                //next element must be larger
+                else if(!compSign && arr[j] >= arr[j+1]) break;
+                compSign = !compSign;
+                ++curLength; ++j;
+            }
+            maxLength = max(curLength, maxLength);
+            i = j;
+        }
+        return maxLength;
+    }
+};
