@@ -1,0 +1,64 @@
+//Run Time: 432ms - 14.46%
+//Memory Usage: 76.5MB - 32.53%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int orderOfLargestPlusSign(int N, vector<vector<int>>& mines) {
+        //scan a specific point to find a plus
+        //do this for every point to get our answer.
+        //However, this is slow a ton of recalcs so dp is our friend
+        //each cell has to store its left, right, up, down info for constant look up
+        //Make matrix
+        vector<vector<bool>> matrix(N, vector<bool>(N, true));
+        for(int i = 0; i < mines.size(); ++i) {
+            matrix[mines[i][0]][mines[i][1]] = false;
+        }
+        
+        int largestSign = 0;
+        vector<vector<int>> up(N, vector<int>(N, 0));
+        vector<vector<int>> down(N, vector<int>(N, 0));
+        for(int i = 0; i < N; ++i) {
+            //Scan for down count
+            int consec = 0;
+            for(int j = N-1; j >= 0; --j)  {
+                if(matrix[j][i]) ++consec;
+                else consec = 0;
+                down[j][i] = consec;
+            }
+            
+            //Scan for up count
+            consec = 0;
+            for(int j = 0; j < N; ++j) {
+                if(matrix[j][i]) ++consec;
+                else consec = 0;
+                up[j][i] = consec;
+            }
+        }
+        
+        vector<vector<int>> left(N, vector<int>(N, 0));
+        vector<vector<int>> right(N, vector<int>(N, 0));
+        for(int i = 0; i < N; ++i) {
+            //Scan for left count
+            int consec = 0;
+            for(int j = 0; j < N; ++j) {
+                if(matrix[i][j]) ++consec;
+                else consec = 0;
+                left[i][j] = consec;
+            }
+            
+            //Scan for right count
+            consec = 0;
+            for(int j = N-1; j >= 0; --j) {
+                if(matrix[i][j]) ++consec;
+                else consec = 0;
+                right[i][j] = consec;
+                //get our largest sign
+                int minVert = min(down[i][j], up[i][j]);
+                int minHorz = min(left[i][j], right[i][j]);
+                largestSign = max(largestSign, min(minVert, minHorz));
+            }
+        }
+        return largestSign;
+    }
+};
