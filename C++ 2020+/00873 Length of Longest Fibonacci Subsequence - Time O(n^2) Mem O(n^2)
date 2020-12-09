@@ -1,0 +1,41 @@
+//Run Time: 608ms - 10.98%
+//Memory Usage: 61.9MB - 25.10%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int lenLongestFibSubseq(vector<int>& A) {
+        //first + second = next
+        //[1,2,3,4,5,6,7,8]
+        //1 + 2 = 3 -> 2 + 3 -> 5
+        //[0,0]
+        //pick two numbers and see if we can form a fib using these two
+        //[1,2],[1,3],[1,4][1,5][1,6][1,7][1,8]
+        //[2,3],[2,4],[2,5],[2,6],[2,7],[2,8]
+        unordered_map<int, int> numberToIndex;
+        for(int i = 0; i < A.size(); ++i) {
+            numberToIndex.emplace(A[i], i);
+        }
+        //dp[first][second] = longest fib chain formed using this set of numbers
+        int size = A.size();
+        vector<vector<int>> dp(size, vector<int>(size, 2));
+        //Generate all starting pairs
+        int maxSize = 0;
+        for(int i = 0; i < size; ++i) {
+            for(int j = i+1; j < size; ++j) {
+                //skip if this chain has been used
+                if(dp[i][j] > 2) continue;
+                int curSize = 2;
+                int first = i, second = j, next = A[first] + A[second];
+                while(numberToIndex.find(next) != numberToIndex.end()) {
+                    first = second;
+                    second = numberToIndex[next];
+                    dp[first][second] = ++curSize;
+                    next = A[first] + A[second];
+                }
+                if(curSize > 2) maxSize = max(maxSize, curSize);
+            }
+        }
+        return maxSize;
+    }
+};
