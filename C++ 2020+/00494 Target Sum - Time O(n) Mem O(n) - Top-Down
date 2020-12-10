@@ -1,0 +1,29 @@
+//Run Time: 16ms - 75.02%
+//Memory Usage: 38.6MB - 27.45%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int calcWays(vector<vector<int>>& dp, vector<int>& nums,
+                 int i, int curNum, int target) {
+        if(i == nums.size()) {
+            return (curNum == target) ? 1 : 0;
+        }
+        if(dp[i][curNum+1000] != INT_MAX) return dp[i][curNum+1000];
+        
+        int numWays = 0;
+        //Test positive
+        numWays += calcWays(dp, nums, i+1, curNum + nums[i], target);
+        //Test negative
+        numWays += calcWays(dp, nums, i+1, curNum - nums[i], target);
+        dp[i][curNum+1000] = numWays;
+        return numWays;
+    }
+    int findTargetSumWays(vector<int>& nums, int S) {
+        //Recursive backtrack, but how to set it up
+        //every step has two choices either sub or add that number
+        //dp[index][curNum] = num ways to reach target
+        vector<vector<int>> dp(nums.size(), vector<int>(2001, INT_MAX));
+        return calcWays(dp, nums, 0, 0, S);
+    }
+};
