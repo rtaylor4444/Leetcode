@@ -1,0 +1,20 @@
+//Run Time: 440ms - 5.14%
+//Memory Usage: 10.9MB - 7.35%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int maxLength = 1;
+        vector<int> dp(nums.size(), 1);
+        for(int i = 0; i < nums.size(); ++i) {
+            //Find smallest element we are greater than and just update that one
+            for(int j = i+1; j < nums.size(); ++j) {
+                if(nums[i] >= nums[j]) continue;
+                dp[j] = max(dp[j], dp[i] + 1);
+                maxLength = max(dp[j], maxLength);
+            }
+        }
+        return maxLength;
+    }
+};
