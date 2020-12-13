@@ -1,0 +1,46 @@
+//Run Time: 192ms - 50.88%
+//Memory Usage: 8.7MB - 24.93%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^3) Memory O(n^2)
+class Solution {
+public:
+    int getMoneyAmount(int n) {
+        //binary search but upper bounds to get maximum amount
+        //we exit when there is only one left and right possbility
+        //Try all possbilities depedning which number we pick?
+        //We have to get the best possbile guess for each range via some backtracking?
+        //dp[range start][range end] = min money spent for each range
+        //base cases are in range of 2 and 3 - being the middle number
+        
+        //Base case dp[1][1] is always zero because we know the answer
+        vector<vector<int>> dp(n+1, vector<int>(n+1, INT_MAX));
+        //Base case of 1 - we know the answer so 0
+        for(int i = 1; i <= n; ++i)
+            dp[i][i] = 0;
+        
+        //Base case of 2 - always smaller number
+        for(int i = 1; i+1 <= n; ++i)
+            dp[i][i+1] = i;
+        
+        //Base case of 3 - always middle number
+        for(int i = 1; i+2 <= n; ++i)
+            dp[i][i+2] = i+1;
+        
+        //Build for every size
+        int size = 2;
+        while(++size <= n) {
+            //calculate min cost for size for every index
+            //cout << "testing size: " << size << endl;
+            for(int i = 1; i+size <= n; ++i) {
+                //check our options within the current range i+1 - i+size-1
+                for(int j = i+1; j < i+size-1; ++j) {
+                    int calcedMin = j + max(dp[i][j-1], dp[j+1][i+size]);
+                    //cout << i << "-" << j-1 << " + " << j+1 << "-" << i+size << endl;
+                    //cout << dp[i][j-1] << " + " << dp[j+1][i+size] << " = " << calcedMin << endl;
+                    dp[i][i+size] = min(dp[i][i+size], calcedMin);
+                }
+            }
+        }
+        return dp[1][n];
+    }
+};
