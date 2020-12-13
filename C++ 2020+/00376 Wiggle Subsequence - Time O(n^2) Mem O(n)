@@ -1,0 +1,33 @@
+//Run Time: 20ms - 10.39%
+//Memory Usage: 7.9MB - 9.91%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        //test all possibilities
+        //[1,7,4,9,2,5]
+        //[1,7],[1,4],[1,9],[1,2],[1,5]
+        //[7,4],[7,9],[7,2],[7,5]
+        
+        //states position + pos or neg
+        //[1,2,2,2,2,2]
+        //[1,1,1,1,1,1]
+        //dp[pos][pos or neg] = max length
+        //pos = 1, neg = 0
+        if(nums.empty()) return 0;
+        int maxLength = 1;
+        vector<vector<int>> dp(nums.size(), vector<int>(2, 1));
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = i+1; j < nums.size(); ++j) {
+                int diff = nums[j] - nums[i];
+                if(diff == 0) continue;
+                int diffIndex = (diff > 0) ? 1 : 0;
+                int prevDiffIndex = (diffIndex == 1) ? 0 : 1;
+                dp[j][diffIndex] = max(dp[j][diffIndex], dp[i][prevDiffIndex] + 1);
+                maxLength = max(maxLength, dp[j][diffIndex]);
+            }
+        }
+        return maxLength;
+    }
+};
