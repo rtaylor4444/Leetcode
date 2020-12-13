@@ -1,0 +1,29 @@
+//Run Time: 40ms - 6.84%
+//Memory Usage: 8.2MB - 64.10%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    double calcProb(unordered_map<double, unordered_map<double, double>>& dp,
+                    double soupA, double soupB) {
+        if(soupA <= 0 && soupB <= 0) return 0.5;
+        else if(soupA <= 0) return 1;
+        else if(soupB <= 0) return 0;
+        
+        if(dp.find(soupA) != dp.end() && dp[soupA].find(soupB) != dp[soupA].end())
+            return dp[soupA][soupB];
+        
+        double totalProb = 0.0;
+        for(int i = 4; i >= 1; --i) {
+            totalProb += calcProb(dp, soupA - (i * 25), soupB - ((4 - i) * 25));
+        }
+        totalProb /= 4;
+        dp[soupA][soupB] = totalProb;
+        return totalProb;
+    }
+    double soupServings(int N) {
+        if(N > (500 * 25)) return 1.0;
+        unordered_map<double, unordered_map<double, double>> dp;
+        return calcProb(dp, N, N);
+    }
+};
