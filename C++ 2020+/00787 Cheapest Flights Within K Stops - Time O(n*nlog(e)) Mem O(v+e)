@@ -1,0 +1,61 @@
+//Run Time: 40ms - 64.72%
+//Memory Usage: 13.3MB - 39.00%
+//Solved =)
+//Time O(n*nlog(e)) Memory O(v+e)
+struct EdgeInfo {
+    int to;
+    int cost;
+    EdgeInfo(int t, int c) {
+        to = t;
+        cost = c;
+    }
+};
+
+struct NodeInfo {
+    int node;
+    int priceSoFar;
+    int steps;
+    NodeInfo() {
+        
+    }
+    NodeInfo(int n, int p, int s) {
+        node = n;
+        priceSoFar = p;
+        steps = s;
+    }
+    bool operator()(NodeInfo& a, NodeInfo& b) {
+        return (a.priceSoFar > b.priceSoFar);
+    }
+};
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+        //dijkstras keeping track of steps
+        //Build adj list
+        vector<vector<EdgeInfo>> adjList(n, vector<EdgeInfo>());
+        for(int i = 0; i < flights.size(); ++i) {
+            adjList[flights[i][0]].push_back(EdgeInfo(flights[i][1], flights[i][2]));
+        }
+        //iterate
+        priority_queue<NodeInfo, vector<NodeInfo>, NodeInfo> p_q;
+        p_q.push(NodeInfo(src, 0, -1));
+        while(!p_q.empty()) {
+            NodeInfo n = p_q.top();
+            p_q.pop();
+            
+            if(n.steps > K) continue;
+            
+            //Exit condition
+            if(n.node == dst) return n.priceSoFar;
+            
+            //Visit adjacent node
+            for(int i = 0; i < adjList[n.node].size(); ++i) {
+                EdgeInfo e = adjList[n.node][i];
+                p_q.push(NodeInfo(e.to, n.priceSoFar + e.cost, n.steps + 1));
+            }
+            
+        }
+        return -1;
+    }
+};
