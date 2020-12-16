@@ -1,25 +1,27 @@
-//Run Time: 4ms - 89.52%
-//Memory Usage: 8.5MB - 50.39%
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.9MB - 8.89%
 //Unoptimal Solution - Memory/Time needs improvement
+//Optimized: https://leetcode.com/problems/sum-of-all-odd-length-subarrays/discuss/867779/Java-O(n)-time-with-Video-explanation
 //Time O(n^2) Memory O(n)
 class Solution {
 public:
     int sumOddLengthSubarrays(vector<int>& arr) {
-        //Dynamic Programming
-        //[1,4,2,5,3]
-        //[0,1,5,7,12,15]
-        //check 1 3 5 ..etc
+        //Dynamic Programming - Brute Force
+        //Remember dp options are prefixes, suffixes or subarray/substring
+        //dp[subarray start][subarray end] = subarray sum
+        //Optimize to dp[0 to subarray end] = subarray sum aka prefix sum
+        vector<int> prefixSum(arr.size() + 1, 0);
         int totalSum = 0;
-        //Calc Single element arrays and build dp
-        vector<int> dp(arr.size()+1, 0);
+        //first index of prefixSum is 0 for cleaner code later
         for(int i = 0; i < arr.size(); ++i) {
             totalSum += arr[i];
-            dp[i+1] = totalSum;
+            prefixSum[i+1] = totalSum;
         }
-        //Get all other lengths
-        for(int i = 2; i < arr.size(); i+=2) {
-            for(int j = 0; (j + i) < arr.size(); ++j) {
-                totalSum += dp[j+i+1] - dp[j];
+        
+        totalSum = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            for(int j = i; j < arr.size(); j+=2) {
+                totalSum += prefixSum[j+1] - prefixSum[i];
             }
         }
         return totalSum;
