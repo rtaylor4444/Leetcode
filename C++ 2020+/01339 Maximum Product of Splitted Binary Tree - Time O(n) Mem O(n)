@@ -1,0 +1,50 @@
+//Run Time: 316ms - 12.60%
+//Memory Usage: 120.3MB - 6.97%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    long totalSum, maxProd, mod;
+public:
+    long calcSums(TreeNode* node, unordered_map<TreeNode*, long>& nodeToSubTreeSum) {
+        if(node == nullptr) return 0;
+        long leftSum = calcSums(node->left, nodeToSubTreeSum);
+        long rightSum = calcSums(node->right, nodeToSubTreeSum);
+        long localSum = leftSum + node->val + rightSum;
+        totalSum += node->val;
+        nodeToSubTreeSum.emplace(node, localSum);
+        return localSum;
+    }
+    void getMaxProduct(TreeNode* node, unordered_map<TreeNode*, long>& nodeToSubTreeSum) {
+        if(node == nullptr) return;
+        //Test left split
+        long subTreeSum = nodeToSubTreeSum[node->left];
+        maxProd = max(maxProd, (totalSum - subTreeSum) * subTreeSum);
+        //Test right split
+        subTreeSum = nodeToSubTreeSum[node->right];
+        maxProd = max(maxProd, (totalSum - subTreeSum) * subTreeSum);
+        getMaxProduct(node->left, nodeToSubTreeSum);
+        getMaxProduct(node->right, nodeToSubTreeSum);
+    }
+    int maxProduct(TreeNode* root) {
+        //get max sum of each subtree and total sum
+        mod = 1000000007;
+        maxProd = totalSum = 0;
+        unordered_map<TreeNode*, long> nodeToSubTreeSum;
+        nodeToSubTreeSum.emplace(nullptr, 0);
+        
+        calcSums(root, nodeToSubTreeSum);
+        getMaxProduct(root, nodeToSubTreeSum);
+        return maxProd % mod;
+    }
+};
