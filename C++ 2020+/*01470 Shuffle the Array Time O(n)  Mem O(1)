@@ -1,0 +1,32 @@
+//Run Time: 4ms - 99.38%
+//Memory Usage: 10.1MB - 55.93%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getDesiredPos(int pos, int n) {
+        //Determine where each pos goes - formula can be tricky to come up with
+        if(pos < n) return pos * 2;
+        else return ((pos - n) * 2) + 1;
+    }
+    vector<int> shuffle(vector<int>& nums, int n) {
+        //Array Swaps + Marking 
+        //Put each number in its desired position and mark it when complete
+        //This can only be done when the numbers are non-negative and 0
+        int size = 2*n;
+        for(int i = 0; i < size; ++i) {
+            //Recursively place each element where it wants to go
+            int pos = i;
+            while(nums[i] > 0) {
+                pos = getDesiredPos(pos, n);
+                swap(nums[i], nums[pos]);
+                nums[pos] *= -1;
+            }
+        }
+        //Unmark all elements
+        for(int i = 0; i < size; ++i) {
+            nums[i] *= -1;
+        }
+        return nums;
+    }
+};
