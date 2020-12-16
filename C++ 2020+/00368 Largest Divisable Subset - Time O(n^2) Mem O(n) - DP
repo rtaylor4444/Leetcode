@@ -1,0 +1,45 @@
+//Run Time: 80ms - 10.32%
+//Memory Usage: 9.2MB - 26.30%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        //Brute Force try all possbilities
+        //subset meaning subsequence
+        //if next element is divisable by prev ones then the whole set must be divisable
+        //sorting array? - do these have to be in index order
+        //[2,1,16,8,4]
+        //[2,1,12,8,4]
+        //Look like we can sort the array, the set doesnt have to be in any order
+        //Keep track of length and previous index used
+        //
+        if(nums.empty()) return {};
+        sort(nums.begin(), nums.end());
+        int maxLength = 0, maxIndex = 0;
+        vector<int> length(nums.size(), 1), prevIndex(nums.size(), -1);
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = i+1; j < nums.size(); ++j) {
+                if(nums[i] % nums[j] != 0 &&
+                   nums[j] % nums[i] != 0) continue;
+                //add divisable 
+                if(length[j] < length[i] + 1) {
+                    length[j] = length[i] + 1;
+                    int prevMax = maxLength;
+                    maxLength = max(maxLength, length[j]);
+                    if(prevMax != maxLength) maxIndex = j;
+                    prevIndex[j] = i;
+                }
+            }
+        }
+        //Construct new list from max Index
+        vector<int> lds;
+        while(prevIndex[maxIndex] != -1) {
+            lds.push_back(nums[maxIndex]);
+            maxIndex = prevIndex[maxIndex];
+        }
+        //push back final first index
+        lds.push_back(nums[maxIndex]);
+        return lds;
+    }
+};
