@@ -1,50 +1,31 @@
-//Run Time: 56ms - 95.02%
-//Memory Usage: 25.9MB - 66.14%
+//Run Time: 40ms - 99.01%
+//Memory Usage: 28MB - 5.35%
 //Solved =)
 //Time O(n) Memory O(n)
 class Solution {
 public:
-    vector<int> merge(int l, int r, vector<int>& A) {
-        //cout << "l is: " << A[l] << " r is: " << A[r] << endl;
-        vector<int> merged;
-        merged.reserve(A.size());
-        while(l >= 0 && r < A.size()) {
-            if(A[l] < A[r]) { 
-                merged.push_back(A[l]);
-                --l;
-            }
-            else {
-                merged.push_back(A[r]);
-                ++r;
-            }
-        }
+    vector<int> sortedSquares(vector<int>& nums) {
+        //O(n log n) sqaure each value then just sort the array
+        //Array is already partially sorted, can we perform a merge?
+        //For merge we have to create a new array which takes up memory
+        //So can we do this in-place? Utilizing array swaps?
         
-        //Add leftover left numbers(if any)
-        while(l >= 0) {
-            merged.push_back(A[l]);
-            --l;
+        //Seperate into two list pos and neg
+        vector<int> pos, neg;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] < 0) neg.push_back(nums[i] * nums[i]);
+            else pos.push_back(nums[i] * nums[i]);
         }
-        
-        //Add leftover right numbers(if any)
-        while(r < A.size()) {
-            merged.push_back(A[r]);
-            ++r;
+        //Merge into new list
+        vector<int> sortedNums(nums.size(), 0);
+        int p1 = 0, p2 = pos.size() -1, i = nums.size() - 1;
+        while(p1 < neg.size() && p2 >= 0) {
+            if(neg[p1] > pos[p2]) sortedNums[i--] = neg[p1++];
+            else sortedNums[i--] = pos[p2--];
         }
-        return merged;
-    }
-    vector<int> sortedSquares(vector<int>& A) {
-        //If no negative values the array is already sorted
-        //If there are negatives just reverse them and 
-        //perform a merge sort
-        int firstNegIndex = -1;
-        for(int i = 0; i < A.size(); ++i) {
-            if(A[i] < 0)
-                firstNegIndex = i;
-            
-            A[i] *= A[i];
-        }
-        //Start left and right at the middle of the array to avoid
-        //having to reverse it
-        return merge(firstNegIndex, firstNegIndex + 1, A);
+        //Merge leftovers
+        while(p1 < neg.size()) sortedNums[i--] = neg[p1++];
+        while(p2 >= 0) sortedNums[i--] = pos[p2--];
+        return sortedNums;
     }
 };
