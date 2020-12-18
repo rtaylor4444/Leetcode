@@ -1,0 +1,28 @@
+//Run Time: 12ms - 91.37%
+//Memory Usage: 10.5MB - 89.75%
+//Solved =)
+//Time O(nlog(n)) Memory O(1)
+bool sortBits(int a, int b) {
+    //Sort by bit count
+    int bitCountA = __builtin_popcount(a), bitCountB = __builtin_popcount(b);
+    if(bitCountA < bitCountB)
+        return true;
+    else if(bitCountA > bitCountB)
+        return false;
+    //Deal with ties
+    return (a < b);
+};
+
+class Solution {
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        //Easily use custom sort function for O(nlogn) Time
+        //To get O(n) bucket sort has to be used
+        //We can have 32 buckets each one for a bit count
+        //But then how would we sort each bucket
+        //We could just store maximum range of values which is 0-10000
+        //But too expensive memory-wise
+        sort(arr.begin(), arr.end(), sortBits);
+        return arr;
+    }
+};
