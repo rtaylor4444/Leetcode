@@ -1,0 +1,25 @@
+//Run Time: 36ms - 86.97%
+//Memory Usage: 21.9MB - 61.07%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> sortArrayByParityII(vector<int>& A) {
+        //keep track of taken odd and even indices
+        //Then place each number where it wants to go since order doesnt matter
+        int evenIndex = 0, oddIndex = 1;
+        for(int i = 0; i < A.size(); ++i) {
+            while((A[i] % 2) != (i % 2)) {
+                if(A[i] % 2 == 0) {
+                    swap(A[i], A[evenIndex]);
+                    evenIndex += 2;
+                }
+                else {
+                    swap(A[i], A[oddIndex]);
+                    oddIndex += 2;
+                }
+            }
+        }
+        return A;
+    }
+};
