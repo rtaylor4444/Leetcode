@@ -1,0 +1,17 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 91.64%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    int findComplement(int num) {
+        //flip one bit at a time
+        int curBit = 1, comp = 0;
+        while(num) {
+            if(!(num & curBit)) comp |= curBit;
+            num &= ~curBit;
+            curBit <<= 1;
+        }
+        return comp;
+    }
+};
