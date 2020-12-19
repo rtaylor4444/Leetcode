@@ -1,0 +1,51 @@
+//Run Time: 96ms - 43.12%
+//Memory Usage: 24.8MB - 33.03%
+//USolved =)
+//Time O(RC) Memory O(RC)
+class Solution {
+public:
+    vector<vector<int>> allCellsDistOrder(int R, int C, int r0, int c0) {
+        //start at the center and iterate outward until we reach
+        //the bounds of our matrix
+        //That we we solve in O(RC) Time and no extra memory
+        //Or just use level order traversal to get them in order
+        int size = max(R, C);
+        vector<vector<int>> ans;
+        vector<vector<bool>> visited(R, vector<bool>(C, false));
+        queue<vector<int>> levelOrder;
+        levelOrder.push({r0, c0});
+        visited[r0][c0] = true;
+        while(!levelOrder.empty()) {
+            for(int i = levelOrder.size() - 1; i >= 0; --i) {
+                vector<int> curCell = levelOrder.front();
+                levelOrder.pop();
+                ans.push_back(curCell);
+                
+                //Left
+                if(curCell[0] - 1 >= 0 && !visited[curCell[0] - 1][curCell[1]]) {
+                    visited[curCell[0] - 1][curCell[1]] = true;
+                    levelOrder.push({curCell[0] - 1, curCell[1]});
+                }
+                    
+                //Right
+                if(curCell[0] + 1 < R && !visited[curCell[0] + 1][curCell[1]]) {
+                    visited[curCell[0] + 1][curCell[1]] = true;
+                    levelOrder.push({curCell[0] + 1, curCell[1]});
+                }
+                    
+                //Up
+                if(curCell[1] - 1 >= 0 && !visited[curCell[0]][curCell[1] - 1]) {
+                    visited[curCell[0]][curCell[1] - 1] = true;
+                    levelOrder.push({curCell[0], curCell[1] - 1});
+                }
+                    
+                //Down
+                if(curCell[1] + 1 < C && !visited[curCell[0]][curCell[1] + 1]) {
+                    visited[curCell[0]][curCell[1] + 1] = true;
+                    levelOrder.push({curCell[0], curCell[1] + 1});
+                }
+            }
+        }
+        return ans;
+    }
+};
