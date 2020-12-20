@@ -1,0 +1,39 @@
+//Run Time: 16ms - 98.02%
+//Memory Usage: 12.6MB - 92.71%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int firstOccurance(vector<int>& arr, int target) {
+        int l = 0, r = arr.size() -1, m;
+        while(l < r) {
+            m = l + ((r - l)/2);
+            if(arr[m] < target) l = m+1;
+            else r=m;
+        }
+        return l;
+    }
+    int lastOccurance(vector<int>& arr, int target) {
+        int l = 0, r = arr.size() -1, m;
+        while(l < r) {
+            m = l + ((r - l)/2);
+            if(arr[m] > target) r = m-1;
+            else l = m+1;
+        }
+        return r;
+    }
+    int findSpecialInteger(vector<int>& arr) {
+        //Binary Search somehow?
+        //Answer is in one of the quarter of the array so we get them
+        //and binary search to find its first occurance
+        int sz = arr.size(), cand = arr[sz/4];
+        vector<int> candidates = {arr[sz/4], arr[sz/2], arr[sz*3/4], arr[sz-1]};
+        for(int i = 0; i < candidates.size(); ++i) {
+            if(lastOccurance(arr, candidates[i]) - firstOccurance(arr, candidates[i]) >= (sz/4)) {
+                cand = candidates[i];
+                //break;
+            }
+        }
+        return cand;
+    }
+};
