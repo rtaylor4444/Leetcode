@@ -1,5 +1,5 @@
-//Run Time: 0ms - 100.00%
-//Memory Usage: 11.4MB - 18.10%
+//Run Time: 4ms - 76.11%
+//Memory Usage: 11.5MB - 24.70%
 //Solved =)
 //Time O(n) Memory O(w)
 /**
@@ -14,43 +14,29 @@
  * };
  */
 class Solution {
-
 public:
     bool isCousins(TreeNode* root, int x, int y) {
-        //possible to exit early if we find both values early
-        //keep track of depth, parent, value
-        //Level Order - dont need to keep track of depth
-        //val -> parent
-        TreeNode* curNode, *curParent;
-        unordered_map<int, TreeNode*> possibleCousins;
-        queue<pair<TreeNode*, TreeNode*>> bfs;
-        bfs.push({root, nullptr});
-        bfs.push({nullptr, nullptr});
-        while(!bfs.empty()) {
-            curNode = bfs.front().first;
-            curParent = bfs.front().second;
-            bfs.pop();
-            
-            //Check if we are done traversing this level
-            if(curNode == nullptr) {
-                //break if only one node found, since distinct
-                //we know that only one of each value exists
-                if(possibleCousins.size() == 1) break;
-                //We found both nodes on the same level just need to check parents
-                else if(possibleCousins.size() == 2) {
-                    return (possibleCousins[x] != possibleCousins[y]);
-                }
-                possibleCousins.clear();
-                if(!bfs.empty()) bfs.push({nullptr, nullptr});
-                continue;
-            }
-            
-            //process node
-            if(curNode->val == x || curNode->val == y)
-                possibleCousins.emplace(curNode->val, curParent);
+        //levelOrder traversal
+        unordered_map<int, TreeNode*> valueToParent;
+        queue<pair<TreeNode*, TreeNode*>> levelOrder;
+        levelOrder.push({root, nullptr});
+        while(!levelOrder.empty()) {
+            for(int i = levelOrder.size() - 1; i >= 0; --i) {
+                TreeNode* curNode = levelOrder.front().first;
+                TreeNode* curParent = levelOrder.front().second;
+                levelOrder.pop();
                 
-            if(curNode->left) bfs.push({curNode->left, curNode});
-            if(curNode->right) bfs.push({curNode->right, curNode});
+                if(curNode->val == x || curNode->val == y)
+                    valueToParent.emplace(curNode->val, curParent);
+                
+                if(curNode->left) levelOrder.push({curNode->left, curNode});
+                if(curNode->right) levelOrder.push({curNode->right, curNode});
+            }
+            //Check if x and y are on the same level and have diff parents
+            if(valueToParent.size() == 2 && valueToParent[x] != valueToParent[y])
+                return true;
+            
+            valueToParent.clear();
         }
         return false;
     }
