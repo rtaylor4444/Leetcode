@@ -1,0 +1,39 @@
+//Run Time: 128ms - 47.11%
+//Memory Usage: 39.4MB - 29.74%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        //first find the common restaurants between the two lists
+        //list index sum
+        //item -> list sum
+        //["Shogun","Tapioca Express","Burger King","KFC"]
+        //["KNN","KFC","Burger King","Tapioca Express","Shogun"]
+        //"shogun" -> 0 + 4
+        //"tapioca express" -> 1 + 3 
+        //"burger king" -> 2 + 2
+        //"kfc" -> 3 + 1
+        unordered_map<string, int> list1ItemToIndexSum;
+        for(int i = 0; i < list1.size(); ++i) {
+            list1ItemToIndexSum.emplace(list1[i], i);
+        }
+        
+        int minSum = INT_MAX;
+        unordered_map<string, int> commonItemToSum;
+        for(int i = 0; i < list2.size(); ++i) {
+            if(list1ItemToIndexSum.find(list2[i]) == list1ItemToIndexSum.end())
+                continue;
+            
+            int list1Index = list1ItemToIndexSum[list2[i]];
+            minSum = min(minSum, list1Index + i);
+            commonItemToSum.emplace(list2[i], list1Index + i);
+        }
+        
+        vector<string> ans;
+        for(auto it = commonItemToSum.begin(); it != commonItemToSum.end(); ++it) {
+            if(it->second == minSum) ans.push_back(it->first);
+        }
+        return ans;
+    }
+};
