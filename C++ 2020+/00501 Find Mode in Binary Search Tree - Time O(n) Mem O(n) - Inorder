@@ -1,0 +1,48 @@
+//Run Time: 20ms - 93.24%
+//Memory Usage: 24.7MB - 60.35%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        //in order traversal
+        int greatestMode = 1, currentMode = 1, prevVal = INT_MAX;
+        vector<int> modes;
+        TreeNode* curNode = root;
+        stack<TreeNode*> inOrder;
+        while(curNode || !inOrder.empty()) {
+            while(curNode) {
+                inOrder.push(curNode);
+                curNode = curNode->left;
+            }
+            curNode = inOrder.top();
+            inOrder.pop();
+            
+            if(prevVal == curNode->val) ++currentMode;
+            else currentMode = 1;
+            
+            if(currentMode > greatestMode) {
+                modes.clear();
+                modes.push_back(curNode->val);
+                greatestMode = currentMode;
+            }
+            else if(currentMode == greatestMode)
+                modes.push_back(curNode->val);
+            
+            prevVal = curNode->val;
+            curNode = curNode->right;
+        }
+        return modes;
+    }
+};
