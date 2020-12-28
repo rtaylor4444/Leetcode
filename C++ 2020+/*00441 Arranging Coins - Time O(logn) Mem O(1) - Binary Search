@@ -1,0 +1,28 @@
+//Run Time: 4ms - 71.96%
+//Memory Usage: 6.2MB - 91.26%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int arrangeCoins(int n) {
+        //Binary Search
+        //we can compute the maximum munRows used to achieve
+        //a value as close to n as possbile using below formula
+        //k(k+1)/2
+        //k = 3
+        //3 * 4 / 2 = 6
+        //we need 6 coins to complete 3 rows in other words
+        // *  * * *
+        // * *  * *
+        // * * *  *
+        int l = 0, r = n;
+        while(l <= r) {
+            long m = l + ((r - l) / 2);
+            long result = (m *(m+1)) / 2;
+            if(result == n) return m;
+            else if(result > n) r = m - 1;
+            else l = m + 1;
+        }
+        return r;
+    }
+};
