@@ -1,0 +1,17 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 39.1MB - 17.12%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        //Some mathy solution
+        //The idea is that only 5s create new 0s so we count all the fives
+        int cnt = 0;
+        while(n>0){
+            cnt += n/5;
+            n/=5;
+        }
+        return cnt;
+    }
+};
