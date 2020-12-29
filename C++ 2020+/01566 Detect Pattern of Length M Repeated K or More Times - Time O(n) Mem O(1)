@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.7MB - 25.98%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool containsPattern(vector<int>& arr, int m, int k) {
+        //Brute Force - three inner loops
+        //KMP - build a table somehow then do a second pass?
+        //DP? - cant seem tof igure out how to build a table
+        //*subarray
+        //*prefix
+        //*suffix
+        //[1,2,4,4,4,4]
+        //[0,0,0,0,0,0]
+        //Sliding Window?
+        //check length m apart every step
+        //we have to get m * k consecutive matches
+        //*everytime we get a match +1 our current match count
+        //*we initialize curMatches at m, reset it when we get a mismatch
+        //*if we ever hit m * k matches pattern is possible
+        //m = 2, k = 2
+        //[1,2,1,2,1,1,1,3]
+        int consecMatches = m;
+        for(int i = 0; i < arr.size() - m; ++i) {
+            if(arr[i] == arr[i+m]) ++consecMatches;
+            else consecMatches = m;
+            
+            if(consecMatches == m*k) return true;
+        }
+        return false;
+    }
+};
