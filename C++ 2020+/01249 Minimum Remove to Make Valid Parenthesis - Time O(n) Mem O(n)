@@ -1,0 +1,31 @@
+//Run Time: 64ms - 19.29%
+//Memory Usage: 12.6MB - 23.23%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        //Use stack to keep track of the ( and )
+        //pop off stack
+        unordered_set<char> parenthesis = {'(', ')'};
+        stack<int> posStack;
+        //Iterate backwards so we build the string more easily
+        for(int i = s.size() - 1; i >= 0; --i) {
+            char prevParenthesis = posStack.empty() ? ' ' : s[posStack.top()];
+            if(s[i] == '(' && prevParenthesis == ')')
+                posStack.pop();
+            
+            //Add parenthesis to stack
+            else if(parenthesis.find(s[i]) != parenthesis.end())
+                posStack.push(i);
+        }
+        //Construct new string
+        string ans;
+        for(int i = 0; i < s.size(); ++i) {
+            int indexToRemove = posStack.empty() ? -1 : posStack.top();
+            if(i == indexToRemove) posStack.pop();
+            else ans.push_back(s[i]);
+        }
+        return ans;
+    }
+};
