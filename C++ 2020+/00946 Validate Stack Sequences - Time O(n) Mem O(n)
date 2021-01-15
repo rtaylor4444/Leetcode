@@ -1,0 +1,28 @@
+//Run Time: 8ms - 98.84%
+//Memory Usage: 15.3MB - 99.59%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        //Simulate it
+        //first pop has to match pushed
+        //[1,2,3,4,5]
+        //[4,5,3,2,1]
+        //curPop: 4
+        //stack: 1 2 3 4
+        //Step 1) Find the first possible pop in our stack
+        //step 2) push to our stack until we find the next pop then iterate
+        int curPopIndex = 0, curPushIndex = 0;
+        stack<int> sim;
+        while(curPopIndex < popped.size() && curPushIndex < pushed.size()) {
+            sim.push(pushed[curPushIndex++]);
+            //Pop off until we get a mismatach
+            while(!sim.empty() && sim.top() == popped[curPopIndex]) {
+                sim.pop();
+                ++curPopIndex;
+            }
+        }
+        return curPopIndex == popped.size();
+    }
+};
