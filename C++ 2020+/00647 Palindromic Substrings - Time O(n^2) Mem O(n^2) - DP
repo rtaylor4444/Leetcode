@@ -1,0 +1,31 @@
+//Run Time: 20ms - 42.76%
+//Memory Usage: 7.6MB - 56.54%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int countSubstrings(string s) {
+        //Check every sub string
+        //Dynamic Programming to avoid recalcs
+        //dp[substring start][substring end] = isPalin;
+        vector<vector<bool>> dp(/*s.size()*/2, vector<bool>(s.size(), false));
+        //Set base cases
+        //One length is always a palindrome
+        int numPalins = s.size();
+        for(int i = 0; i < s.size(); ++i)
+            dp[i][i] = true;
+        
+        for(int len = 1; len < s.size(); ++len) {
+            for(int i = 0; i+len < s.size(); ++i) {
+                //Only check if first and last char are equal
+                //the middle substring must be a palindrome though
+                bool isMidPalin = (i+1 <= (i+len)-1) ? dp[i+1][(i+len)-1] : true;
+                if(s[i] == s[i+len] && isMidPalin) {
+                    dp[i][i+len] = true;
+                    ++numPalins;
+                }
+            }
+        }
+        return numPalins;
+    }
+};
