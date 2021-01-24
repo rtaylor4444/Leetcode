@@ -1,0 +1,28 @@
+//Run Time: 64ms - 47.96%
+//Memory Usage: 18.6MB - 93.15%
+//Solved =)
+//n = number of string
+//k = length of largest string
+//Time O(n*klogk) Memory O(nk)
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        //Sort each word and put it inside of a hashmap
+        //sorted word -> list of words
+        unordered_map<string, vector<string>> wordToGroup;
+        for(int i = 0; i < strs.size(); ++i) {
+            string temp = strs[i];
+            sort(temp.begin(), temp.end());
+            if(wordToGroup.find(temp) == wordToGroup.end()) {
+                wordToGroup.emplace(temp, vector<string>());
+            }
+            wordToGroup[temp].push_back(strs[i]);
+        }
+        vector<vector<string>> ans;
+        ans.reserve(wordToGroup.size());
+        for(auto it = wordToGroup.begin(); it != wordToGroup.end(); ++it) {
+            ans.push_back(it->second);
+        }
+        return ans;
+    }
+};
