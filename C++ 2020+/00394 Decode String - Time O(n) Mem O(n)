@@ -1,0 +1,35 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 93.21%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string decodeHelper(string& s, int& pos) {
+        string cur;
+        int numTimes = 0;
+        for(; pos < s.size(); ++pos) {
+            if(isdigit(s[pos])) {
+                numTimes *= 10;
+                numTimes += s[pos] - '0';
+            }
+            else if(isalpha(s[pos])) {
+                cur += s[pos];
+            }
+            else if(s[pos] == '[') {
+                string nested = decodeHelper(s, ++pos);
+                while(numTimes) {
+                    cur += nested;
+                    numTimes--;
+                }
+            }
+            else if(s[pos] == ']') break;
+            //cout << cur << endl;
+        }
+        return cur;
+    }
+    string decodeString(string s) {
+        //recursion
+        int pos = 0;
+        return decodeHelper(s, pos);
+    }
+};
