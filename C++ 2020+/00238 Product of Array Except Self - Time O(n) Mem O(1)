@@ -1,0 +1,21 @@
+//Run Time: 24ms - 92.65%
+//Memory Usage: 24MB - 94.00%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> ans(nums.size(), 1);
+        int runningProduct = 1;
+        for(int i = 0; i < nums.size(); ++i) {
+            ans[i] *= runningProduct;
+            runningProduct *= nums[i];
+        }
+        runningProduct = 1;
+        for(int i = nums.size() - 1; i >= 0; --i) {
+            ans[i] *= runningProduct;
+            runningProduct *= nums[i];
+        }
+        return ans;
+    }
+};
