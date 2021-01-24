@@ -1,0 +1,15 @@
+//Run Time: 8ms - 87.81%
+//Memory Usage: 39.1MB - 60.93%
+//Solved =)
+//Time O(nlog(k)) Memory O(k)
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> p_q;
+        for(int i = 0; i < nums.size(); ++i) {
+            p_q.push(nums[i]);
+            if(p_q.size() > k) p_q.pop();
+        }
+        return p_q.top();
+    }
+};
