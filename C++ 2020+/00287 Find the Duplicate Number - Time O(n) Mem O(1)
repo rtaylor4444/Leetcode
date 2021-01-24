@@ -1,0 +1,17 @@
+//Run Time: 8ms - 94.24%
+//Memory Usage: 10.9MB - 93.56%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        //Array Marking
+        int dup = -1;
+        for(int i = 0; i < nums.size(); ++i) {
+            int index = abs(nums[i]);
+            if(nums[index] < 0) dup = index;
+            nums[index] *= -1;
+        }
+        return dup;
+    }
+};
