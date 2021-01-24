@@ -1,0 +1,29 @@
+//Run Time: 4ms - 58.10%
+//Memory Usage: 7.2MB - 84.36%
+//Solved =)
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        //place each element where it wants to go
+        //Recursive swaps
+        //Swap each element around a diagnol from (0, 0) to (n, n)
+        //The swap again from middle top to bottom
+        //1 2 3    1 4 7    7 4 1 
+        //4 5 6 -> 2 5 8 -> 8 5 2
+        //7 8 9    3 6 9    9 6 3
+        //Diag swap
+        int size = matrix.size();
+        for(int i = 0; i < size; ++i) {
+            for(int j = 0; j < i; ++j) {
+                swap(matrix[i][j], matrix[j][i]);
+            }
+        }
+        //Middle swap
+        for(int i = 0; i < size; ++i) {
+            for(int j = 0; j*2 < size; ++j) {
+                swap(matrix[i][j], matrix[i][size-(j+1)]);
+            }
+        }
+    }
+};
