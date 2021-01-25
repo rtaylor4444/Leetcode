@@ -1,0 +1,56 @@
+//Run Time: 8ms - 69.84%
+//Memory Usage: 12.9MB - 80.03%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        //Store the nodes in a list in pre-order
+        //then construct the LinkedList
+        //Or post order going toward the right first
+        //6 5
+        if(root == nullptr) return;
+        stack<TreeNode*> postOrder;
+        TreeNode* curNode = root, *prevNode = nullptr;
+        //stack: 2 1 
+        //node: 5
+        while(curNode || !postOrder.empty()) {
+            //Populate stack
+            while(curNode) {
+                if(curNode->left) postOrder.push(curNode->left);
+                postOrder.push(curNode);
+                curNode = curNode->right;
+            }
+            
+            curNode = postOrder.top();
+            postOrder.pop();
+            
+            //verify stack
+            if(!postOrder.empty() && postOrder.top() == curNode->left) {
+                //process left next and push root back onto the stack
+                TreeNode* curRoot = curNode;
+                curNode = postOrder.top();
+                postOrder.pop();
+                postOrder.push(curRoot);
+            }
+            else {
+                //cout << curNode->val << " ";
+                curNode->right = prevNode;
+                curNode->left = nullptr;
+                prevNode = curNode;
+                curNode = nullptr;
+            }    
+        }
+    }
+};
