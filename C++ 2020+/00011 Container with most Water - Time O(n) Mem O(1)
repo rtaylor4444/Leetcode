@@ -1,0 +1,22 @@
+//Run Time: 20ms - 93.75%
+//Memory Usage: 17.6MB - 99.83%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        //Check all containers n^2
+        //Pick the pillar that weilds most water
+        //*dont know how to pck it though
+        //Two pointers
+        int l = 0, r = height.size() - 1, w = r;
+        int maxContainer = 0;
+        while(l < r) {
+            maxContainer = max(maxContainer, min(height[l], height[r]) * w);
+            if(height[l] > height[r]) --r;
+            else ++l;
+            --w;
+        }
+        return maxContainer;
+    }
+};
