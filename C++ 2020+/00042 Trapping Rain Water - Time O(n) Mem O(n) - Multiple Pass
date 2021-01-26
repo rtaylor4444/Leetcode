@@ -1,0 +1,28 @@
+//Run Time: 20ms - 11.52%
+//Memory Usage: 14.3MB - 85.70%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        //Multiple Pass
+        vector<int> trappedWater(height.size(), INT_MAX);
+        int maxHeight = 0;
+        for(int i = 0; i < height.size(); ++i) {
+            maxHeight = max(maxHeight, height[i]);
+            trappedWater[i] = min(maxHeight, trappedWater[i]);
+        }
+        
+        maxHeight = 0;
+        for(int i = height.size() - 1; i >= 0; --i) {
+            maxHeight = max(maxHeight, height[i]);
+            trappedWater[i] = min(maxHeight, trappedWater[i]);
+        }
+        
+        int totalTrapped = 0;
+        for(int i = 0; i < height.size(); ++i) {
+            totalTrapped += max(0, trappedWater[i] - height[i]);
+        }
+        return totalTrapped;
+    }
+};
