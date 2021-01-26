@@ -1,0 +1,85 @@
+//Run Time: 96ms - 24.92%
+//Memory Usage: 39.1MB - 95.89%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+//[4,-7,-3,n,n,-9,-3,9,-7,-4,n,6,n,-6,-6,n,n,0,6,5,null,9,n,n,-1,-4,null,null,null,-2]
+class Codec {
+public:
+    TreeNode* constructTree(vector<TreeNode*>& treeNodes) {
+        int index = 0, refIndex = 0;
+        while(index < treeNodes.size()) {
+            if(treeNodes[index] != nullptr) {
+                if(++refIndex < treeNodes.size()) treeNodes[index]->left = treeNodes[refIndex];
+                if(++refIndex < treeNodes.size()) treeNodes[index]->right = treeNodes[refIndex];
+            }
+            ++index;
+        }
+        return treeNodes[0];
+    }
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if(root == nullptr) return "";
+        string ans = "";
+        queue<TreeNode*> bfs;
+        bfs.push(root);
+        while(!bfs.empty()) {
+            TreeNode* curNode = bfs.front();
+            bfs.pop();
+            
+            if(curNode) ans += to_string(curNode->val);
+            else ans += 'n';
+            
+            ans += ',';
+            if(!curNode) continue;
+            bfs.push(curNode->left);
+            bfs.push(curNode->right);
+        }
+        //BUG - Trim unneeded n's
+        return ans;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if(data.empty()) return nullptr;
+        //cout << data << endl;
+        int index = 0;
+        vector<TreeNode*> treeNodes;
+        while(index < data.size()) {
+            //parse value
+            int value = 0, negate = 1;
+            while(data[index] != 'n') {
+                if(data[index] == '-') {
+                    negate = -1;
+                    index++;
+                    continue;
+                }
+                value *= 10;
+                value += data[index] - '0';
+                //cout << value << " ";
+                if(data[++index] == ',') break;
+            }
+            //cout << " creating node " << endl;
+            //Make tree node
+            TreeNode *curNode = nullptr;
+            if(data[index] != 'n') curNode = new TreeNode(value * negate);
+            else ++index;
+            treeNodes.push_back(curNode);
+            ++index;
+        }
+        //Construct tree
+        return constructTree(treeNodes);
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
