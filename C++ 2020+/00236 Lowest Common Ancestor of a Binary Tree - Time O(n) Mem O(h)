@@ -1,0 +1,42 @@
+//Run Time: 16ms - 85.97%
+//Memory Usage: 14MB - 97.67%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    TreeNode* lca, *a1, *a2;
+public:
+    TreeNode* postOrder(TreeNode* node) {
+        if(node == nullptr) return nullptr;
+        TreeNode* leftAns = postOrder(node->left);
+        TreeNode* rightAns = postOrder(node->right);
+        //Check current node for ancestor
+        TreeNode* curAns = nullptr;
+        if(node == a1 || node == a2) curAns = node;
+        //Set LCA if it isnt set already
+        if(!lca) {
+            if(leftAns && rightAns) lca = node;
+            else if(leftAns && curAns) lca = node;
+            else if(rightAns && curAns) lca = node;
+        }
+        //Return ancestor found
+        if(leftAns) return leftAns;
+        if(rightAns) return rightAns;
+        return curAns;
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        lca == nullptr;
+        a1 = p;
+        a2 = q;
+        postOrder(root);
+        return lca;
+    }
+};
