@@ -1,0 +1,35 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.7MB - 82.70%
+//Solved =)
+//n = input mapping to 3 letters
+//m = input mapping to 4 letters
+//Time O(3^n * 4^m) Memory O(3^n * 4^m)
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        if(digits.empty()) return {};
+        vector<vector<char>> digitToLetters = {{}, {}, 
+                                               {'a', 'b', 'c'},
+                                               {'d', 'e', 'f'},
+                                               {'g', 'h', 'i'},
+                                               {'j', 'k', 'l'},
+                                               {'m', 'n', 'o'},
+                                               {'p', 'q', 'r', 's'},
+                                               {'t', 'u', 'v'},
+                                               {'w', 'x', 'y', 'z'}};
+        //generate answer
+        vector<string> ans(1, "");
+        for(int i = 0; i < digits.size(); ++i) {
+            vector<string> temp;
+            for(int j = 0; j < ans.size(); ++j) {
+                //for each prev calced result add new answer
+                for(int k = 0; k < digitToLetters[digits[i] - '0'].size(); ++k) {
+                    temp.push_back(ans[j] + digitToLetters[digits[i] - '0'][k]);
+                }
+            }
+            ans = temp;
+            temp.clear();
+        }
+        return ans;
+    }
+};
