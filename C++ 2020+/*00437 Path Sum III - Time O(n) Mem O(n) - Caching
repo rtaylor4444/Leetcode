@@ -1,0 +1,55 @@
+//Run Time: 20ms - 81.60%
+//Memory Usage: 18.7MB - 48.67%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    int result;
+    unordered_map<int, int> pathsumToFreq;
+public:
+    void calcSums(TreeNode* node, int curSum, int target) {
+        if(node == nullptr) return;
+        curSum += node->val;
+        int reqPathSum = curSum - target;
+        //cout << "added: " << curSum << endl;
+        //Check if we calced the reqPathSum
+        if(pathsumToFreq.find(reqPathSum) != pathsumToFreq.end()) {
+            result += pathsumToFreq[reqPathSum];
+            //cout << node->val << " -> " << curSum << endl;
+        }
+        //Update freq of current
+        if(pathsumToFreq.find(curSum) == pathsumToFreq.end())
+            pathsumToFreq.emplace(curSum, 1);
+        else pathsumToFreq[curSum] += 1;
+        calcSums(node->left, curSum, target);
+        calcSums(node->right, curSum, target);
+        //Undo this path as we backtrack
+        pathsumToFreq[curSum] -= 1;
+        //cout << "removed: " << curSum << endl;
+    }
+    int pathSum(TreeNode* root, int sum) {
+        //Dynamic Programming
+        /*
+        O(n) 10 -> possible answer
+        Must be able to quickly look up if a possible sum can be made
+        for each node.
+        We traverse and get all root->node sums then lookup the path sum
+        we need to remove in order to find the answer
+        */
+        result = 0;
+        pathsumToFreq.clear();
+        pathsumToFreq.emplace(0, 1);
+        calcSums(root, 0, sum);
+        return result;
+    }
+};
