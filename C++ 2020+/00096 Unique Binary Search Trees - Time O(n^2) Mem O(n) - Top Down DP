@@ -1,0 +1,30 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6MB - 87.12%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int topDown(int curN, vector<int>& dp) {
+        if(dp[curN] != INT_MAX) return dp[curN];
+        int numTrees = 0;
+        for(int i = 0; i < curN; ++i) {
+            //Test each possible number of right and left nodes
+            int right = topDown(curN - (i+1), dp);
+            int left = topDown(i, dp);
+            //for each left we can make right comboes
+            numTrees += right * left;
+        }
+        //cout << curN << " -> " << numTrees << endl;
+        dp[curN] = numTrees;
+        return numTrees;
+    }
+    int numTrees(int n) {
+        //Dynamic Programming
+        //At each step we have a choice between 1-n left and irght nodes
+        //we pick 1 left n-1 right, 2 left n-2 right etc
+        vector<int> dp(n+1, INT_MAX);
+        dp[0] = 1, dp[1] = 1;
+        topDown(n, dp);
+        return dp[n];
+    }
+};
