@@ -1,0 +1,32 @@
+//Run Time: 96ms - 16.58%
+//Memory Usage: 11.2MB - 79.45%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        //pick a good pivot point
+        //stock price that could be a low point
+        if(prices.empty()) return 0;
+        vector<int> dp(prices.size(), 0);
+        int maxProfit = 0;
+        for(int i = 0; i < prices.size() - 1; ++i) {
+            //pick a possible stock that can yeild profit
+            if(prices[i] > prices[i+1]) continue;
+            //find maximum profit based on just this one stock 
+            int maxProfitSoFar = 0;
+            //check previous answer account for cooldown which is 
+            //2 items back given cooldown
+            int prevProfit = (i - 2 >= 0) ? dp[i-2] : 0;
+            for(int j = i+1; j < prices.size(); ++j) {
+                int curProfit = max(0, prices[j] - prices[i]);
+                maxProfitSoFar = max(curProfit + prevProfit, maxProfitSoFar);
+                //We can ignore this choice completely and take prev stock
+                //or take current profit
+                dp[j] = max(dp[j], maxProfitSoFar);
+                maxProfit = max(dp[j], maxProfit);
+            }
+        }
+        return maxProfit;
+    }
+};
