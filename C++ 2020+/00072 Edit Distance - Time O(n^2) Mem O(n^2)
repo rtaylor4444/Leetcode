@@ -1,0 +1,51 @@
+//Run Time: 12ms - 71.20%
+//Memory Usage: 9MB - 45.59%
+//Solved =) 
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    void printMatrix(vector<vector<int>>& dp) {
+        for(int i = 0; i < dp.size(); ++i) {
+            for(int j = 0; j < dp[i].size(); ++j) {
+                cout << dp[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    int minDistance(string word1, string word2) {
+        //Dynamic Programming
+        //This problem can be broken down into subproblems
+        //Build matrix
+        //  ' h o r s e
+        //' 0 1 2 3 4 5
+        //r 1 1 2 2 3 4
+        //o 2 2 1 2 3 4
+        //s 3 3 2 2 2 3
+        //forumla:
+        //if chars are the same  ex: r vs hor is the same as ' vs ho
+        //*dp[i][j] = dp[i-1][j-1]
+        //otherwise: we have three choices
+        //1) replacement  ex: r vs h we can set r to h which is the same as ' vs ' +1
+        //2) delete ex: r vs h same as ' vs h + 1 since we can remove r and add h
+        //3) add ex: ???
+        //*dp[i][j] = min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]) + 1
+        //Two vectors can be used to optimize memory
+        vector<vector<int>> dp(word1.size()+1, vector<int>(word2.size()+1, 0));
+        //Fill base cases
+        for(int i = 0; i <= word1.size(); ++i)
+            dp[i][0] = i;
+        
+        for(int j = 0; j <= word2.size(); ++j)
+            dp[0][j] = j;
+        
+        //Fill matrix
+        for(int i = 1; i <= word1.size(); ++i) {
+            for(int j = 1; j <= word2.size(); ++j) {
+                if(word1[i-1] == word2[j-1]) dp[i][j] = dp[i-1][j-1];
+                else dp[i][j] = min(dp[i-1][j], min(dp[i][j-1], dp[i-1][j-1])) + 1;
+            }
+        }
+        //printMatrix(dp);
+        return dp[word1.size()][word2.size()];
+    }
+};
