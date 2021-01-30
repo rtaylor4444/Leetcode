@@ -1,0 +1,52 @@
+//Run Time: 4ms - 83.46%
+//Memory Usage: 11.3MB - 77.31%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void printStates(vector<int>& reset, vector<int>& hold, vector<int>& sold) {
+        cout << "reset state: " << endl;
+        for(int i = 0; i < reset.size(); ++i) {
+            cout << reset[i] << " ";
+        }
+        cout << endl;
+        
+        cout << "hold state: " << endl;
+        for(int i = 0; i < hold.size(); ++i) {
+            cout << hold[i] << " ";
+        }
+        cout << endl;
+        
+        cout << "sold state: " << endl;
+        for(int i = 0; i < sold.size(); ++i) {
+            cout << sold[i] << " ";
+        }
+    }
+    int maxProfit(vector<int>& prices) {
+        //DP + State Machine
+        //reset(no stock held)
+        //sold(profited from stock)
+        //hold(stock is held)
+        //sold->reset
+        //reset->reset
+        //reset->hold
+        //hold->sold
+        //hold->hold
+        if(prices.empty()) return 0;
+        vector<int> reset(prices.size(), 0), sold(prices.size(), 0), hold(prices.size(), 0);
+        //base cases
+        hold[0] = -prices[0];
+        for(int i = 1; i < prices.size(); ++i) {
+            //Could have entered this state from selling or prev no stock
+            //So we pick the maximum
+            reset[i] = max(reset[i-1], sold[i-1]);
+            //Could have entered from hold or reset(buying stock)
+            //Again we want the max amount
+            hold[i] = max(hold[i-1], reset[i-1] - prices[i]);
+            //Can only entre from prev held stock
+            sold[i] = hold[i-1] + prices[i];
+        }
+        //printStates(reset, hold, sold);
+        return max(sold[prices.size()-1], reset[prices.size()-1]);
+    }
+};
