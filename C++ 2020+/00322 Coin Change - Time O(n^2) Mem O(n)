@@ -1,0 +1,27 @@
+//Run Time: 92ms - 61.56%
+//Memory Usage: 14MB - 64.21%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        //Dynamic Programming
+        //  0 1 2 3 4 5 6 7 8 9 10 11
+        //1 0 1 2 3 4 5 6 7 8 9 10 11
+        //2 0 1 1 2 2 3 3 4 4 5 5  6
+        //5 0
+        //dp[coin][amount] = fewest coins
+        //dp[i][j] = min(dp[i][j-coin val], dp[i-1][j-coin val]) + 1
+        //sort(coins.begin(), coins.end());
+        vector<int> dp(amount + 1, INT_MAX);
+        dp[0] = 0;
+        for(int i = 0; i < coins.size(); ++i) {
+            for(int j = 0; j <= amount; ++j) {
+                if(coins[i] > j) continue;
+                if(dp[j - coins[i]] == INT_MAX) dp[j] = min(dp[j], INT_MAX);
+                else dp[j] = min(dp[j], dp[j - coins[i]] + 1); 
+            }
+        }
+        return (dp[amount] == INT_MAX) ? -1 : dp[amount]; 
+    }
+};
