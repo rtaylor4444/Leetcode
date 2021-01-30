@@ -1,0 +1,60 @@
+//Run Time: 104ms - 91.57%
+//Memory Usage: 47.4MB - 31.59%
+//Solved =)
+//Time O(nlog(n)) Memory O(n)
+class MedianFinder {
+    double median;
+    //min heap of large numbers
+    priority_queue<double, vector<double>, greater<double>> minHeap;
+    //max heap of small numbers
+    priority_queue<double, vector<double>> maxHeap;
+public:
+    /** initialize your data structure here. */
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        if(minHeap.empty()) {
+            minHeap.push((double)num);
+            median = (double)num;
+            return;
+        }
+        
+        //Place number in a heap
+        if((double)num < minHeap.top())
+            maxHeap.push((double)num);
+        else
+            minHeap.push((double)num);
+        
+        //Balance heaps (assume max size diff of 1)
+        int sizeDiff = minHeap.size() - maxHeap.size();
+        if(sizeDiff > 1) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+        else if(sizeDiff < -1) {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        }
+        
+        //Calc median
+        if(minHeap.size() > maxHeap.size())
+            median = (double)minHeap.top();
+        else if(minHeap.size() < maxHeap.size())
+            median = (double)maxHeap.top();
+        else
+            median = (double)(minHeap.top() + maxHeap.top()) / 2;
+    }
+    
+    double findMedian() {
+        return median;
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj->addNum(num);
+ * double param_2 = obj->findMedian();
+ */
