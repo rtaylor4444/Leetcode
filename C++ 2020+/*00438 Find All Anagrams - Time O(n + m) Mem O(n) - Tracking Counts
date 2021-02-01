@@ -1,0 +1,60 @@
+//Run Time: 12ms - 80.71%
+//Memory Usage: 8.5MB - 91.09%
+//Solved =)
+//n = length of string
+//m = length of window
+//Time O(n + m) Memory O(n)
+class Counter {
+    int totalCount;
+    vector<bool> validLetters;
+    vector<int> count;
+public:
+    Counter(string& p) {
+        totalCount = 0;
+        count = vector<int>(26, 0);
+        validLetters = vector<bool>(26, false);
+        for(int i = 0; i < p.size(); ++i) {
+            validLetters[p[i] - 'a'] = true;
+            count[p[i] - 'a']++;
+            totalCount++;
+        }
+        
+    }
+    void incrementCount(char c) {
+        if(!validLetters[c - 'a'])
+            return;
+        
+        //Skip counts below 0 if we become 0 this doesn't count
+        if(count[c - 'a']++ >= 0) totalCount++;
+    }
+    void decrementCount(char c) {
+        if(!validLetters[c - 'a'])
+            return;
+        
+        //Skip character counts below 0
+        if(--count[c - 'a'] >= 0) totalCount--;
+    }
+    bool isAnagram() {
+        return (totalCount == 0);
+    }
+};
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        //Count
+        //Count all characters of p
+        //Then silding window count of s updating count as we go
+        if(p.size() > s.size()) return {};
+        Counter counter(p);
+        
+        int windowSize = p.size();
+        vector<int> result;
+        for(int i = 0; i < s.size(); ++i) {
+            counter.decrementCount(s[i]);
+            if(i - windowSize >= 0) counter.incrementCount(s[i - windowSize]);
+            if(counter.isAnagram())
+                result.push_back(i+1 - windowSize);
+        }
+        return result;
+    }
+};
