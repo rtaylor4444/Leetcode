@@ -1,0 +1,34 @@
+//Run Time: 8ms - 81.30%
+//Memory Usage: 11.1MB - 83.11%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+class Solution {
+    vector<vector<int>> ans;
+public:
+    void generateComb(vector<int>& candidates, vector<int>& curComb,
+                      int curTarget, int candPos) {
+        if(curTarget == 0) {
+            ans.push_back(curComb);
+            return;
+        }
+        
+        //Keep track of position to avoid repeat answers
+        for(int i = candPos; i < candidates.size(); ++i) {
+            if(candidates[i] > curTarget) continue;
+            curComb.push_back(candidates[i]);
+            curTarget -= candidates[i];
+            generateComb(candidates, curComb, curTarget, i);
+            curTarget += candidates[i]; 
+            curComb.pop_back();
+        }
+        
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        //try all combinations and store ones that add to target
+        //O(2^N)
+        ans.clear();
+        vector<int> curComb;
+        generateComb(candidates, curComb, target, 0);
+        return ans;
+    }
+};
