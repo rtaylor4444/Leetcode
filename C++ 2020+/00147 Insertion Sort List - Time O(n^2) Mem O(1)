@@ -1,0 +1,40 @@
+//Run Time: 44ms - 71.84%
+//Memory Usage: 9.7MB - 82.32%
+//Solved =)
+//Time O(n^2) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        //Insertion Sort - O(n^2)
+        //Pick the head and seperate it to make a seperate list;
+        if(head == nullptr) return head;
+        ListNode dummyHead(0);
+        dummyHead.next = head;
+        head = head->next;
+        dummyHead.next->next = nullptr;
+        while(head) {
+            //insertion sort
+            ListNode *prevInsertNode = nullptr, *curInsertNode = dummyHead.next;
+            ListNode *nextNode = head->next;
+            while(curInsertNode && head->val > curInsertNode->val) {
+                prevInsertNode = curInsertNode;
+                curInsertNode = curInsertNode->next;
+            }
+            if(prevInsertNode) prevInsertNode->next = head;
+            else dummyHead.next = head;
+            head->next = curInsertNode;
+            head = nextNode;
+        }
+        return dummyHead.next;
+    }
+};
