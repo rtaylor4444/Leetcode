@@ -1,0 +1,68 @@
+//Run Time: 140ms - 42.14%
+//Memory Usage: 29.1MB - 92.91%
+//Solved =)
+//Time O(nlog(n)) Memory O(h)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void printList(ListNode* l) {
+        while(l) {
+            cout << l->val << " ";
+            l = l->next;
+        }
+        cout << endl;
+    }
+    ListNode* merge(ListNode* l1, ListNode* l2) {
+        if(l1 && !l2) return l1;
+        else if(!l1 && l2) return l2;
+        ListNode *curNode = nullptr, *head = nullptr;
+        while(l1 && l2) {
+            if(l1->val < l2->val) {
+                if(!curNode) curNode = l1;
+                else curNode->next = l1;
+                l1 = l1->next;
+            }
+            else {
+                if(!curNode) curNode = l2;
+                else curNode->next = l2;
+                l2 = l2->next;
+            }
+            if(!head) head = curNode;
+            else curNode = curNode->next;
+        }
+        if(l1) curNode->next = l1;
+        else curNode->next = l2;
+        return head;
+    }
+    ListNode* mergeSort(ListNode* head, ListNode* tail, int len) {
+        if(head == tail || len < 2) return head;
+        int newLen = len / 2;
+        ListNode* mid = head, *midNext = nullptr;
+        while(--newLen) mid = mid->next;
+        midNext = mid->next;
+        mid->next = nullptr;
+        ListNode* l1 = mergeSort(head, mid, len/2);
+        ListNode* l2 = mergeSort(midNext, tail, len - (len/2));
+        return merge(l1, l2);
+    }
+    ListNode* sortList(ListNode* head) {
+        if(head == nullptr) return head;
+        //Get length + tail
+        int len = 1;
+        ListNode* tail = head;
+        while(tail->next) {
+            ++len;
+            tail = tail->next;
+        }
+        return mergeSort(head, tail, len);
+    }
+};
