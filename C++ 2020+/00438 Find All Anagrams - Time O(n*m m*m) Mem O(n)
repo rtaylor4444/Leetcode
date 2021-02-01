@@ -1,0 +1,40 @@
+//Run Time: 24ms - 41.30%
+//Memory Usage: 9.5MB - 18.29%
+//Unoptimal Solution - Time needs improvement
+//n = length of string
+//m = length of window
+//Time O(n*m + m*m) Memory O(n)
+class Solution {
+public:
+    bool isAnagram(unordered_set<char>& validLetters, vector<int>& pCount, 
+                   vector<int>& sCount) {
+        for(auto it = validLetters.begin(); it != validLetters.end(); ++it) {
+            if(pCount[*it - 'a'] > sCount[*it - 'a']) return false;
+        }
+        return true;
+    }
+    vector<int> findAnagrams(string s, string p) {
+        //Count
+        //Count all characters of p
+        //Then silding window count of s updating count as we go
+        if(p.size() > s.size()) return {};
+        //Count p
+        unordered_set<char> validLetters;
+        vector<int> pCount(26, 0), sCount(26, 0);
+        for(int i = 0; i < p.size(); ++i) {
+            pCount[p[i] - 'a']++;
+            validLetters.emplace(p[i]);
+        }
+        //Count s
+        int windowSize = p.size() - 1;
+        vector<int> result;
+        for(int i = 0; i < s.size(); ++i) {
+            sCount[s[i] - 'a']++;
+            if(i - windowSize < 0) continue;
+            if(isAnagram(validLetters, pCount, sCount))
+                result.push_back(i - windowSize);
+            sCount[s[i - windowSize] - 'a']--;
+        }
+        return result;
+    }
+};
