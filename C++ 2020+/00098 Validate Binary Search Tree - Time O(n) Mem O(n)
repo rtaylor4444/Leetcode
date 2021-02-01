@@ -1,0 +1,40 @@
+//Run Time: 24ms - 18.40%
+//Memory Usage: 21.6MB - 86.97%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        //Iterative In-Order
+        int prevVal = 10e7;
+        stack<TreeNode*> inOrder;
+        TreeNode* curNode = root;
+        while(curNode || !inOrder.empty()) {
+            //Populate stack
+            while(curNode) {
+                inOrder.push(curNode);
+                curNode = curNode->left;
+            }
+            
+            curNode = inOrder.top();
+            inOrder.pop();
+            
+            if(prevVal != 10e7 && curNode->val <= prevVal) return false;
+            prevVal = curNode->val;
+            
+            curNode = curNode->right;
+        }
+        return true;
+    }
+};
