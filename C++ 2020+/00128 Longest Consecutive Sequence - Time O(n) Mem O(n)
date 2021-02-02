@@ -1,0 +1,35 @@
+//Run Time: 12ms - 81.16%
+//Memory Usage: 11.1MB - 53.28%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        //Make dp array - hashmap
+        //dp[index] = longest consec
+        //find start of a chain and update them
+        if(nums.empty()) return 0;
+        unordered_map<int, int> valueToLength;
+        for(int i = 0; i < nums.size(); ++i) {
+            valueToLength.emplace(nums[i], 1);
+        }
+        
+        int longestSeq = 1;
+        for(int i = 0; i < nums.size(); ++i) {
+            int curValue = nums[i];
+            //skip if update to this values length is possible
+            //We want to find the start of a chain
+            if(valueToLength.find(curValue - 1) != valueToLength.end()) 
+                continue;
+            
+            //Get length of this possible chain
+            //cout << curValue << endl;
+            int curLength = 0;
+            while(valueToLength.find(curValue) != valueToLength.end()) {
+                valueToLength[curValue++] = ++curLength;
+            }
+            longestSeq = max(longestSeq, curLength);
+        }
+        return longestSeq;
+    }
+};
