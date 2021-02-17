@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        //Sum has to be even for a possible partition
+        //half of the sum is our target number
+        //sort the array and count up until we reach the target
+        if(nums.size() < 2) return false;
+        int sum = 0;
+        for(int i = 0; i < nums.size(); ++i)
+            sum += nums[i];
+        
+        if(sum % 2 != 0) return false;
+        sum /= 2;
+        
+        unordered_set<int> seenSums;
+        seenSums.emplace(0);
+        //Bottom Up - O(num choices ^ numsteps) -> O(2^n)
+        for(int i = nums.size() - 1; i >= 0; --i) {
+            unordered_set<int> temp = seenSums;
+            for(auto it = temp.begin(); it != temp.end(); ++it) {
+                int curSum = nums[i] + *it;
+                if(curSum == sum) return true;
+                seenSums.emplace(curSum);
+            }
+        }
+        
+        return false;
+    }
+};
