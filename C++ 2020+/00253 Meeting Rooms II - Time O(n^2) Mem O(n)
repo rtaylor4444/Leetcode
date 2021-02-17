@@ -1,0 +1,28 @@
+//Run Time: 20ms - 75.82%
+//Memory Usage: 11.8MB - 89.93%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    bool canFitinRoom(vector<vector<int>>& intervals, vector<vector<int>>& numRooms, int i) {
+        for(int j = 0; j < numRooms.size(); ++j) {
+            //Update this room
+            if(intervals[i][0] >= numRooms[j][1]) {
+                numRooms[j] = intervals[i];
+                return true;
+            }
+        }
+        return false;
+    }
+    int minMeetingRooms(vector<vector<int>>& intervals) {
+        //Sort meetings by start time
+        sort(intervals.begin(), intervals.end());
+        vector<vector<int>> numRooms;
+        numRooms.push_back(intervals[0]);
+        for(int i = 1; i < intervals.size(); ++i) {
+            if(!canFitinRoom(intervals, numRooms, i))
+                numRooms.push_back(intervals[i]);
+        }
+        return numRooms.size();
+    }
+};
