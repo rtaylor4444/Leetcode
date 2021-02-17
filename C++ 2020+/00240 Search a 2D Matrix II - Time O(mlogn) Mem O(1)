@@ -1,0 +1,26 @@
+//Run Time: 228ms - 22.89%
+//Memory Usage: 14.6MB - 91.73%
+//Solved =)
+//Time O(mlog(n)) Memory O(1)
+class Solution {
+public:
+    bool binarySearch(vector<int>& row, int target) {
+        int l = 0, r = row.size() - 1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            if(row[m] == target) return true;
+            if(row[m] > target) r = m-1;
+            else l = m+1;
+        }
+        return false;
+    }
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        //mlogn
+        //Binary Search each row
+        for(int i = 0; i < matrix.size(); ++i) {
+            if(binarySearch(matrix[i], target))
+                return true;
+        }
+        return false;
+    }
+};
