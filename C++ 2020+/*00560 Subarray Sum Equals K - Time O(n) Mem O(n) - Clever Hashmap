@@ -1,0 +1,28 @@
+//Run Time: 72ms - 87.85%
+//Memory Usage: 35.9MB - 96.67%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        //Check every subarray O(n^2)
+        //They can be any size? - yes
+        //Hashmap - keep track of all previous subarrays
+        // and see what we need to deduct to reach target
+        int curSum = 0, numArrays = 0;
+        unordered_map<int, int> subarraySumsToCount;
+        subarraySumsToCount.emplace(0, 1);
+        for(int i = 0; i < nums.size(); ++i) {
+            curSum += nums[i];
+            int toRemove = curSum - k;
+            if(subarraySumsToCount.find(toRemove) != subarraySumsToCount.end())
+                numArrays += subarraySumsToCount[toRemove];
+            
+            if(subarraySumsToCount.find(curSum) == subarraySumsToCount.end())
+                subarraySumsToCount.emplace(curSum, 0);
+            
+            subarraySumsToCount[curSum]++;
+        }
+        return numArrays;
+    }
+};
