@@ -1,0 +1,48 @@
+//Run Time: 20ms - 89.77%
+//Memory Usage: 13.2MB - 79.14%
+//Solved =)
+//l = number of lists
+//n = number of nodes
+//Time O(nlog(l)) Memory O(n)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+struct ListSort {
+    bool operator()(ListNode* a, ListNode* b) {
+        return a->val > b->val;
+    }
+};
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        //Priority Queue
+        //Place all starting nodes inside of pq
+        //pick smallest node add to current list and advance the pointer
+        //if its valid place back on the queue
+        priority_queue<ListNode*, vector<ListNode*>, ListSort> p_q;
+        for(int i = 0; i < lists.size(); ++i) {
+            if(lists[i] == nullptr) continue;
+            p_q.push(lists[i]);
+        }
+        
+        ListNode *dummyHead = new ListNode(0), *curNode = dummyHead;
+        while(!p_q.empty()) {
+            curNode->next = p_q.top();
+            p_q.pop();
+            curNode = curNode->next;
+            ListNode* nextNode = curNode->next;
+            curNode->next = nullptr;
+            if(nextNode) p_q.push(nextNode);
+        }
+        curNode = dummyHead->next;
+        delete dummyHead;
+        return curNode;
+    }
+};
