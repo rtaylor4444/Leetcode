@@ -1,0 +1,32 @@
+//Run Time: 24ms - 97.17%
+//Memory Usage: 11.1MB - 83.20%
+//Solved =)
+//w = length of the word
+//Time O(nm*4^w) Memory O(nm)
+class Solution {
+public:
+    bool dfs(vector<vector<char>>& board, vector<vector<bool>>& visited,
+             string& word, int index, int i, int j) {
+        if(index == word.size()) return true;
+        if(i < 0 || j < 0 || i >= board.size() || j >= board[0].size()) return false;
+        if(board[i][j] != word[index]) return false;
+        if(visited[i][j]) return false;
+        visited[i][j] = true;
+        if(dfs(board, visited, word, index+1, i, j+1)) return true;
+        if(dfs(board, visited, word, index+1, i, j-1)) return true;
+        if(dfs(board, visited, word, index+1, i+1, j)) return true;
+        if(dfs(board, visited, word, index+1, i-1, j)) return true;
+        visited[i][j] = false;
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        vector<vector<bool>> visited(board.size(), vector<bool>(board[0].size(), false));
+        for(int i = 0; i < board.size(); ++i) {
+            for(int j = 0; j < board[i].size(); ++j) {
+                if(dfs(board, visited, word, 0, i, j))
+                    return true;
+            }
+        }
+        return false;
+    }
+};
