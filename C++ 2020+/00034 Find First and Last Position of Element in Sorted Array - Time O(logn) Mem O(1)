@@ -1,0 +1,38 @@
+//Run Time: 8ms - 82.39%
+//Memory Usage: 13.6MB - 73.91%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int binarySearchLower(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1, index = -1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            if(nums[m] == target) {
+                index = m;
+            }
+            if(nums[m] >= target) r = m - 1;
+            else l = m + 1;
+        }
+        return index;
+    }
+    int binarySearchUpper(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1, index = -1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            if(nums[m] == target) {
+                index = m;
+            }
+            if(nums[m] > target) r = m - 1;
+            else l = m + 1;
+        }
+        return index;
+    }
+    vector<int> searchRange(vector<int>& nums, int target) {
+        //Two linear scans would solve easily
+        //Figuring how to use binary search
+        //use binary search first the last position
+        //^simply do the above so two diff binary searches
+        return {binarySearchLower(nums, target), binarySearchUpper(nums, target)};
+    }
+};
