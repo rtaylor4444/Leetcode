@@ -1,0 +1,47 @@
+//Run Time: 36ms - 48.74%
+//Memory Usage: 71.1MB - 67.58%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void createNewNode(ListNode*& curNode, int& carry, int curValue) {
+        curNode->next = new ListNode(curValue % 10);
+        if(curValue > 9) carry = 1;
+        else carry = 0;
+        curNode = curNode->next;
+    }
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int carry = 0;
+        ListNode* dummyHead = new ListNode(), *curNode = dummyHead;
+        while(l1 && l2) {
+            createNewNode(curNode, carry, l1->val + l2->val + carry);
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        
+        while(l1) {
+            createNewNode(curNode, carry, l1->val + carry);
+            l1 = l1->next;
+        }
+        
+        while(l2) {
+            createNewNode(curNode, carry, l2->val + carry);
+            l2 = l2->next;
+        }
+        
+        if(carry) curNode->next = new ListNode(carry);
+        curNode = dummyHead->next;
+        delete dummyHead;
+        return curNode;
+    }
+};
