@@ -1,0 +1,68 @@
+//Run Time: 20ms - 60.58%
+//Memory Usage: 7.9MB - 59.37%
+//Solved =)
+//Time O(n) Memory O(n)
+class WindowCount {
+    int conditionsMet;
+    unordered_set<char> validChars;
+    unordered_map<char, int> charToCount, reqCount;
+public:
+    WindowCount(string& t) {
+        conditionsMet = 0;
+        validChars = unordered_set<char>(t.begin(), t.end());
+        for(int i = 0; i < t.size(); ++i) {
+            if(reqCount.find(t[i]) == reqCount.end())
+                reqCount.emplace(t[i], 0);
+        
+            reqCount[t[i]] += 1;
+        }
+    }
+    
+    void addToCount(char c) {
+        if(validChars.find(c) == validChars.end())
+            return;
+        
+        if(charToCount.find(c) == charToCount.end())
+            charToCount.emplace(c, 0);
+        
+        if(++charToCount[c] == reqCount[c])
+            conditionsMet++;
+    }
+    
+    void removeFromCount(char c) {
+        if(validChars.find(c) == validChars.end())
+            return;
+        
+        if(--charToCount[c] < reqCount[c])
+            conditionsMet--;
+    }
+    
+    bool isValid() {
+        return conditionsMet == reqCount.size();
+    }
+};
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        WindowCount window(t);
+        int l = 0, r = 0, minLength = INT_MAX, start = 0;
+        //Right
+        while(r < s.size()) {
+            if(!window.isValid()) {
+                window.addToCount(s[r++]);
+            }
+            
+            //Left - process leftovers
+            while(l < s.size() && window.isValid()) {
+                if(r-l < minLength) {
+                    start = l;
+                    minLength = r-l;
+                }
+                window.removeFromCount(s[l++]);
+            }
+        }
+        
+        return minLength == INT_MAX ? "" :  s.substr(start, minLength);
+    }
+};
