@@ -1,0 +1,25 @@
+//Run Time: 16ms - 70.58%
+//Memory Usage: 8.3MB - 67.07%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        //Sliding Window - trailing left
+        int l = 0, r = 0, length = 0;
+        unordered_map<char, int> charToIndex;
+        for(int r = 0; r < s.size(); ++r){
+            if(charToIndex.find(s[r]) == charToIndex.end()) {
+                charToIndex.emplace(s[r], r);
+            }
+            else {
+                //Set l to max so we dont ignore duplicates by going backwards
+                l = max(charToIndex[s[r]], l);
+            }
+            length = max(length, r+1 - l);
+            //Place index we want l to skip to basically omitting this one
+            charToIndex[s[r]] = r+1;
+        }
+        return length;
+    }
+};
