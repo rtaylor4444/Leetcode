@@ -1,0 +1,21 @@
+//Run Time: 28ms - 53.78%
+//Memory Usage: 10.7MB - 29.07%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        //Sliding Window - trailing left
+        int l = 0, r = 0, length = 0;
+        unordered_set<char> curSeenChars;
+        while(r < s.size()) {
+            bool isDup = curSeenChars.find(s[r]) != curSeenChars.end();
+            if(!isDup) {
+                curSeenChars.emplace(s[r++]);
+                length = max(length, r - l);
+            }
+            else curSeenChars.erase(s[l++]);
+        }
+        return length;
+    }
+};
