@@ -1,0 +1,65 @@
+//Run Time: 312ms - 5.13%
+//Memory Usage: 12.2MB - 49.51%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(nm*nm) Memory O(nm)
+class Solution {
+public:
+    void printMatrix(vector<vector<int>>& matrix) {
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[0].size(); ++j) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    
+    bool validateRect(vector<vector<int>>& downCount, vector<vector<int>>& rightCount, 
+                      int i, int j, int estWidth, int estHeight) {
+        while(i < downCount.size() && j < rightCount[0].size()) {
+            if(downCount[i][j] < estHeight) return false;
+            if(rightCount[i][j] < estWidth) return false;
+            if(estWidth < 0 && estHeight < 0) break;
+            if(--estWidth > 0) j++;
+            if(--estHeight > 0) i++;
+        }
+        return true;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if(matrix.empty()) return 0;
+        //Get down and right counts
+        vector<vector<int>> downCount(matrix.size(), vector<int>(matrix[0].size(), 0));
+        for(int j = 0; j < matrix[0].size(); ++j) {
+            int consec = 0;
+            for(int i = matrix.size() - 1; i >= 0; --i) {
+                if(matrix[i][j] == '1') downCount[i][j] = ++consec;
+                else consec = 0;
+            }
+        }  
+        
+        vector<vector<int>> rightCount(matrix.size(), vector<int>(matrix[0].size(), 0));
+        for(int i = 0; i < matrix.size(); ++i) {
+            int consec = 0;
+            for(int j = matrix[0].size() - 1; j >= 0; --j) {
+                if(matrix[i][j] == '1') rightCount[i][j] = ++consec;
+                else consec = 0;
+            }
+        }
+        
+        //Loop through matrix and check for possible rectangles
+        int maxArea = 0;
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[0].size(); ++j) {
+                //Test all possible rect sizes
+                for(int width = rightCount[i][j]; width >= 1; --width) {
+                    for(int height = downCount[i][j]; height >= 1; --height) {
+                        if(validateRect(downCount, rightCount, i, j, width, height)) {
+                            maxArea = max(maxArea, width * height);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return maxArea;
+    }
+};
