@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 10.7MB - 49.57%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if(head == nullptr) return nullptr;
+        ListNode* fast = head, *slow = head, *prevNode;
+        int steps = n;
+        while(steps--) {
+            fast = fast->next;
+        }
+        while(fast) {
+            fast = fast->next;
+            prevNode = slow;
+            slow = slow->next;
+        }
+        if(prevNode) prevNode->next = slow->next;
+        else head = head->next;
+        return head;
+    }
+};
