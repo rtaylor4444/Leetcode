@@ -1,0 +1,36 @@
+//Run Time: 36ms - 65.75%
+//Memory Usage: 88.9MB - 84.97%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    double indexOf(int index, vector<int>& nums1, vector<int>& nums2) {
+        int p1 = 0, p2 = 0, curValue = -1;
+        while(p1 < nums1.size() && p2 < nums2.size()) {
+            if(nums1[p1] <= nums2[p2]) 
+                curValue = nums1[p1++];
+            else
+                curValue = nums2[p2++];
+            
+            if(index-- <= 0) break;
+        }
+        
+        while(p1 < nums1.size() && index >= 0) {
+            curValue = nums1[p1++];
+            --index;
+        }
+        
+        while(p2 < nums2.size() && index >= 0) {
+            curValue = nums2[p2++];
+            --index;
+        }
+        return (double) curValue;
+    }
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int totalSize = nums1.size() + nums2.size();
+        if(totalSize == 0) return 0.0;
+        double rightValue = indexOf((totalSize / 2), nums1, nums2);
+        if(totalSize % 2 == 1) return rightValue;
+        return (rightValue + indexOf((totalSize / 2) - 1, nums1, nums2)) / 2;
+    }
+};
