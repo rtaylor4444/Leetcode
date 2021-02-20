@@ -1,0 +1,46 @@
+//Run Time: 324ms - 24.59%
+//Memory Usage: 29.9MB - 37.88%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        //Brute Force - O(n^3)
+        //Search every substring see if its a palin
+        //Dynamic Programming O(n^2)
+        //substrings 
+        //dp[substring start][substring end] = ispalin
+        if(s.size() == 1) return s;
+        int start = 0, length = 1;
+        vector<vector<bool>> dp(s.size(), vector<bool>(s.size(), false));
+        //Base cases - every single letter is a palin
+        for(int i = 0; i < s.size(); ++i) {
+            dp[i][i] = true;
+        }
+        //Base cases - check double letters
+        for(int i = 1; i < s.size(); ++i) {
+            if(s[i-1] == s[i]) {
+                dp[i-1][i] = true;
+                //record starting palin
+                start = i-1;
+                length = 2;
+            }
+        }
+        //Build matrix
+        for(int winSize = 2; winSize < s.size(); ++winSize) {
+            for(int i = 0; i+winSize < s.size(); ++i) {
+                //Check if outer two letters match
+                if(s[i] != s[i+winSize]) continue;
+                //If they match result is the same as inner pre calced palin
+                dp[i][i+winSize] = dp[i+1][i+winSize-1];
+                //Find the largest palin
+                if(dp[i][i+winSize] && winSize+1 > length) {
+                    length = winSize+1;
+                    start = i;
+                }
+            }
+        }
+        
+        return s.substr(start, length);
+    }
+};
