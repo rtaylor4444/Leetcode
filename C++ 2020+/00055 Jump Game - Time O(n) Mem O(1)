@@ -1,0 +1,18 @@
+//Run Time: 8ms - 93.24%
+//Memory Usage: 12.9MB - 51.37%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        //Dynamic Programming O(n) Time O(1) Memory
+        int lastReachablePos = nums.size() - 1;
+        for(int i = nums.size() - 1; i >= 0; --i) {
+            int jumpDist = nums[i];
+            if(i + jumpDist >= lastReachablePos) {
+                lastReachablePos = i;
+            }
+        }
+        return lastReachablePos == 0; 
+    }
+};
