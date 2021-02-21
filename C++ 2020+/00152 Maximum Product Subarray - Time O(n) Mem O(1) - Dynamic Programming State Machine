@@ -1,0 +1,32 @@
+//Run Time: 4ms - 91.06%
+//Memory Usage: 11.6MB - 87.63%
+//Solved =)
+//Time O(n)) Memory O(1)
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        //Dynamic Programming - State Machine
+        //*zeros reset your count
+        //0 = max, 1 = min
+        int result = INT_MIN;
+        int prevMax = 1, prevMin = 1;
+        int curMax = INT_MIN, curMin = INT_MAX;
+        for(int i = 0; i < nums.size(); ++i) {
+            //Get maxmimum value
+            curMax = max(prevMax * nums[i], prevMin * nums[i]);
+            //compare if previous result is worth it over current
+            curMax = max(curMax, nums[i]);
+            
+            //Get minimum value
+            curMin = min(prevMax * nums[i], prevMin * nums[i]);
+            //compare if previous result is worth it over current
+            curMin = min(curMin, nums[i]);
+            
+            //Update values
+            result = max(result, curMax);
+            prevMax = curMax;
+            prevMin = curMin;
+        }
+        return result;
+    }
+};
