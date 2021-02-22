@@ -1,0 +1,89 @@
+//Run Time: 84ms - 89.10%
+//Memory Usage: 40MB - 77.50%
+//Solved =)
+//Time O(1) Memory O(n)
+class LRUCache {
+    struct LinkedList {
+        int value, key;
+        LinkedList *next, *prev;
+        LinkedList(int v, int k) {
+            value = v;
+            key = k;
+            next = nullptr;
+            prev = nullptr;
+        }
+    };
+    LinkedList* head, *tail;
+    unordered_map<int, LinkedList*> keyToNode;
+    int size;
+    
+    void detatchNode(LinkedList* node) {
+        if(node == tail) tail = node->prev;
+        if(node == head) head = node->next;
+        if(node->prev) node->prev->next = node->next;
+        if(node->next) node->next->prev = node->prev;
+        node->prev = nullptr;
+        node->next = nullptr;
+    }
+    void removeLast() {
+        if(tail) {
+            LinkedList* toDelete = tail;
+            keyToNode.erase(toDelete->key);
+            detatchNode(toDelete);
+            delete toDelete;
+        }
+    }
+    void putAtFront(LinkedList* node) {
+        detatchNode(node);
+        if(head) head->prev = node;
+        node->next = head;
+        head = node;
+        if(!tail) tail = node;
+    }
+public:
+    LRUCache(int capacity) {
+        size = capacity;
+        head = tail = nullptr;
+    }
+    ~LRUCache() {
+        keyToNode.clear();
+        while (head) {
+            LinkedList* nextNode = head->next;
+            delete head;
+            head = nextNode;
+        }
+    }
+    
+    int get(int key) {
+        //cout << "get: " << key << endl; 
+        if(keyToNode.find(key) == keyToNode.end()) return -1;
+        putAtFront(keyToNode[key]);
+        return keyToNode[key]->value;
+    }
+    
+    void put(int key, int value) {
+        //cout << "put: " << key << "->" << value << endl; 
+        //Update current value
+        if(keyToNode.find(key) != keyToNode.end()) {
+            keyToNode[key]->value = value;
+            putAtFront(keyToNode[key]);
+        } 
+        //Insert new value
+        else {
+            LinkedList* newNode = new LinkedList(value, key);
+            keyToNode.emplace(key, newNode);
+            putAtFront(newNode);
+        }
+        
+        //Maintain size
+        if(keyToNode.size() > size)
+            removeLast();
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
