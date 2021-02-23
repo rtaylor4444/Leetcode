@@ -1,0 +1,26 @@
+//Run Time: 8ms - 32.53%
+//Memory Usage: 7.3MB - 47.72%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        //Stack - push back indices
+        //) marks a finished possible valid parenthesis
+        //")()())"
+        int longestValid = 0;
+        stack<int> indexStack;
+        indexStack.push(-1);
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '(') indexStack.push(i);
+            else {
+                indexStack.pop();
+                if(indexStack.empty()) 
+                    indexStack.push(i);
+                else
+                    longestValid = max(longestValid, i - indexStack.top());
+            }
+        }
+        return longestValid;
+    }
+};
