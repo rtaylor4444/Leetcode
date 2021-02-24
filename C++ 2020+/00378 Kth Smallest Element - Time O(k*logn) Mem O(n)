@@ -1,0 +1,29 @@
+//Run Time: 112ms - 26.54%
+//Memory Usage: 16.9MB - 9.27%
+//Solved =)
+//Time O(k*log(n)) Memory O(n)
+class Solution {
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        //Min Heap
+        //{value, x, y}
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> p_q;
+        for(int i = 0; i < matrix.size(); ++i)
+            p_q.push({matrix[i][0], 0, i});
+        
+        int curValue = 0, seenValues = 0;
+        while(!p_q.empty()) {
+            curValue = p_q.top()[0];
+            int x = p_q.top()[1];
+            int y = p_q.top()[2];
+            p_q.pop();
+            if(++seenValues == k)
+                break;
+            
+            if(++x >= matrix.size())
+                continue;
+            p_q.push({matrix[y][x], x, y});
+        }
+        return curValue;
+    }
+};
