@@ -1,0 +1,45 @@
+//Run Time: 10ms - 78.41%
+//Memory Usage: 10.5MB - 66.30%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head == nullptr) return nullptr;
+        //Group by node number and not value in nodes
+        ListNode *dummyEvenHead = new ListNode(0), *dummyOddHead = new ListNode(0);
+        ListNode *curNodeEven = dummyEvenHead, *curNodeOdd = dummyOddHead;
+        int numSteps = 1;
+        while(head) {
+            if(numSteps % 2) {
+                curNodeOdd->next = head;
+                curNodeOdd = curNodeOdd->next;
+            }
+            else {
+                curNodeEven->next = head;
+                curNodeEven = curNodeEven->next;
+            }
+            head = head->next;
+            ++numSteps;
+        }
+        //Set end of list to null
+        if(numSteps % 2) curNodeOdd->next = nullptr;
+        else curNodeEven->next = nullptr;
+        
+        head = dummyOddHead->next;
+        delete dummyOddHead;
+        curNodeOdd->next = dummyEvenHead->next;
+        delete dummyEvenHead;
+        return head;
+    }
+};
