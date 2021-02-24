@@ -1,0 +1,31 @@
+//Run Time: 196ms - 96.32%
+//Memory Usage: 29.2MB - 96.16%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        int numTuples = 0;
+        unordered_map<int, int> sumToCount;
+        //compute all pairs between A and B
+        for(int i = 0; i < A.size(); ++i) {
+            for(int j = 0; j < B.size(); ++j) {
+                int pairSum = A[i] + B[j];
+                if(sumToCount.find(pairSum) == sumToCount.end()) {
+                    sumToCount.emplace(pairSum, 0);
+                }
+                sumToCount[pairSum]++;
+            }
+        }
+        //Iterate between C and D
+        for(int i = 0; i < C.size(); ++i) {
+            for(int j = 0; j < D.size(); ++j) {
+                int pairSum = C[i] + D[j];
+                if(sumToCount.find(-pairSum) != sumToCount.end()) {
+                    numTuples += sumToCount[-pairSum];
+                }
+            }
+        }
+        return numTuples;
+    }
+};
