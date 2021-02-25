@@ -1,0 +1,53 @@
+//Run Time: 4ms - 69.40%
+//Memory Usage: 12.2MB - 54.16%
+//Solved =)
+//Time O(n) Memory O(w)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        //Level Order
+        //use deque and odd we read fron the back
+        if(root == nullptr) return {};
+        vector<vector<int>> ans;
+        int curLevel = 0;
+        deque<TreeNode*> bfs;
+        bfs.push_front(root);
+        
+        while(!bfs.empty()) {
+            ans.push_back(vector<int>());
+            deque<TreeNode*> temp = bfs;
+            bfs.clear();
+            for(int i = temp.size() - 1; i >= 0; --i) {
+                TreeNode* node = temp.front();
+                temp.pop_front();  
+                ans[curLevel].push_back(node->val);
+                
+                if(curLevel % 2) {
+                    //Odd level means the list is flipped
+                    //Place nodes so they are read in proper order
+                    if(node->right) bfs.push_front(node->right);
+                    if(node->left) bfs.push_front(node->left);
+                }
+                else {
+                    //Even level means the list is in order
+                    //Place nodes so they will be flipped
+                    if(node->left) bfs.push_front(node->left);
+                    if(node->right) bfs.push_front(node->right);
+                }
+            }
+            ++curLevel;
+        }
+        return ans;
+    }
+};
