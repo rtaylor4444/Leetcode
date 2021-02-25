@@ -1,0 +1,91 @@
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir = {{0,1}, {1,0}, {0, -1}, {-1, 0}};
+    }
+    
+    bool isBorderNode(vector<vector<int>>& grid, int row, int col) {
+        //Check if we are a on the boundary of the grid
+        if(row + 1 >= grid.size() || col + 1 >= grid[0].size())
+            return true;
+        if(row == 0 || col == 0)
+            return true;
+        
+        //Check to see if neightbor isnt in the boundary (diff color)
+        for(int i = 0; i < 4; ++i) {
+            if(abs(grid[row][col]) != abs(grid[row+dir[i][0]][col+dir[i][1]]))
+                return true;
+        }
+        return false;
+    }
+    vector<vector<int>> colorBorder(vector<vector<int>>& grid, int r0, int c0, int color) {
+        //Two squares in component if same color and next to each other in 4
+        //border is squares inside component but neighbors a square
+        //not in component/or can be on boundary of grid
+        
+        //Color the border
+        //Run BFS/DFS and find the border nodes
+        //Then just color the border
+        
+        //Find our border nodes
+        //[row, col]
+        vector<vector<int>> borderNodes;
+        int curColor = grid[r0][c0];
+        queue<vector<int>> bfs;
+        bfs.push({r0, c0});
+        grid[r0][c0] *= -1;
+        
+        //cout << isBorderNode(grid, 1, 1) << endl;
+        
+        while(!bfs.empty()) {
+            int row = bfs.front()[0];
+            int col = bfs.front()[1];
+            bfs.pop();
+            
+            if(isBorderNode(grid, row, col)) {
+                //if(row == 1 and col == 1) cout << "fail" << endl;
+                borderNodes.push_back({row, col});
+            }
+            
+            //Add neighbors
+            //Check to see if neightbor isnt in the boundary (diff color)
+            for(int i = 0; i < 4; ++i) {
+                int nextRow = row+dir[i][0];
+                int nextCol = col+dir[i][1];
+                //bounds check
+                if(nextRow >= grid.size() || nextCol >= grid[0].size())
+                    continue;
+                if(nextRow < 0 || nextCol < 0)
+                    continue;
+                
+                //cout << "checking: " << nextRow << " " << nextCol << endl;
+                //Visited Check
+                if(grid[nextRow][nextCol] < 0)
+                    continue;
+                
+                //Color match check
+                if(abs(grid[row][col]) != grid[nextRow][nextCol])
+                    continue;
+                
+                //cout << "added: " << nextRow << " " << nextCol << endl;
+                grid[nextRow][nextCol] *= -1;
+                bfs.push({nextRow, nextCol});
+            }
+        }
+        
+        //Fix grid
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] < 0)
+                    grid[i][j] *= -1;
+            }
+        }
+        
+        //Color the border nodes
+        for(int i = 0; i < borderNodes.size(); ++i) {
+            grid[borderNodes[i][0]][borderNodes[i][1]] = color;
+        }
+        return grid;
+    }
+};
