@@ -1,0 +1,48 @@
+//Run Time: 120ms - 77.89%
+//Memory Usage: 75.7MB - 47.99%
+//Solved =)
+//Time O(2^n) Memory O(n^2)
+class Solution {
+    vector<vector<string>> ans;
+public:
+    void getPartitions(vector<vector<bool>>& isPalin, vector<string>& curPart, string& s,
+                       int start, int end) {
+        if(start >= s.size()) {
+            ans.push_back(curPart);
+            return;
+        }
+        
+        for(int i = end; i < s.size(); ++i) {
+            if(!isPalin[start][i]) continue;
+            curPart.push_back(s.substr(start, i+1 - start));
+            getPartitions(isPalin, curPart, s, i+1, i+1);
+            curPart.pop_back();
+        }
+    }
+    vector<vector<string>> partition(string s) {
+        //Get all palindromes substrings of s
+        //Recursively check all palindromes and return them
+        //dp[substring start][substring end] = isPalin
+        vector<vector<bool>> palinParts(s.size(), vector<bool>(s.size(), false));
+        //Base Case - single characters are palindromes
+        for(int i = 0; i < s.size(); ++i)
+            palinParts[i][i] = true;
+        //Base case - double matching chars are palindromes
+        for(int i = 1; i < s.size(); ++i) {
+            if(s[i] == s[i-1]) palinParts[i-1][i] = true;
+        }
+        //Fill the matrix
+        //if outer two letters match and inner substring is a palin
+        //then the new substring is a palin
+        for(int win = 2; win < s.size(); ++win) {
+            for(int i = 0; i + win < s.size(); ++i) {
+                if(s[i] != s[i+win]) continue;
+                palinParts[i][i+win] = palinParts[i+1][i-1+win];
+            }
+        }
+        ans.clear();
+        vector<string> curPart;
+        getPartitions(palinParts, curPart, s, 0, 0);
+        return ans;
+    }
+};
