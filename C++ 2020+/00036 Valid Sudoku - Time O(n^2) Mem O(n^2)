@@ -1,0 +1,26 @@
+//Run Time: 28ms - 60.24%
+//Memory Usage: 19.6MB - 46.60%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        vector<vector<bool>> isinSquare(9, vector<bool>(9, false));
+        vector<vector<bool>> isinRow(9, vector<bool>(9, false));
+        vector<vector<bool>> isinCol(9, vector<bool>(9, false));
+        
+        for(int i = 0; i < board.size(); ++i) {
+            for(int j = 0; j < board[i].size(); ++j) {
+                if(board[i][j] == '.') continue;
+                int value = board[i][j] - '1';
+                if(isinSquare[((i / 3) * 3) + (j / 3)][value]) return false;
+                if(isinRow[i][value]) return false;
+                if(isinCol[j][value]) return false;
+                isinSquare[((i / 3) * 3) + (j / 3)][value] = true;
+                isinRow[i][value] = true;
+                isinCol[j][value] = true;
+            }
+        }
+        return true;
+    }
+};
