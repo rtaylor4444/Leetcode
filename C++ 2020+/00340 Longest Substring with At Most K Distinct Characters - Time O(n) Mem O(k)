@@ -1,0 +1,38 @@
+//Run Time: 20ms - 56.62%
+//Memory Usage: 8.3MB - 42.68%
+//Solved =)
+//Time O(n) Memory O(k)
+class Solution {
+public:
+    int lengthOfLongestSubstringKDistinct(string s, int k) {
+        //Brute Force O(n^3)
+        //Check every substring and check for k distinct
+        //Sliding Window - trailing left
+        //right - advance until we reach past k chars
+        //left - advance until we are at k chars
+        if(k == 0) return 0;
+        int maxLength = 1;
+        unordered_map<char, int> charToCount;
+        int l = 0, r = 0;
+        for(r = 0; r < s.size(); ++r) {
+            //Keep track of character count
+            if(charToCount.find(s[r]) == charToCount.end()) {
+                charToCount.emplace(s[r], 0);
+            }
+            charToCount[s[r]]++;
+            //Update max length
+            if(charToCount.size() <= k)
+                maxLength = max(maxLength, r+1 - l);
+            
+            while(charToCount.size() > k && l < s.size()) {
+                if(charToCount.find(s[l]) != charToCount.end()) {
+                    if(--charToCount[s[l]] == 0) {
+                        charToCount.erase(s[l]);
+                    }
+                }
+                ++l;
+            }
+        }
+        return maxLength;
+    }
+};
