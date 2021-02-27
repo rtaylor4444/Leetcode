@@ -1,0 +1,41 @@
+//Run Time: 36ms - 89.29%
+//Memory Usage: 23.6MB - 67.88%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Vector2D {
+    int i, j;
+    vector<vector<int>> info;
+    
+    void iterateToNext() {
+        //Skip empty arrays and point to a filled one
+        while(i < info.size() && j >= info[i].size()) {
+            ++i;
+            j = 0;
+        }
+    }
+public:
+    Vector2D(vector<vector<int>>& v) {
+        i = j = 0;
+        info = v;
+    }
+    
+    int next() {
+        iterateToNext();
+        //Increment j for used up value
+        return info[i][j++];
+    }
+    
+    bool hasNext() {
+        iterateToNext();
+        if(i >= info.size()) return false;
+        if(j >= info[i].size() && i == info.size() - 1) return false;
+        return true;
+    }
+};
+
+/**
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D* obj = new Vector2D(v);
+ * int param_1 = obj->next();
+ * bool param_2 = obj->hasNext();
+ */
