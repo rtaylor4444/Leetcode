@@ -1,0 +1,32 @@
+//Run Time: 136ms - 89.86%
+//Memory Usage: 9.6MB - 65.74%
+//Solved =)
+//Time O(n) Memory O(1)
+/* The knows API is defined for you.
+      bool knows(int a, int b); */
+
+class Solution {
+public:
+    int findCelebrity(int n) {
+        //everyone knows celebrity
+        //but celebrity knows nobody
+        //Possible that there can be no celebrity
+        
+        //Brute Force O(n^2) Time O(1) Mem
+        //0->n-1 n^2 comboes
+        //Elimate 
+        int possibleCeleb = 0;
+        for(int i = 1; i < n; ++i) {
+            if(knows(possibleCeleb, i)) {
+                possibleCeleb = i;
+            }
+        }
+        //Verify
+        for(int i = 0; i < n; ++i) {
+            if(i == possibleCeleb) continue;
+            //everyone must know celeb and celeb must know nobody
+            if(!knows(i, possibleCeleb) || knows(possibleCeleb, i)) return -1;
+        }
+        return possibleCeleb;
+    }
+};
