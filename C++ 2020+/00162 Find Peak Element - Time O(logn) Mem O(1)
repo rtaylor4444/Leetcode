@@ -1,0 +1,26 @@
+//Run Time: 4ms - 81.85%
+//Memory Usage: 8.8MB - 68.43%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        //Binary Search
+        //mouatain is either descending or ascending
+        //ascending mountain go right, desc go left
+        int l = 0, r = nums.size() - 1, peak = -1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            long leftEle = (m-1 >= 0) ? nums[m-1] : LONG_MIN;
+            long rightEle = (m+1 < nums.size()) ? nums[m+1] : LONG_MIN;
+            if(nums[m] > leftEle && nums[m] > rightEle) {
+                peak = m;
+                break;
+            }
+            //Check the slope
+            if(leftEle <= nums[m]) l = m+1;
+            else r = m-1;
+        }
+        return peak;
+    }
+};
