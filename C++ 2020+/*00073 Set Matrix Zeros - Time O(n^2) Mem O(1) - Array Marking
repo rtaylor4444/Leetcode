@@ -1,0 +1,41 @@
+//Run Time: 16ms - 71.51%
+//Memory Usage: 13.2MB - 85.57%
+//Solved =)
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        //Array marking 
+        //mark starting row and col if it needs to change to 0
+        bool editCol = false;
+        for(int i = 0; i < matrix.size(); ++i) {
+            //Check and see if we need to fill first column
+            if(matrix[i][0] == 0)
+                editCol = true;
+            
+            for(int j = 1; j < matrix[i].size(); ++j) {
+                if(matrix[i][j] == 0) {
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+        
+        //Set zeros - start second row and col
+        for(int i = 1; i < matrix.size(); ++i) {
+            for(int j = 1; j < matrix[i].size(); ++j) {
+                if(matrix[0][j] == 0 || matrix[i][0] == 0)
+                    matrix[i][j] = 0;
+            }
+        }
+        
+        for(int j = 0; j < matrix[0].size() && matrix[0][0] == 0; ++j) {
+            matrix[0][j] = 0;
+        }
+        
+        //Edit the column last so we dont pad top row with 0
+        for(int i = 0; i < matrix.size() && editCol; ++i) {
+            matrix[i][0] = 0;
+        }  
+    }
+};
