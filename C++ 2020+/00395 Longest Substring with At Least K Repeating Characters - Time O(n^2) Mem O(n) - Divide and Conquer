@@ -1,0 +1,34 @@
+//Run Time: 156ms - 25.03%
+//Memory Usage: 10.7MB - 26.99%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int calcLongString(string& s, int start, int end, int k) {
+        int curLength = end+1 - start;
+        if(k > curLength) return 0;
+        //Get freq
+        vector<int> charCount(26, 0);
+        for(int i = start; i <= end; ++i) {
+            charCount[s[i] - 'a']++;
+        }
+        //Look for bad chars and split array there
+        for(int i = start; i <= end; ++i) {
+            if(charCount[s[i] - 'a'] < k) {
+                return max(calcLongString(s, start, i-1, k), 
+                           calcLongString(s, i+1, end, k));
+            }
+        }
+        //there are no bad chars return current length
+        return curLength;
+    }
+    int longestSubstring(string s, int k) {
+        //Divide and Conquer
+        //only lowercase
+        //We need to know what is a good character and a bad character
+        // good = repeats k or more times
+        // bad = doesnt repeat k or more times we need a new sub from here
+        //Seperate the array based on good characters and bad characters
+        return calcLongString(s, 0, s.size()-1, k);
+    }
+};
