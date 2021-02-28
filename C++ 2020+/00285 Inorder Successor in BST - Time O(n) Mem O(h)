@@ -1,0 +1,45 @@
+//Run Time: 44ms - 13.23%
+//Memory Usage: 22.8MB - 50.04%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        if(p->right) {
+            p = p->right;
+            while(p->left) p = p->left;
+            return p;
+        }
+        
+        
+        TreeNode* succ = nullptr, *prev = nullptr, *curNode = root;
+        stack<TreeNode*> inOrder;
+        while(curNode || !inOrder.empty()) {
+            //Populate stack
+            while(curNode) {
+                inOrder.push(curNode);
+                curNode = curNode->left;
+            }
+            
+            curNode = inOrder.top();
+            inOrder.pop();
+            
+            if(prev == p) {
+                succ = curNode;
+                break;
+            }
+            prev = curNode;
+            curNode = curNode->right;
+        }
+        return succ;
+    }
+};
