@@ -1,0 +1,28 @@
+//Run Time: 4ms - 93.55%
+//Memory Usage: 9.8MB - 89.61%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        //try each station and complete a curcuit
+        //gas  = [1,2,3,4,5]
+        //cost = [3,4,5,1,2]
+        //tank = [-2,-2,-2,3,]
+        //if sum(gas) < sum(cost)
+        //if curr_tank < 0 reset
+        //gas  = [2,3,4]
+        //cost = [3,4,3]
+        //tank = [-1,-1,1] <- no pos index so answer is -1
+        int total_tank = 0, curr_tank = 0, starting_station = 0;;
+        for(int i = 0; i < gas.size(); ++i) {
+            total_tank += gas[i] - cost[i];
+            curr_tank += gas[i] - cost[i];
+            if(curr_tank < 0) {
+                starting_station = i+1;
+                curr_tank = 0;
+            }
+        }
+        return (total_tank < 0) ? -1 : starting_station;
+    }
+};
