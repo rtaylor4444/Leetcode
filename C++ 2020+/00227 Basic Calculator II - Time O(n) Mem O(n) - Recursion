@@ -1,0 +1,48 @@
+//Run Time: 16ms - 41.33%
+//Memory Usage: 7.7MB - 91.23%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+    unordered_map<char, int> signToPriority;
+public:
+    Solution(){
+        signToPriority = {{' ', 0}, {'-', 1}, {'+', 1}, 
+                          {'/', 2}, {'*', 2}};
+    }
+    int calcHelper(string& s, char sign, int& i) {
+        int curValue = 0, curPriority = signToPriority[sign];
+        for(i; i < s.size(); ++i) {
+            if(isdigit(s[i])) {
+                //Parse value
+                curValue *= 10;
+                curValue += s[i] - '0';
+            }
+            //skip space chars - do not read as empty sign
+            else if(s[i] == ' ') continue;
+            else if(signToPriority.find(s[i]) != signToPriority.end()) {
+                char nextSign = s[i];
+                int nextPriority = signToPriority[nextSign];
+                if(curPriority >= nextPriority) {
+                    //Have our caller process the next sign
+                    i--;
+                    break;
+                }
+                //Do the appropiate sign + have next call process value
+                ++i;
+                if(nextSign == '-') curValue -= calcHelper(s, '-', i);
+                else if(nextSign == '+') curValue += calcHelper(s, '+', i);
+                else if(nextSign == '/') curValue /= calcHelper(s, '/', i);
+                else if(nextSign == '*') curValue *= calcHelper(s, '*', i);
+            }
+        }
+        return curValue;
+    }
+    int calculate(string s) {
+        //PEMDAS
+        //Recursion
+        //sign or parenthesis triggers recursion
+        //return when we find a sign that has lower priority
+        int i = 0;
+        return calcHelper(s, ' ', i);
+    }
+};
