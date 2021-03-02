@@ -1,0 +1,49 @@
+//Run Time: 20ms - 39.18%
+//Memory Usage: 12.9MB - 41.41%
+//Solved =)
+//Time O(n^2*?) Memory O(n^2*?)
+
+class Solution {
+    unordered_set<string> words;
+    unordered_map<int, vector<string>> posToFormedWords;
+public:
+    void mergeToList(vector<string>& list, string& cur, vector<string>& toMerge) {
+        for(int i = 0; i < toMerge.size(); ++i) {
+            string nextString = (toMerge[i].empty()) ? cur : cur + " " + toMerge[i];
+            list.push_back(nextString);
+        }
+    }
+    //Backtracking + memo
+    vector<string> wordBreakHelper(string& s, int i) {
+        if(i >= s.size()) {
+            return {""};
+        }
+        
+        if(posToFormedWords.find(i) != posToFormedWords.end())
+            return posToFormedWords[i];
+        
+        int start = i;
+        vector<string> localStrings;
+        for(; i < s.size(); ++i) {
+            string temp = s.substr(start, i+1 - start);
+            if(words.find(temp) != words.end()) {
+                vector<string> formedWords = wordBreakHelper(s, i+1);
+                mergeToList(localStrings, temp, formedWords);
+            }
+        }
+        posToFormedWords.emplace(start, localStrings);
+        return localStrings;
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        //Dynamic Programming + Trie
+        //1) Construct Trie and place words inside for quick lookup
+        //-Use set for speed the optimize it later
+        //2) Backtrack by seeing which words are found in the trie/set
+        //-loop through the string see if we can find substring inside the trie/set
+        //-if we find a match loop through the remaining substring to find another match
+        //-exit when we reach the end of string a return result
+        words.clear();
+        words = unordered_set<string>(wordDict.begin(), wordDict.end());
+        return wordBreakHelper(s, 0);
+    }
+};
