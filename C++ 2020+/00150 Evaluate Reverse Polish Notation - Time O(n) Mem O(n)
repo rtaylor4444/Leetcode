@@ -1,0 +1,44 @@
+//Run Time: 8ms - 94.28%
+//Memory Usage: 11.9MB - 92.73%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int parseValue(string& s) {
+        int value = 0, sign = 1;
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '-') {
+                sign = -1;
+                continue;
+            }
+            value *= 10;
+            value += s[i] - '0';
+        }
+        return value * sign;
+    }
+    int evalRPN(vector<string>& tokens) {
+        //val val sign
+        if(tokens.empty()) return 0;
+        stack<int> prevValues;
+        for(int i = 0; i < tokens.size(); ++i) {
+            if(isdigit(tokens[i][tokens[i].size() -1])) {
+                prevValues.push(parseValue(tokens[i]));
+            }
+            else {
+                //Get the most recent top values
+                int value2 = prevValues.top();
+                prevValues.pop();
+                int value1 = prevValues.top();
+                prevValues.pop();
+                //Do the operation
+                if(tokens[i][0] == '+') value1 += value2;
+                else if(tokens[i][0] == '-') value1 -= value2;
+                else if(tokens[i][0] == '/') value1 /= value2;
+                else if(tokens[i][0] == '*') value1 *= value2;
+                //Push back to the stack
+                prevValues.push(value1);
+            }
+        }
+        return prevValues.top();
+    }
+};
