@@ -1,0 +1,51 @@
+//Run Time: 4ms - 97.76%
+//Memory Usage: 11.3MB - 77.96%
+//Solved =)
+//Time O(nlog(n)) Memory O(n)
+struct SortNums {
+    bool operator()(string &a, string &b) {
+        int i = 0;
+        //Compare both options
+        string order1 = a + b;
+        string order2 = b + a;
+        //Get first mismatching char or last char before end
+        while(order1[i] == order2[i]) {
+            if(++i >= order1.size()) return false;
+        }
+        //Strings mismatch and both are within bounds
+        return (order1[i] > order2[i]);
+    }
+};
+
+class Solution {
+public:
+    string numToString(int num) {
+        string res;
+        do {
+            res += '0' + (num % 10);
+            num /= 10;
+        } while(num);
+        reverse(res.begin(), res.end());
+        return res;
+    }
+    string largestNumber(vector<int>& nums) {
+        //sort list of strings based on: 
+        //first digit mismatching digit higher one wins
+        //if uneven size and above fails compare last to first uneven char
+
+        //Convert numbers to strings
+        vector<string> stringList;
+        for(int i = 0; i < nums.size(); ++i) {
+            stringList.push_back(numToString(nums[i]));
+        }
+        sort(stringList.begin(), stringList.end(), SortNums());
+        //Build result
+        string result;
+        for(int i = 0; i < stringList.size(); ++i) {
+            result += stringList[i];
+        }
+        //Multiple starting 0 edge case
+        if(result[0] == '0') return "0";
+        return result;
+    }
+};
