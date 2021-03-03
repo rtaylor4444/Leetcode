@@ -1,0 +1,86 @@
+//Run Time: 4ms - 88.66%
+//Memory Usage: 9.1MB - 98.04%
+//Solved =)
+//Time O(n) Memory O(n^2)
+class AlienGraph {
+    vector<vector<int>> adjList;
+    vector<bool> isNode;
+    bool dfs(vector<bool>& visited, vector<bool>& isProcessing, int node, string& s) {
+        if(isProcessing[node]) return false;
+        if(visited[node]) return true;
+        isProcessing[node] = true;
+        for(int i = 0; i < adjList[node].size(); ++i) {
+            int nextNode = adjList[node][i];
+            if(visited[nextNode]) continue;
+            if(!dfs(visited, isProcessing, nextNode, s)) return false;
+        }
+        isProcessing[node] = false;
+        visited[node] = true;
+        s.push_back('a' + node);
+        return true;
+    }
+public:  
+    AlienGraph() {
+        adjList = vector<vector<int>>(26, vector<int>());
+        isNode = vector<bool>(26, false);
+    }
+    void setNode(char node) {
+        //if(!isNode[node - 'a']) cout << node << endl;
+        isNode[node - 'a'] = true;
+    }
+    void setEdge(char from, char to) {
+        setNode(from);
+        setNode(to);
+        adjList[from - 'a'].push_back(to - 'a');
+    }
+    string getTopoOrder() {
+        string result;
+        vector<bool> visited(26, false);
+        for(int i = 0; i < adjList.size(); ++i) {
+            if(visited[i]) continue;
+            if(!isNode[i]) continue;
+            vector<bool> process(26, false);
+            if(!dfs(visited, process, i, result)) return "";
+        }
+        reverse(result.begin(), result.end());
+        return result;
+    }
+};
+
+class Solution {
+    AlienGraph graph;
+public:
+    void addNodes(string& word) {
+        int j = 0;
+        while(j < word.size()) graph.setNode(word[j++]);
+    }
+    bool compareWords(string& word1, string& word2) {
+        //Add all letters as nodes
+        addNodes(word2);
+        //Find dependancy rule
+        int i = 0;
+        while(word1[i] == word2[i]) {
+            ++i;
+            if(i >= word1.size()) break;
+            //Check word2 isnt a prefix of word1
+            //a letter cannot come before empty
+            if(i >= word2.size()) return false;
+        }
+        //Since sorted word1 always comes before word2
+        if(i < word2.size() && i < word1.size())
+            graph.setEdge(word1[i], word2[i]);
+        return true;
+    }
+    string alienOrder(vector<string>& words) {
+        //construct a graph out of the dependancies
+        //run topological sort if there are any cycles
+        //there can be no answer
+        if(words.empty()) return "";
+        addNodes(words[0]);
+        for(int i = 1; i < words.size(); ++i) {
+            if(!compareWords(words[i-1], words[i]))
+                return "";
+        }
+        return graph.getTopoOrder();
+    }
+};
