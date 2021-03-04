@@ -1,0 +1,47 @@
+//Run Time: 8ms - 99.40%
+//Memory Usage: 10MB - 86.32%
+//Solved =)
+//Time O(nm) Memory O(n)
+class Solution {
+    vector<vector<int>> dir;
+public:
+    void dfs(vector<vector<char>>& board, int i, int j) {
+        //Bounds check
+        if(i < 0 || j < 0) return;
+        if(i >= board.size() || j >= board[i].size()) return;
+        if(board[i][j] == 'X' || board[i][j] == '/') return;
+        
+        board[i][j] = '/';
+        for(int d = 0; d < dir.size(); ++d) {
+            dfs(board, i+dir[d][0], j+dir[d][1]);
+        }
+    }
+    void solve(vector<vector<char>>& board) {
+        //DFS + Matrix Marking
+        //run dfs from every 'O' at the edges of the matrix
+        //mark it as '/' then replace everything as 'X'
+        //and '/' as 'O'
+        dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int lastRow = board.size() - 1;
+        int lastCol = board[0].size() - 1;
+        //Top + Bottom Row
+        for(int j = 0; j <= lastCol; ++j) {
+            if(board[0][j] == 'O') dfs(board, 0, j);
+            if(board[lastRow][j] == 'O') dfs(board, lastRow, j);
+        }
+        
+        //Right + Left Column
+        for(int i = 0; i <= lastRow; ++i) {
+            if(board[i][0] == 'O') dfs(board, i, 0);
+            if(board[i][lastCol] == 'O') dfs(board, i, lastCol);
+        }
+        
+        //Set board
+        for(int i = 0; i <= lastRow; ++i) {
+            for(int j = 0; j <= lastCol; ++j) {
+                if(board[i][j] == '/') board[i][j] = 'O';
+                else board[i][j] = 'X';
+            }
+        }
+    }
+};
