@@ -1,0 +1,67 @@
+//Run Time: 1124ms - 15.46%
+//Memory Usage: 279MB - 5.01%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    bool compareWords(string& cur, string& next) {
+        int numDiff = 0;
+        for(int i = 0; i < cur.size(); ++i) {
+            if(cur[i] != next[i]) ++numDiff;
+        }
+        return numDiff == 1;
+    }
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        //BFS
+        //iterate through the words in the list
+        //check and see if we can make them
+        //aka only a difference by one letter
+        if(beginWord == endWord) return 1;
+        
+        //Build transformation map
+        unordered_map<string, vector<string>> transformMap;
+        for(int i = 0; i < wordList.size(); ++i) {
+            for(int j = 0; j < wordList[i].size(); ++j) {
+                string trans = wordList[i].substr(0, j) + "*" 
+                    + wordList[i].substr(j+1, wordList[i].size());
+                
+                if(transformMap.find(trans) == transformMap.end()) {
+                    transformMap.emplace(trans, vector<string>());
+                }
+                transformMap[trans].push_back(wordList[i]);
+            }
+        }
+        
+        //Perform BFS 
+        unordered_map<string, int> wordToLength;
+        wordToLength.emplace(beginWord, 0);
+        int curLevel = 1;
+        queue<string> bfs;
+        bfs.push(beginWord);
+        while(!bfs.empty()) {
+            for(int w = bfs.size() - 1; w >= 0; --w) {
+                string curWord = bfs.front();
+                bfs.pop();
+                
+                if(curWord == endWord)
+                    return curLevel;
+                
+                wordToLength.emplace(curWord, curLevel);
+                for(int i = 0; i < curWord.size(); ++i) {
+                    string trans = curWord.substr(0, i) + "*" 
+                    + curWord.substr(i+1, curWord.size());
+                    
+                    vector<string> commonWords = transformMap[trans];
+                    for(int j = 0; j < commonWords.size(); ++j) {
+                        if(wordToLength.find(commonWords[j]) != wordToLength.end())
+                            continue;
+
+                        bfs.push(commonWords[j]);
+                    }
+                }
+            }
+            ++curLevel;
+        }
+        return 0;
+    }
+};
