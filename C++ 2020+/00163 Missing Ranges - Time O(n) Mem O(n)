@@ -1,0 +1,27 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.1MB - 58.59%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void addRange(vector<string>& ranges, int current, int endRange) {
+        //Range is only a single value
+        if(current == endRange) ranges.push_back(to_string(current));
+        //Range is actually a range
+        else ranges.push_back(to_string(current) + "->" + to_string(endRange));
+    }
+    vector<string> findMissingRanges(vector<int>& nums, int lower, int upper) {
+        int current = lower;
+        vector<string> ans;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(current > upper) break;
+            if(nums[i] == current) ++current;
+            else {
+                addRange(ans, current, nums[i] - 1);
+                current = nums[i] + 1;
+            }
+        }
+        if(current <= upper) addRange(ans, current, upper);
+        return ans;
+    }
+};
