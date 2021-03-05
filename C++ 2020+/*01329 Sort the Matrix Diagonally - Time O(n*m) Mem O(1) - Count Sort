@@ -1,0 +1,48 @@
+//Run Time: 8ms - 93.22%
+//Memory Usage: 8.8MB - 82.70%
+//Solved =)
+//Time O(nm) Memory O(1)
+class Solution {
+public:
+    int getNext(vector<int>& countSort, int& index, int& totalCount) {
+        while(countSort[index] == 0 && totalCount) {
+            ++index;
+        }
+        --countSort[index];
+        --totalCount;
+        return index;
+    }
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        //Loop through row + col diag using counting sort
+        vector<int> countSort(101, 0);
+        int startingIndex = 100, totalCount = 0;
+        int n = mat[0].size(), m = mat.size();
+        //Column
+        for(int i = 0; i < m; ++i) {
+            //Get count of all elements
+            for(int j = 0; i+j < m && j < n; ++j) {
+                countSort[mat[i+j][j]]++;
+                totalCount++;
+                startingIndex = min(startingIndex, mat[i+j][j]);
+            }
+            //Place elements in proper position
+            for(int j = 0; i+j < m && j < n; ++j) {
+                mat[i+j][j] = getNext(countSort, startingIndex, totalCount);
+            }
+        }
+        //Row
+        for(int j = 1; j < n; ++j) {
+            //Place all element in priority queue
+            for(int i = 0; i < m && i+j < n; ++i) {
+                countSort[mat[i][i+j]]++;
+                totalCount++;
+                startingIndex = min(startingIndex, mat[i][i+j]);
+            }
+            //Place elements in proper position
+            for(int i = 0; i < m && i+j < n; ++i) {
+                mat[i][i+j] = getNext(countSort, startingIndex, totalCount);
+            }
+        }
+        return mat;
+    }
+};
