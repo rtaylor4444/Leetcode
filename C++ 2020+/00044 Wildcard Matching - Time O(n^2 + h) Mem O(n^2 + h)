@@ -1,0 +1,53 @@
+//Run Time: 184ms - 26.59%
+//Memory Usage: 27.6MB - 18.06%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    bool updateDP(bool result, int p1, int p2, vector<vector<int>>& dp) {
+        //Assuming p1 and p2 are in bounds
+        if(dp[p1][p2] != -1) return dp[p1][p2];
+        dp[p1][p2] = (result) ? 1 : 0;
+        return result;
+    }
+    bool isMatchHelper(string& s, int p1, string& p, int p2, vector<vector<int>>& dp) {
+        //Bounds check
+        //cout << "checking: " << p1 << " " << p2 << endl;
+        if(p1 >= s.size() && p2 >= p.size()) return true;
+        else if(p2 >= p.size()) return false;
+        //Memoization
+        if(p1 < s.size() && dp[p1][p2] != -1) return dp[p1][p2];
+        
+        //Check pattern special char
+        if(p[p2] == '?') {
+            //? can represent any ONE character
+            if(p1 < s.size()) 
+                return updateDP(isMatchHelper(s, p1+1, p, p2+1, dp), p1, p2, dp);
+            else return false;
+        } 
+        else if(p[p2] == '*') {
+            //* can cover multiple character try them all
+            for(int i = p1; i <= s.size(); ++i) {
+                if(isMatchHelper(s, i, p, p2+1, dp)) {
+                    if(p1 < s.size()) updateDP(true, p1, p2, dp);
+                    return true;
+                }
+            }
+            if(p1 < s.size()) updateDP(false, p1, p2, dp);
+            return false;
+        }
+        
+        //If no special char return false if mismatch or bounds
+        if(p1 >= s.size()) return false;
+        if(p[p2] != s[p1]) return updateDP(false, p1, p2, dp);
+        
+        //Characters match advance pointers
+        return updateDP(isMatchHelper(s, p1+1, p, p2+1, dp), p1, p2, dp);
+    }
+    bool isMatch(string s, string p) {
+        //Recursion + Dynamic Programming
+        //dp[pos 1][pos 2] = isMatch
+        vector<vector<int>> dp(s.size(), vector<int>(p.size(), -1));
+        return isMatchHelper(s, 0, p, 0, dp);
+    }
+};
