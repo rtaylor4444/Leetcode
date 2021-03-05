@@ -1,0 +1,61 @@
+//Run Time: 656ms - 5.13%
+//Memory Usage: 11.1MB - 52.49%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^3) Memory O(n)
+class Solution {
+    int top, left, right, bottom;
+public:
+    string pointToString(vector<int>& point) {
+        return to_string(point[0]) + "," + to_string(point[1]);
+    }
+    int findPoints(int dirX, int dirY, vector<int> point, 
+                   unordered_set<string>& seenPoints) {
+        int numPoints = 0;
+        while(point[0] <= right && point[0] >= left && 
+              point[1] <= top && point[1] >= bottom) {
+            point[0] += dirX;
+            point[1] += dirY;
+            //cout << point[0] << "," << point[1] << endl;
+            if(seenPoints.find(pointToString(point)) != seenPoints.end())
+                ++numPoints;
+        }
+        return numPoints;
+    }
+    int maxPoints(vector<vector<int>>& points) {
+        //place all points inside of a hashset for quick lookup
+        //Get bounds of our
+        if(points.size() < 3) return points.size();
+        top = INT_MIN, left = INT_MAX, right = INT_MIN, bottom = INT_MAX;
+        unordered_set<string> seenPoints;
+        for(int i = 0; i < points.size(); ++i) {
+            seenPoints.emplace(pointToString(points[i]));
+            top = max(top, points[i][1]);
+            bottom = min(bottom, points[i][1]);
+            left = min(left, points[i][0]);
+            right = max(right, points[i][0]);
+        }
+        //Check all possible lines
+        int maxPoints = 2;
+        for(int i = 0; i < points.size(); ++i) {
+            for(int j = 0; j < points.size(); ++j) {
+                //N^2 opt just place the next point and dir
+                //in a hash keep track of the current count
+                //point + dir -> points on this line starting at point
+                if(i == j) continue;
+                //Get current line
+                int xDiff = points[j][0] - points[i][0];
+                int yDiff = points[j][1] - points[i][1];
+                //Get greatest common denom
+                int divisor = gcd(xDiff, yDiff);
+                if(divisor) {
+                    xDiff /= divisor;
+                    yDiff /= divisor;
+                }
+                int numPoints = findPoints(xDiff, yDiff, points[i], seenPoints);
+                numPoints += findPoints(-xDiff, -yDiff, points[i], seenPoints);
+                maxPoints = max(maxPoints, numPoints + 1);
+            }
+        }
+        return maxPoints;
+    }
+};
