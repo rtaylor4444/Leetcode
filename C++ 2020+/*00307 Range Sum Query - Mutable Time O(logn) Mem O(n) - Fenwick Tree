@@ -1,0 +1,69 @@
+//Run Time: 372ms - 51.15%
+//Memory Usage: 150.6MB - 45.98%
+//Solved =)
+//Time O(n) Memory O(n)
+class NumArray {
+    vector<int> fenwick, original;
+    int prefixSum(int index) {
+        //start from this index and move down toward 0 deduct lsb
+        int sum = 0;
+        while(index) {
+            int lsb = index & -index;
+            sum += fenwick[index];
+            index -= lsb;
+        }
+        return sum;
+    }
+    void printFenwick() {
+        for(int i = 1; i < fenwick.size(); ++i)
+            cout << fenwick[i] << " ";
+        cout << endl;
+    }
+public:
+    NumArray(vector<int>& nums) {
+        //Simple Fenwick Tree
+        //Construction
+        original = nums;
+        fenwick = vector<int>(nums.size() +1, 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            //add this value to its current position (1-indexed)
+            int index = i+1;
+            fenwick[index] += nums[i];
+            //get least signficant bit 
+            int lsb = index & -index;
+            //Then add this value to immediate parent
+            int parent = index + lsb;
+            //cout << index << " parent :" << parent << endl; 
+            if(parent < fenwick.size())
+                fenwick[parent] += fenwick[index];
+            
+        }
+        //printFenwick();
+    }
+    
+    void update(int index, int val) {
+        //First update our oringal value and get the change
+        int diff = original[index] - val;
+        original[index] -= diff;
+        //Update all the values that are responsible
+        index += 1;
+        while(index < fenwick.size()) {
+            fenwick[index] -= diff;
+            int lsb = index & -index;
+            //Go to our parent
+            index += lsb;
+        }
+        //printFenwick();
+    }
+    
+    int sumRange(int left, int right) {
+        return prefixSum(right+1) - prefixSum(left);
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * obj->update(index,val);
+ * int param_2 = obj->sumRange(left,right);
+ */
