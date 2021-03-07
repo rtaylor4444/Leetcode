@@ -1,0 +1,27 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 39.1MB - 23.04%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+    int maxLen;
+public:
+    int calcNumStrings(int start, int curLen, vector<vector<int>>& dp) {
+        if(curLen == maxLen) return 1;
+        if(dp[start][curLen] != -1) return dp[start][curLen];
+        int numLocalStrings = 0;
+        for(int i = start; i < 5; ++i) {
+            numLocalStrings += calcNumStrings(i, curLen+1, dp);
+        }
+        dp[start][curLen] = numLocalStrings;
+        return numLocalStrings;
+    }
+    int countVowelStrings(int n) {
+        //Recursion
+        //Test all possiblies
+        //lexicograph sorted "e" cannot come before "a"
+        //as soon as I pick e I cannot pick a anymore
+        maxLen = n;
+        vector<vector<int>> dp(5, vector<int>(n+1, -1));
+        return calcNumStrings(0, 0, dp);
+    }
+};
