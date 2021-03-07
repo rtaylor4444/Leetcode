@@ -1,0 +1,54 @@
+//Run Time: 100ms - 59.08%
+//Memory Usage: 39.3MB - 99.17%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ For each number, we keep pop the stack until empty or a bigger number; The bigger number (if exist, it will be still in stack) is current number's root, and the last popped number (if exist) is current number's left child (temporarily, this relationship may change in the future); Then we push current number into the stack.
+ */
+class Solution {
+public:
+
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        //This is a Cartesian Tree
+        //Monostack - keep track of greatest elements
+        //[3,2,1,6,0,5]
+        //s: 3
+        //3 gets pushed to the stack (nothing happens)
+        //s: 3, 2
+        //2 gets pushed to the stack 3's right points to 2
+        //(inorder prints the elements in original order)
+        //s: 3, 2, 1
+        //1 gets pushed to the stack 2's right points to 1
+        //s: 6                                                    
+        //6's left will finally point to 3 as we empty the stack
+        //s: 6, 0
+        //0 gets pushed to the stack 6's right points to 0
+        //s: 6, 0
+        //5's left will point to 0 as we empty the stack
+        //6's right points to 5 now
+        
+        if(nums.empty()) return nullptr;
+        vector<TreeNode*> monoStack;
+        monoStack.reserve(nums.size());
+        for(int i = 0; i < nums.size(); ++i) {
+            TreeNode* cur = new TreeNode(nums[i]);
+            while(!monoStack.empty() && monoStack.back()->val < nums[i]) {
+                cur->left = monoStack.back();
+                monoStack.pop_back();
+            }
+            if(!monoStack.empty())
+                monoStack.back()->right = cur;
+            monoStack.push_back(cur);
+        }
+        return monoStack.front();
+    }
+};
