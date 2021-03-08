@@ -1,0 +1,53 @@
+//Run Time: 108ms - 69.24%
+//Memory Usage: 41.9MB - 16.47%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* cloneTree(TreeNode* node) {
+        if(node == nullptr) return nullptr;
+        TreeNode* root = new TreeNode(0);
+        root->left = cloneTree(node->left);
+        root->right = cloneTree(node->right);
+        return root;
+    }
+    vector<TreeNode*> generateTrees(vector<vector<TreeNode*>>& valueToTrees, int numNodes) {
+        if(!valueToTrees[numNodes].empty())
+            return valueToTrees[numNodes];
+        
+        TreeNode* temp = new TreeNode(0);
+        for(int i = 1; i < numNodes-1; i+=2) {
+            //Get all combinations with current number of nodes
+            vector<TreeNode*> leftPossible = generateTrees(valueToTrees, i);
+            vector<TreeNode*> rightPossible = generateTrees(valueToTrees, (numNodes-1)-i);
+            //Copy all trees and add them to our list
+            for(int l = 0; l < leftPossible.size(); ++l) {
+                temp->left = leftPossible[l];
+                for(int r = 0; r < rightPossible.size(); ++r) {
+                    temp->right = rightPossible[r];
+                    valueToTrees[numNodes].push_back(cloneTree(temp));
+                }
+            }
+        }
+        delete temp;
+        return valueToTrees[numNodes];
+    }
+    vector<TreeNode*> allPossibleFBT(int n) {
+        vector<vector<TreeNode*>> valueToTrees(n+1, vector<TreeNode*>());
+        valueToTrees[0].push_back(nullptr);
+        valueToTrees[1].push_back(new TreeNode(0));
+        generateTrees(valueToTrees, n);
+        return valueToTrees[n];
+    }
+};
