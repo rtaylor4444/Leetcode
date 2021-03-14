@@ -1,0 +1,57 @@
+//Run Time: 32ms - 71.27%
+//Memory Usage: 15.7MB - 77.50%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    void heapify(vector<int>& nums) {
+        //child left: n*2+1
+        //child right: n*2+2
+        //parent = n-1/2
+        //call siftDown on each parent
+        for(int i = nums.size() - 1; i >= 0; i -= 2) {
+            siftDown(nums, (i-1)/2, nums.size());
+        }
+    }
+    void siftDown(vector<int>& nums, int index, int size) {
+        while(index < size) {
+            int child1 = (index*2)+1;
+            int child2 = (index*2)+2;
+            
+            //Get larger child
+            int largestChild;
+            //Check bounds
+            if(child1 >= size && child2 >= size)
+                break;
+            else if(child2 >= size) largestChild = child1;
+            else if(nums[child1] > nums[child2]) largestChild = child1;
+            else largestChild = child2;
+            
+            //Skip if our children are smaller
+            if(nums[largestChild] < nums[index])
+                break;
+            
+            swap(nums[largestChild], nums[index]);
+            index = largestChild;
+        }
+    }
+    void siftUp(vector<int>& nums, int index) {
+        while(index > 0) {
+            int parentIndex = (index-1)/2;
+            if(nums[index] < nums[parentIndex]) break;
+            swap(nums[index], nums[parentIndex]);
+            index = parentIndex;
+        }
+    }
+    void heapSort(vector<int>& nums) {
+        heapify(nums);
+        for(int i = nums.size()-1; i >= 0; --i) {
+            swap(nums[0], nums[i]);
+            siftDown(nums, 0, i);
+        }
+    }
+    vector<int> sortArray(vector<int>& nums) {
+        heapSort(nums);
+        return nums;
+    }
+};
