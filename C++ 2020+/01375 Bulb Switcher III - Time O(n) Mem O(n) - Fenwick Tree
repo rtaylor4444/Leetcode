@@ -1,0 +1,50 @@
+//Run Time: 80ms - 57.25%
+//Memory Usage: 40.2MB - 25.42%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(nlog(n)) Memory O(n)
+class Solution {
+public:
+    int getPrefixSum(vector<int>& fenwick, int prefix) {
+        int curSum = 0;
+        while(prefix) {
+            curSum += fenwick[prefix];
+            int lsb = prefix & -prefix;
+            prefix -= lsb;
+        }
+        return curSum;
+    }
+    void updateParents(vector<int>& fenwick, int index) {
+        while(index < fenwick.size()) {
+            fenwick[index] += 1;
+            int lsb = (index & -index);
+            index += lsb;
+        }                
+    }
+    void printFenwick(vector<int>& fenwick) {
+        for(int i = 1; i < fenwick.size(); ++i)
+            cout << fenwick[i] << " ";
+        cout << endl;
+    }
+    int numTimesAllBlue(vector<int>& light) {
+        //number of moments all lights are blue
+        //Simulate the process
+        //each step light of i is turnd on
+        //easy solve O(n^2)
+        //we need tp update which will cost us O(n)
+        //So fenwick tree its also 1-indexed
+        int numMoments = 0, maxPrefix = 0;
+        vector<int> fenwick(light.size() + 1, 0);
+        for(int i = 0; i < light.size(); ++i) {
+            maxPrefix = max(maxPrefix, light[i]);
+            updateParents(fenwick, light[i]);
+            //printFenwick(fenwick);
+            //Get and check prefixSum
+            int sum = getPrefixSum(fenwick, maxPrefix);
+            if(sum == maxPrefix) {
+                //cout << "found moment: " << light[i] << " -> " << maxPrefix << endl;
+                ++numMoments;
+            }
+        }
+        return numMoments;
+    }
+};
