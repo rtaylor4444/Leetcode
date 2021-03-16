@@ -1,0 +1,21 @@
+//Run Time: 4ms - 64.97%
+//Memory Usage: 7.2MB - 87.25%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numberOfArithmeticSlices(vector<int>& nums) {
+        //Arithmetic = size of at least 3 and diff between consec is the same
+        //Brute Force check each subarray
+        //Dynamic Programming - O(n)
+        int numSlices = 0, prevDiff = INT_MAX, numConsec = 2;
+        for(int i = 1; i < nums.size(); ++i) {
+            int curDiff = nums[i] - nums[i-1];
+            if(curDiff == prevDiff) ++numConsec;
+            else numConsec = 2;
+            prevDiff = curDiff;
+            if(numConsec > 2) numSlices += (numConsec - 2);
+        }
+        return numSlices;
+    }
+};
