@@ -1,0 +1,30 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.2MB - 94.51%
+//Solved =)
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    int expandOutward(string& s, int left, int right) {
+        int palinFound = 1;
+        while(left >= 0 && right < s.size()) {
+            if(s[left--] != s[right++])
+                break;
+            
+            ++palinFound;
+        }
+        return palinFound;
+    }
+    int countSubstrings(string s) {
+        //Dynamic Programming
+        //Check every 1 and 2 length and exand outward
+        int numPalin = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            //Expand outward from 1 letter
+            numPalin += expandOutward(s, i-1, i+1);
+            //Expand outward from two letters
+            if(i-1 >= 0 && s[i-1] == s[i])
+                numPalin += expandOutward(s, i-2, i+1);
+        }
+        return numPalin;
+    }
+};
