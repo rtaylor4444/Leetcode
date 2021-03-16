@@ -1,0 +1,37 @@
+//Run Time: 16ms - 83.52%
+//Memory Usage: 13.7MB - 65.73%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        //Quickselect or Heap size K
+        //Bucket Sort
+        //Count freq
+        int maxFreq = 0;
+        unordered_map<int, int> numToFreq;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numToFreq.find(nums[i]) == numToFreq.end())
+                numToFreq.emplace(nums[i], 0);
+            
+           maxFreq = max(maxFreq, ++numToFreq[nums[i]]);
+        }
+        vector<vector<int>> freqToNums(maxFreq+1, vector<int>());
+        for(auto it = numToFreq.begin(); it != numToFreq.end(); ++it) {
+            freqToNums[it->second].push_back(it->first);
+        }
+        vector<int> ans;
+        int curFreq = maxFreq;
+        while(ans.size() < k) {
+            if(freqToNums[curFreq].empty()) {
+                --curFreq;
+                continue;
+            }
+            
+            //cout << "adding: " << curFreq << " -> " << freqToNums[curFreq].back() << endl;
+            ans.push_back(freqToNums[curFreq].back());
+            freqToNums[curFreq].pop_back();
+        }
+        return ans;
+    }
+};
