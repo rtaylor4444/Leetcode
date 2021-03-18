@@ -1,0 +1,32 @@
+//Run Time: 92ms - 49.90%
+//Memory Usage: 72.8MB - 5.69%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {
+        //dp[subarray start][subarray end] = longestPalin
+        //Base case
+        //subarray of length 1 is always 1
+        vector<vector<int>> dp(s.size(), vector<int>(s.size(), 1));
+        //subarray of size 2 is 2 is letter match
+        for(int i = 1; i < s.size(); ++i) {
+            //if we match palindrome is size 2
+            if(s[i-1] == s[i]) dp[i-1][i] = 2;
+            //otherwise default to 1
+        }
+        //Calc other subarray sizes
+        for(int win = 2; win < s.size(); ++win) {
+            for(int i = 0; i + win < s.size(); ++i) {
+                //If chars dont match we are the same as previous subproblems
+                if(s[i] != s[i+win]) {
+                    //we have two choices in regards to the subarray to pick
+                    //either disregard s[i] or s[i+win]
+                    dp[i][i+win] = max(dp[i+1][i+win], dp[i][i+win-1]);
+                }
+                else dp[i][i+win] = dp[i+1][i+win-1] + 2;
+            }
+        }
+        return dp[0][s.size() - 1];
+    }
+};
