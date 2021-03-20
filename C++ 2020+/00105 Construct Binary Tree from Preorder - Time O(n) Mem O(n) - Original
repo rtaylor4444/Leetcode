@@ -1,0 +1,38 @@
+//Run Time: 12ms - 96.32%
+//Memory Usage: 26.7MB - 33.11%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    unordered_set<int> prevVals;
+public:
+    TreeNode* construct(int& preIndex, vector<int>& preorder, int& inIndex, 
+                        vector<int>& inorder) {
+        if(preIndex >= preorder.size()) return nullptr;
+        if(inIndex >= inorder.size()) return nullptr;
+        TreeNode* curNode = new TreeNode(preorder[preIndex++]);
+        prevVals.emplace(curNode->val);
+        //Dont go left if we are at an inorder node
+        if(curNode->val != inorder[inIndex])
+            curNode->left = construct(preIndex, preorder, inIndex, inorder);
+        //when inIndex is equal to a parents value dont go right
+        if(++inIndex < inorder.size() && prevVals.find(inorder[inIndex]) == prevVals.end())
+            curNode->right = construct(preIndex, preorder, inIndex, inorder);
+        return curNode;
+    }
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int preIndex = 0, inIndex = 0;
+        prevVals.clear();
+        return construct(preIndex, preorder, inIndex, inorder);
+    }
+};
