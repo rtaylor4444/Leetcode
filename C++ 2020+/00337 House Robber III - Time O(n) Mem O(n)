@@ -1,0 +1,44 @@
+//Run Time: 32ms - 32.89%
+//Memory Usage: 31.8MB - 10.76%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+/*
+      3
+     / \
+    4   1
+   / \   \
+  1   3   5
+*/
+class Solution {
+public:
+    //[children sum, grand sum]
+    vector<int> postOrder(TreeNode* node) {
+        if(node == nullptr) return {0,0};
+        vector<int> leftSums = postOrder(node->left);
+        vector<int> rightSums = postOrder(node->right);
+        //We can pick ourselves and grandchildren
+        int curSum = node->val + leftSums[1] + rightSums[1];
+        //or we can pick the best of the prev two sums
+        int childSum = max(leftSums[0], leftSums[1]);
+        childSum += max(rightSums[0], rightSums[1]);
+        return {curSum, childSum};
+    }
+    int rob(TreeNode* root) {
+        //Post Order
+        //we can either pick ourselves + grandchildren
+        //or just our children
+        vector<int> ans = postOrder(root);
+        return max(ans[0], ans[1]);
+    }
+};
