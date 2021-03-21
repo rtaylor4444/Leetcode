@@ -1,0 +1,40 @@
+//Run Time: 360ms - 25.64%
+//Memory Usage: 108.8MB - 45.27%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int findLength(vector<int>& A, vector<int>& B) {
+        //compare every possible subarray to each other
+        //Dynamic Programming O(n^2)
+        //Store all possible subarrays
+        //similar to edit distance, del distance
+        //diff start positions
+        //dp[start pos A][start Pos B] = length
+        //  1 2 3 2 1
+        //3 0 0 1 0 0
+        //2 0 1 0 2 0
+        //1 1 0 0 0 3
+        //4 0 0 0 0 0
+        //7 0 0 0 0 0
+        //if match ans = dp[i-1][j-1] + 1
+        //if not then 0
+        vector<vector<int>> dp(A.size(), vector<int>(B.size(), 0));
+        //Base case - find matching row and col
+        for(int j = 0; j < dp[0].size(); ++j)
+            if(A[0] == B[j]) dp[0][j] = 1;
+        
+        for(int i = 0; i < dp.size(); ++i)
+            if(B[0] == A[i]) dp[i][0] = 1;
+        
+        //Fill matrix while store maximum
+        int maxLen = 0;
+        for(int i = 1; i < dp.size(); ++i) {
+            for(int j = 1; j < dp[i].size(); ++j) {
+                if(A[i] == B[j]) dp[i][j] = dp[i-1][j-1] + 1;
+                maxLen = max(dp[i][j], maxLen);
+            }
+        }
+        return maxLen;
+    }
+};
