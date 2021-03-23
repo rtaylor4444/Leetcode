@@ -1,0 +1,53 @@
+//Run Time: 268ms - 66.84%
+//Memory Usage: 85.7MB - 81.04%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int longestArithSeqLength(vector<int>& A) {
+        //Brute Force?
+        //test all differences
+        //sorting the array?
+        //and see the longest chain we can make
+        //states: cur diff + start/end pos
+        //dp[current diff][startIndex] = longest arith?
+        //[2,4,7,9,10]
+        // i
+        //       j
+        // cur diff matrix
+        //  4 3 2 1 0
+        //0 1 1 1 1 1
+        //1 1 2 1 1 1
+        //2 1 1 2 1 2
+        //3 1 1 2 3 1
+        //4 1 1 1 1 1
+        //5 1 1 1 2 2
+        //6 1 1 1 2 1
+        //7 1 1 1 1 2
+        //8 1 1 1 1 2
+        //add the current index we are checking to curr diff
+        //dp[curDiff][i] = dp[currDiff][j] + 1
+        
+        int minNum = INT_MAX, maxNum = INT_MIN;
+        for(int i = 0; i < A.size(); ++i) {
+            minNum = min(minNum, A[i]);
+            maxNum = max(maxNum, A[i]);
+        }
+        int maxDiff = max(maxNum - minNum, abs(minNum - maxNum));
+        vector<vector<int>> dp(maxDiff*2+1, vector<int>(A.size(), 1));
+        //cout << maxDiff << endl;
+        int longestArith = 1;
+        for(int i = A.size() - 1; i >= 0; --i) {
+            for(int j = i+1; j < A.size(); ++j) {
+                int curDiff = A[j] - A[i];
+                curDiff += maxDiff;
+                //cout << "comparing " << A[i] << " to " << A[j];
+                //cout << " diff is: " << curDiff << endl;
+                dp[curDiff][i] = max(dp[curDiff][i], dp[curDiff][j] + 1);
+                longestArith = max(dp[curDiff][i], longestArith);
+            }
+            //cout << A[i] << " ";
+        }
+        return longestArith;
+    }
+};
