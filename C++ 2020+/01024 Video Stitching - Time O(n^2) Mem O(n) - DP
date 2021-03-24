@@ -1,49 +1,41 @@
-//Run Time: 8ms - 17.06%
-//Memory Usage: 8.3MB - 19.80%
-//Unoptimal Solution - Memory needs improvement
+//Run Time: 8ms - 16.00%
+//Memory Usage: 8.4MB - 8.60%
+//Unoptimal Solution - Time/Memory needs improvement
 //Time O(n^2) Memory O(n)
-bool sortClips(vector<int>&a, vector<int>&b) {
-        //want the last stitches with the biggest span first
-        if(a[1] > b[1]) return true;
-        else if(a[1] < b[1]) return false;
-        return (a[0] < b[0]);
-}
-
 class Solution {
 public:
-    
     int videoStitching(vector<vector<int>>& clips, int T) {
-        //minimum number of clips
-        //sort to make the vidoes easier to go through
-        //maximum stitches first so we can count down T
-        //One Pass to check if its even possible to stitch the vids
-        //Second pass to actually stitch the videos
-        sort(clips.begin(), clips.end(), sortClips);
-        //Check if stitching can be done
-        int minTimeReached = T;
+        //Sort the clips by start time
+        //for each clip pick the one we can stitch and has the most
+        //end time
+        if(T == 0) return 0;
+        sort(clips.begin(), clips.end());
+        vector<int> nextStitch(clips.size(), 0);
         for(int i = 0; i < clips.size(); ++i) {
-            if(clips[i][0] < minTimeReached && clips[i][1] >= minTimeReached)
-                minTimeReached = min(minTimeReached, clips[i][0]);
-        }
-        if(minTimeReached > 0) return -1;
-        //Set base cases = 1 means it can be used as a starting stitch
-        vector<int> dp(clips.size(), INT_MAX);
-        for(int i = 0; i < clips.size(); ++i) {
-            if(clips[i][1] >= T) dp[i] = 1;
-        }
-        //Fill the rest of the array based on the base cases
-        for(int i = 0; i < clips.size(); ++i) {
+            nextStitch[i] = i;
             for(int j = i+1; j < clips.size(); ++j) {
-                //check if this stitch can fit into out current one
-                if(clips[j][1] < clips[i][0]) continue;
-                dp[j] = min(dp[j], dp[i] + 1);
+                //Check if we can use this stitch
+                if(clips[i][1] < clips[j][0]) continue;
+                //Ensure this stitch is better than the previous one
+                vector<int> curNextStitch = clips[nextStitch[i]];
+                if(curNextStitch[1] >= clips[j][1]) continue;
+                nextStitch[i] = j;
             }
         }
-        //Get the min size of the clip that starts at 0
+        
+        //Try to construct a full 0-T clip list
         int minClips = INT_MAX;
         for(int i = 0; i < clips.size(); ++i) {
-            if(clips[i][0] == 0) minClips = min(minClips, dp[i]);
+            //As soon as we find a clip who start past 0 exit
+            if(clips[i][0] > 0) break;
+            int curClip = i, curLength = 1;
+            while(curClip != nextStitch[curClip]) {
+                if(clips[curClip][1] >= T) break;
+                curClip = nextStitch[curClip];
+                ++curLength;
+            }
+            if(clips[curClip][1] >= T) minClips = min(minClips, curLength);
         }
-        return minClips;
+        return minClips == INT_MAX ? -1 : minClips;
     }
 };
