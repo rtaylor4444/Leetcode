@@ -1,0 +1,33 @@
+//Run Time: 92ms - 99.83%
+//Memory Usage: 40MB - 87.56%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+class Solution {
+public:
+    vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
+        //Graph coloring
+        //Make an adjList
+        vector<vector<int>> adjList(n+1);
+        for(int i = 0; i < paths.size(); ++i) {
+            adjList[paths[i][0]].push_back(paths[i][1]);
+            adjList[paths[i][1]].push_back(paths[i][0]);
+        }
+        //Color graph node by node
+        vector<int> colors(n, 0);
+        vector<int> pickedColors(5, 0);
+        for(int i = 1; i <= n; ++i) {
+            //See what colors our neighbors have
+            for(int path = 0; path < adjList[i].size(); ++path) {
+                int color = colors[adjList[i][path]-1];
+                //mark color as picked
+                pickedColors[color] = i+1;
+            }
+            //Find which color wasnt picked and use that one
+            int curColor = 1;
+            while(pickedColors[curColor] == i+1)
+                ++curColor;
+            colors[i-1] = curColor;
+        }
+        return colors;
+    }
+};
