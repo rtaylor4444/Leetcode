@@ -1,0 +1,21 @@
+//Run Time: 4ms - 74.18%
+//Memory Usage: 9.6MB - 39.32%
+//Solved =)
+//Time O(log(mn)) Memory O(1)
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        //Binary Search
+        int width = matrix[0].size(), height = matrix.size();
+        int l = 0, r = width * height - 1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            int y = m / width;
+            int x = m % width;
+            if(matrix[y][x] == target) return true;
+            else if(matrix[y][x] < target) l = m+1;
+            else r = m-1;
+        }
+        return false;
+    }
+};
