@@ -1,0 +1,70 @@
+//Run Time: 100ms - 27.75%
+//Memory Usage: 32.9MB - 45.68%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(v*e+e) Memory O(v+e)
+class Solution {
+    int startNode;
+    vector<vector<int>> adjList, dp;
+public:
+    int calcHeight(vector<vector<int>>& edges, vector<int>& visitedNode, 
+                   vector<int>& visitedEdge, int curNode, int prevNode, int prevEdge) {
+        //If we visit a node we been to before there is a cycle
+        //therefore no tree can exist
+        if(visitedNode[curNode] == startNode)
+            return INT_MAX;
+        
+        visitedNode[curNode] = startNode;
+        
+        //Check for previously cached results
+        if(prevNode > -1 && dp[prevNode][prevEdge] != -1)
+            return dp[prevNode][prevEdge];
+        
+        int localMaxHeight = 0;
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            int curEdge = adjList[curNode][i];
+            if(visitedEdge[curEdge] == startNode)
+                continue;
+            
+            visitedEdge[curEdge] = startNode;
+            //Pick the correct node we are going to
+            int nextNode = edges[curEdge][0];
+            if(nextNode == curNode) nextNode = edges[curEdge][1];
+            
+            //cache result for this edge
+            dp[curNode][i] = calcHeight(edges, visitedNode, visitedEdge, nextNode, curNode, i);
+            if(dp[curNode][i] == INT_MAX) return INT_MAX;
+            localMaxHeight = max(localMaxHeight, dp[curNode][i] + 1);
+        }
+        return localMaxHeight;
+    }
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        //make our graph
+        //node -> edges index
+        adjList = vector<vector<int>>(n); 
+        dp = vector<vector<int>>(n);
+        for(int i = 0; i < edges.size(); ++i) {
+            //undirected
+            adjList[edges[i][0]].push_back(i);
+            dp[edges[i][0]].push_back(-1);
+            
+            adjList[edges[i][1]].push_back(i);
+            dp[edges[i][1]].push_back(-1);
+        }
+        //Get our heights
+        int minHeight = INT_MAX;
+        vector<int> heights(n, -1), visitedNode(n, -1);
+        vector<int> visitedEdge(edges.size(), -1);
+        for(int i = 0; i < n; ++i) {
+            startNode = i;
+            heights[i] = calcHeight(edges, visitedNode, visitedEdge, i, -1, -1);
+            minHeight = min(heights[i], minHeight);
+        }
+        //Build our final answer
+        vector<int> mht;
+        for(int i = 0; i < heights.size(); ++i) {
+            if(heights[i] == minHeight)
+                mht.push_back(i);
+        }
+        return mht;
+    }
+};
