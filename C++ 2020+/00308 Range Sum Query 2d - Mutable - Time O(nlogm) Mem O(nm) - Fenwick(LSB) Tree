@@ -1,0 +1,76 @@
+//Run Time: 20ms - 61.74%
+//Memory Usage: 12.8MB - 29.42%
+//Solved =)
+//Time O(n*logm) Memory O(nm)
+class NumMatrix {
+    vector<vector<int>> matrix, original;
+    void printMatrix() {
+        for(int i = 0; i < matrix.size(); ++i) {
+            for(int j = 0; j < matrix[i].size(); ++j) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    int getSum(int i, int index) {
+        int sum = 0;
+        while(index > 0) {
+            sum += matrix[i][index-1];
+            int lsb = index & -index;
+            index -= lsb;
+        }
+        return sum;
+    }
+public:
+    NumMatrix(vector<vector<int>>& m) {
+        //Fenwick(LSB) Tree
+        //1 indexed
+        original = m;
+        matrix = m;
+        for(int i = 0; i < matrix.size(); ++i) {
+            //turn each row into an LSB Tree
+            for(int j = 0; j < matrix[i].size(); ++j) {
+                int index = j+1;
+                int lsb = index & -index;
+                //update our parent
+                int parent = index + lsb;
+                if(parent <= matrix[i].size())
+                    matrix[i][parent-1] += matrix[i][j];
+                
+                //cout << matrix[i][j] << " ";
+            }
+            //cout << endl;
+        }
+    }
+    
+    void update(int row, int col, int val) {
+        //Get our change and update lsb tree
+        int diff = val - original[row][col];
+        int index = col+1;
+        while(index <= matrix[row].size()) {
+            matrix[row][index-1] += diff;
+            int lsb = index & -index;
+            index += lsb;
+        }
+        //update original for future calcs
+        original[row][col] = val;
+        //printMatrix();
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        int sum = 0;
+        for(int i = row1; i <= row2; ++i) {
+            //Get sums inside of the box
+            sum += getSum(i, col2+1);
+            sum -= getSum(i, col1);
+        }
+        return sum;
+    }
+};
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix* obj = new NumMatrix(matrix);
+ * obj->update(row,col,val);
+ * int param_2 = obj->sumRegion(row1,col1,row2,col2);
+ */
