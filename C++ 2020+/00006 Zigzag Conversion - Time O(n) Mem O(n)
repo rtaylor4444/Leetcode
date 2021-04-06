@@ -1,0 +1,32 @@
+//Run Time: 8ms - 86.66%
+//Memory Usage: 10.6MB - 50.36%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void flip(int& dir, int& curRow) {
+        curRow -= dir;
+        dir *= -1;
+        curRow += dir;
+    }
+    string convert(string s, int numRows) {
+        //have numRows of strings
+        //++numRows every iteration andadd to that string
+        //we flip dir everyTime curRows == numRows-1 or its negative
+        if(numRows == 1) return s;
+        int dir = 1, curRow = 0;
+        vector<string> rows(numRows);
+        for(int i = 0; i < s.size(); ++i) {
+            if(curRow < 0 || curRow == numRows)
+                flip(dir, curRow);
+            
+            rows[curRow] += s[i];
+            curRow += dir;
+        }
+        //Read line by line
+        string ans;
+        for(int i = 0; i < numRows; ++i)
+            ans += rows[i];
+        return ans;
+    }
+};
