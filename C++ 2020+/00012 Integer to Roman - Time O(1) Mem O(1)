@@ -1,0 +1,63 @@
+//Run Time: 12ms - 30.49%
+//Memory Usage: 10.9MB - 16.67%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    string intToRoman(int num) {
+        //largest to smallest
+        //num range is 1-3999
+        //parse numerals one at a time
+        //see if target is divisable by 1000(M), 500(D), 100(C) and 10
+        //specific rules need to check for 4 + 9, 40 + 90 and 400 + 900
+        //9
+        //check 1000 -> MMM
+        //check 900 -> CM
+        //-if fail check 500
+        //-if fail check 400
+        //check 100 ->
+        //check 90 -> XC
+        //-if fail check 50
+        //-if fail check 40
+        //check 10 ->
+        //check 9 -> IX
+        //-if fail check 5
+        //-if fail check 4
+        //check 1
+        unordered_map<int, string> numToRoman = {{1000, "M"}, {900, "CM"}, {500, "D"},
+                                                 {400, "CD"}, {100, "C"}, {90, "XC"},
+                                                 {50, "L"}, {40, "XL"}, {10, "X"}, {9, "IX"},
+                                                 {5, "V"}, {4, "IV"}, {1, "I"}};
+        string roman;
+        for(int n = 1000; n > 0; n /= 10) {
+            //get num times to copy numbers like 1000, 100, 10 or 1
+            int numNumerals = num / n;
+            if(numNumerals) {
+                for(int i = 0; i < numNumerals; ++i)
+                    roman += numToRoman[n];
+                //Update num 
+                num -= numNumerals * n;
+            }
+            //exit in the case of 1
+            if(num == 0) break;
+            int subtract = n / 10;
+            //we can only have either 9 5 or 4
+            //check numbers like 900, 90 and 9
+            if(num / (n - subtract) != 0) {
+                roman += numToRoman[n - subtract];
+                num -= (n - subtract);
+            }
+            //check numbers like 500, 50 and 5
+            else if(num / (n / 2) != 0) {
+                roman += numToRoman[n / 2];
+                num -= (n / 2);
+            }
+            //check numbers like 400, 40, 4
+            else if(num / ((n / 2) - subtract) != 0) {
+                roman += numToRoman[(n / 2) - subtract];
+                num -= ((n / 2) - subtract);
+            }
+        }
+        return roman;
+    }
+};
