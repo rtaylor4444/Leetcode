@@ -1,0 +1,45 @@
+//Run Time: 8ms - 49.04%
+//Memory Usage: 7.6MB - 87.65%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void processName(string& curName, vector<string>& dirNames) {
+        //Pop off the stack if we encounter ..
+        if(curName ==  "..") {
+            if(!dirNames.empty()) dirNames.pop_back();
+        }
+        //Do nothing on . but push all other names
+        else if(!curName.empty() && curName != ".") dirNames.push_back(curName);
+        curName = "";
+    }
+    string simplifyPath(string path) {
+        //. = current directory
+        //.. = up a level
+        //... = directory name
+        /// = down a level?
+        //stack?
+        //read directory names and push inside a stack popping when we encounter
+        //..
+        //
+        vector<string> dirNames;
+        string curName;
+        for(int i = 0; i < path.size(); ++i) {
+            //Process the directory name once we hit slash
+            if(path[i] == '/') processName(curName, dirNames);
+            else curName += path[i];
+        }
+        processName(curName, dirNames);
+        
+        //Create simple path from the names
+        string newPath = "/";
+        for(int i = 0; i < dirNames.size(); ++i) {
+            if(dirNames[i].empty()) continue;
+            newPath += dirNames[i];
+            newPath += '/';
+        }
+        //deal with trailing /
+        if(newPath.size() > 1 && newPath[newPath.size()-1] == '/') newPath.pop_back();
+        return newPath;
+    }
+};
