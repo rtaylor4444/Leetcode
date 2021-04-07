@@ -1,0 +1,55 @@
+//Run Time: 16ms - 27.48%
+//Memory Usage: 9.8MB - 23.3%
+//Solved =)
+//Time O(nm) Memory O(nm)
+class Solution {
+public:
+    int getInteger(int p, string& num) {
+        if(p < 0 || p >= num.size()) return 0;
+        return num[p] - '0';
+    }
+    string multiply(string num1, string num2) {
+        vector<string> products;
+        int maxLength = 1;
+        for(int i = num1.size() - 1; i >= 0; --i) {
+            int carry = 0;
+            string product;
+            //Pad extra 0s for the future digits;
+            for(int d = i+1; d < num1.size(); ++d)
+                product.push_back('0');
+            //Do our multiplication for every digits
+            for(int j = num2.size() - 1; j >= 0; --j) {
+                int curVal = getInteger(i, num1) * getInteger(j, num2);
+                curVal += carry;
+                product += (curVal % 10) + '0';
+                carry = curVal / 10;
+            }
+            //Add leftover carry
+            while(carry) {
+                product += (carry % 10) + '0';
+                carry /= 10;
+            }
+            maxLength = max(maxLength, (int)product.size());
+            products.push_back(product);
+        }
+        
+        string result;
+        //Add products together
+        int carry = 0;
+        for(int j = 0; j < maxLength || carry; ++j) {
+            int curSum = 0;
+            for(int i = 0; i < products.size(); ++i) {
+                curSum += getInteger(j, products[i]);
+            }
+            curSum += carry;
+            result += (curSum % 10) + '0';
+            carry = curSum / 10;
+        }
+        reverse(result.begin(), result.end());
+        //Trim 0s
+        int start = 0;
+        for(; start < result.size()-1; ++start)
+            if(result[start] != '0') break;
+        return result.substr(start, result.size() - start);
+    }
+};
