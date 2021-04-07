@@ -1,0 +1,19 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.3MB - 61.82%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string reverseWords(string s) {
+        reverse(s.begin(), s.end());
+        istringstream iss(s);
+        string curWord, newSentence;
+        while(iss >> curWord) {
+            reverse(curWord.begin(), curWord.end());
+            newSentence += curWord;
+            newSentence += " ";
+        }
+        newSentence.pop_back();
+        return newSentence;
+    }
+};
