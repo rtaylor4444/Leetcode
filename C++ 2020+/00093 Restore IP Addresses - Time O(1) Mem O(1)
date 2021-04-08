@@ -1,0 +1,57 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.5MB - 93.30%
+//Solved =)
+//Time O(1) Memory O(1)
+class Solution {
+    vector<string> addresses;
+public:
+    bool verifyChunk(string& s, int start, int end) {
+        //single digit is always valid
+        if(start == end) return true;
+        else if(start > end) return false;
+        else if(end - start > 4) return false;
+        //check leading zero
+        if(s[start] == '0') return false;
+        int num = 0;
+        for(int i = start; i <= end; ++i) {
+            num *= 10;
+            num += s[i] - '0';
+        }
+        return num < 256;
+    }
+    void addAddress(string& s, int p1, int p2, int p3) {
+        string curAddress;
+        for(int i = 0; i < s.size(); ++i) {
+            curAddress += s[i];
+            if(i == p1 || i == p2 || i == p3) curAddress += '.';
+        }
+        addresses.push_back(curAddress);
+    }
+    vector<string> restoreIpAddresses(string s) {
+        //all permutations
+        //Valid IP Address
+        //numbers 0-255 sperated by dot
+        //check all possible dot positions
+        //no leading zero on numbers
+        addresses.clear();
+        //try all possible positions of the dots
+        for(int pos1 = 0; pos1 < 3; ++pos1) {
+            if(!verifyChunk(s, 0, pos1))
+                continue;
+            
+            for(int pos2 = pos1 + 1; pos2 < pos1+4; ++pos2) {
+                if(!verifyChunk(s, pos1+1, pos2))
+                    continue;
+                
+                for(int pos3 = pos2 + 1; pos3 < pos2+4; ++pos3) {
+                    if(!verifyChunk(s, pos2+1, pos3))
+                        continue;
+                    
+                    if(verifyChunk(s, pos3+1, s.size()-1))
+                        addAddress(s, pos1, pos2, pos3);
+                }
+            }
+        }
+        return addresses;
+    }
+};
