@@ -1,0 +1,36 @@
+//Run Time: 16ms - 13.34%
+//Memory Usage: 7.9MB - 21.53%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void updateFreq(unordered_map<char, int>& charToFreq, char c, int change) {
+        if(charToFreq.find(c) == charToFreq.end())
+            charToFreq.emplace(c, 0);
+        
+        charToFreq[c] += change;
+        if(charToFreq[c] <= 0) charToFreq.erase(c);
+    }
+    int lengthOfLongestSubstringTwoDistinct(string s) {
+        //Sliding Window - Two pointers
+        //Hashmap keep track of frequency of chars
+        //"eceba"
+        //     i
+        //    j
+        //hashmap:
+        //b -> 1
+        //a -> 1
+        unordered_map<char, int> charToFreq;
+        int j = 0, longest = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            updateFreq(charToFreq, s[i], 1);
+            while(charToFreq.size() > 2) {
+                updateFreq(charToFreq, s[j++], -1);
+            }
+            if(charToFreq.size() <= 2) {
+                longest = max(longest, i+1-j);
+            }
+        }
+        return longest;
+    }
+};
