@@ -1,0 +1,35 @@
+//Run Time: 4ms - 79.98%
+//Memory Usage: 8.1MB - 43.34%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string computeGroup(string &s) {
+        string group = to_string(s.size()) + "0";
+        for(int i = 1; i < s.size(); ++i) {
+            int diff = (s[i] - s[i-1]) % 26;
+            if(diff < 0) diff += 26;
+            group += to_string(diff);
+        }
+        return group;
+    }
+    vector<vector<string>> groupStrings(vector<string>& strings) {
+        //compute each string diff and hash them based off that
+        //abc -> 011
+        //bcd -> 011
+        unordered_map<string, vector<string>> diffToGroup;
+        for(int i = 0; i < strings.size(); ++i) {
+            string diff = computeGroup(strings[i]);
+            //cout << strings[i] << " -> " << diff << endl;
+            if(diffToGroup.find(diff) == diffToGroup.end())
+                diffToGroup.emplace(diff, vector<string>());
+            
+            diffToGroup[diff].push_back(strings[i]);
+        }
+        vector<vector<string>> ans;
+        for(auto it = diffToGroup.begin(); it != diffToGroup.end(); ++it) {
+            ans.push_back(it->second);
+        }
+        return ans;
+    }
+};
