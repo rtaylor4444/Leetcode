@@ -1,0 +1,32 @@
+//Run Time: 4ms - 63.98%
+//Memory Usage: 6.4MB - 93.36%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isEqual(string& s, string& t, int p1, int p2) {
+        while(p1 < s.size() && p2 < t.size()) {
+            if(s[p1++] != t[p2++]) return false;
+        }
+        return p1 == s.size() && p2 == t.size();
+    }
+    bool isOneEditDistance(string s, string t) {
+        //always one edit distance
+        //test each option once
+        //s->t
+        //confusing me how to handle which pointer
+        //to increment when there is a mismatch
+        //we can incement neither
+        //incement j
+        //increment i
+        if(abs((int)s.size() - (int)t.size()) > 1) return false;
+        int minSize = min((int)s.size(), (int)t.size());
+        for(int i = 0; i < minSize; ++i) {
+            if(s[i] != t[i]) {
+                return isEqual(s, t, i+1, i+1) || isEqual(s, t, i, i+1) || isEqual(s, t, i+1, i);
+            }
+        }
+        //no mismatch here
+        return s.size() != t.size();
+    }
+};
