@@ -1,0 +1,45 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 13.1MB - 28.19%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n^2) Memory O(n^2)
+class Solution {
+    vector<vector<char>> dp;
+public:
+    char getCurrent(string s, int p) {
+        if(p >= s.size()) return ' ';
+        return s[p];
+    }
+    bool interleaveHelper(string& s1, int p1, string& s2, int p2, string& s3, int p3) {
+        int start1 = p1, start2 = p2;
+        if(dp[start1][start2] != -1) return dp[start1][start2];
+        while(p1 < s1.size() || p2 < s2.size()) {
+            char c1 = getCurrent(s1, p1);
+            char c2 = getCurrent(s2, p2);
+            char c3 = getCurrent(s3, p3);
+            //cout << c1 <<  " vs " << c2 <<  " -> " << c3 << endl;
+            //If both c1 and c2 are equal to c3 test both possible options
+            if(c1 == c3 && c2 == c3) {
+                if(interleaveHelper(s1, p1+1, s2, p2, s3, p3+1) || 
+                    interleaveHelper(s1, p1, s2, p2+1, s3, p3+1))
+                 dp[start1][start2] = 1;   
+                else
+                 dp[start1][start2] = 0;
+                break;
+            }
+            else if(c1 == c3) ++p1;
+            else if(c2 == c3) ++p2;
+            else { 
+                dp[start1][start2] = 0;
+                break;
+            }
+            ++p3;
+        }
+        if(dp[start1][start2] == -1) dp[start1][start2] = (p3 == s3.size()) ? 1 : 0;
+        return dp[start1][start2];
+    }
+    bool isInterleave(string s1, string s2, string s3) {
+        if(s1.size() + s2.size() != s3.size()) return false;
+        dp = vector<vector<char>>(s1.size()+1, vector<char>(s2.size()+1, -1));
+        return interleaveHelper(s1, 0, s2, 0, s3, 0);
+    }
+};
