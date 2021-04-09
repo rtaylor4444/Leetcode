@@ -1,0 +1,43 @@
+//Run Time: 36ms - 87.70%
+//Memory Usage: 23.5MB - 96.34%
+//Solved =)
+//Time O(n) Memory O(n)
+class Codec {
+public:
+
+    // Encodes a list of strings to a single string.
+    string encode(vector<string>& strs) {
+        string encoded;
+        for(int i = 0; i < strs.size(); ++i) {
+            //get size of the current str and store in 3 chars
+            int size = strs[i].size();
+            //cout << strs[i] << " -> " << size << endl;
+            for(int n = 100; n > 0; n /= 10) {
+                encoded += '0' + (size / n);
+                size -= (size / n) * n;
+            }
+            //add current string
+            encoded += strs[i];
+        }
+        //cout << encoded << endl;
+        return encoded;
+    }
+
+    // Decodes a single string to a list of strings.
+    vector<string> decode(string s) {
+        int pos = 0;
+        vector<string> list;
+        while(pos < s.size()) {
+            //cout << "chunkSize: " << s.substr(pos, 3) << endl;
+            int chunkSize = stoi(s.substr(pos, 3));
+            pos += 3;
+            list.push_back(s.substr(pos, chunkSize));
+            pos += chunkSize;
+        }
+        return list;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec;
+// codec.decode(codec.encode(strs));
