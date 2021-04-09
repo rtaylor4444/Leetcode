@@ -1,0 +1,18 @@
+//Run Time: 16ms - 95.31%
+//Memory Usage: 16.2MB - 85.04%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void reverseWords(vector<char>& s) {
+        reverse(s.begin(), s.end());
+        int i = 0, j = 0;
+        for(; i < s.size(); ++i) {
+            if(s[i] == ' ') {
+                reverse(s.begin()+j, s.begin()+i);
+                j = i+1;
+            }
+        }
+        reverse(s.begin()+j, s.begin()+i);
+    }
+};
