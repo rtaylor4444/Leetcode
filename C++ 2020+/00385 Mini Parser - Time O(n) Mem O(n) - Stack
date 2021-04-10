@@ -1,0 +1,80 @@
+//Run Time: 4ms - 98.12%
+//Memory Usage: 10.5MB - 97.74%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * class NestedInteger {
+ *   public:
+ *     // Constructor initializes an empty nested list.
+ *     NestedInteger();
+ *
+ *     // Constructor initializes a single integer.
+ *     NestedInteger(int value);
+ *
+ *     // Return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     bool isInteger() const;
+ *
+ *     // Return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // The result is undefined if this NestedInteger holds a nested list
+ *     int getInteger() const;
+ *
+ *     // Set this NestedInteger to hold a single integer.
+ *     void setInteger(int value);
+ *
+ *     // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+ *     void add(const NestedInteger &ni);
+ *
+ *     // Return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // The result is undefined if this NestedInteger holds a single integer
+ *     const vector<NestedInteger> &getList() const;
+ * };
+ */
+class Solution {
+public:
+    void addAndReset(NestedInteger*& nl, NestedInteger& ni,
+                     int& curValue, int& sign) {
+        //add current value
+        if(curValue != INT_MAX) nl->add(ni);
+        //reset curValue
+        curValue = INT_MAX;
+        sign = 1;
+    }
+    NestedInteger deserialize(string s) {
+        NestedInteger ni, *nl = new NestedInteger();
+        stack<NestedInteger*> stk;
+        int curValue = INT_MAX, sign = 1;
+        //check if we are making a list for not for return value
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] >= '0' && s[i] <= '9') {
+                if(curValue == INT_MAX) curValue = 0;
+                curValue *= 10;
+                curValue += s[i] - '0';
+                ni.setInteger(curValue * sign);
+            }
+            else if(s[i] == '-') sign = -1;
+            else if(s[i] == ',') {
+                addAndReset(nl, ni, curValue, sign);
+            }
+            else if(s[i] == '[') {
+                //Skip if this is the first symbol
+                if(i == 0) continue;
+                //add current nested and create a new one to update
+                stk.push(nl);
+                nl = new NestedInteger();
+            }
+            else if(s[i] == ']') {
+                //take previous nested and update it
+                addAndReset(nl, ni, curValue, sign);
+                if(stk.empty()) continue;
+                NestedInteger* prev = stk.top();
+                stk.pop();
+                prev->add(*nl);
+                delete nl;
+                nl = prev;
+            }
+        }
+        return nl->getList().empty() ? ni : *nl;
+    }
+};
