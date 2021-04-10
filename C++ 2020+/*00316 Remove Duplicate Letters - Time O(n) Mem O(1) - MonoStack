@@ -1,0 +1,44 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.5MB - 71.39%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        //MonoStack
+        //ideally we want to get the smallest char first
+        //remove all other characters if we can in left to right order
+        
+        //Get last position of each char so we know if we can remove or not
+        vector<int> charToLastPos(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+           //mark last position
+           charToLastPos[s[i] - 'a'] = i;
+        }
+        //use string as a monostack
+        string minString;
+        vector<bool> usedChars(26, false);
+        for(int i = 0; i < s.size(); ++i) {
+            //We can only use each character once
+            if(usedChars[s[i] - 'a'])
+                continue;
+            
+            //pop off larger characters from the stack
+            while(!minString.empty() && minString.back() > s[i]) {
+                //check if we can pop off this char
+                char prev = minString.back();
+                if(charToLastPos[prev - 'a'] < i) 
+                    break;
+                
+                //cout << "removing: " << prev << endl;
+                minString.pop_back();
+                usedChars[prev - 'a'] = false;
+            }
+            
+            //cout << "adding: " << s[i] << endl;
+            minString += s[i];
+            usedChars[s[i] - 'a'] = true;
+        }
+        return minString;
+    }
+};
