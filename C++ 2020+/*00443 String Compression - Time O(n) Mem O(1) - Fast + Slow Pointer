@@ -1,0 +1,37 @@
+//Run Time: 4ms - 86.42%
+//Memory Usage: 8.9MB - 47.24%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void updateSlow(vector<char>& chars, int val, int& slow) {
+        //If consecutive is 1 do nothing
+        if(val == 1) return;
+        string toAppend = to_string(val);
+        for(int i = 0; i < toAppend.size(); ++i)
+            chars[slow++] = toAppend[i];
+    }
+    int compress(vector<char>& chars) {
+        //Fast-Slow Pointer
+        //"aabbccc"
+        //   f
+        //  s
+        int slow = 0, numConsec = 1;
+        char prev = chars[0];
+        for(int fast = 1; fast < chars.size(); ++fast) {
+            if(chars[fast] == prev) ++numConsec;
+            else {
+                //Append current character
+                chars[slow++] = prev;
+                prev = chars[fast];
+                //Append value and update slow pointer
+                updateSlow(chars, numConsec, slow);
+                numConsec = 1;   
+            }
+        }
+        //Append for the final character
+        chars[slow++] = prev;
+        updateSlow(chars, numConsec, slow);
+        return slow;
+    }
+};
