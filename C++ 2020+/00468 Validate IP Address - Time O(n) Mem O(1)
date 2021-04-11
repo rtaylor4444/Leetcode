@@ -1,0 +1,56 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 34.01%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool validateIP4Chunk(string& IP, int start, int end) {
+        if(start == end) return true;
+        else if(start > end) return false;
+        else if(IP[start] == '0') return false;
+        return true;
+    }
+    string validIP4Address(string& IP) {
+        int start = 0, numChunks = 0, curVal = 0;
+        for(int i = 0; i <= IP.size(); ++i) {
+            //Validate chunk at end of string or at a .
+            if(i == IP.size() || IP[i] == '.') {
+                if(++numChunks > 4 || !validateIP4Chunk(IP, start, i-1))
+                    return "Neither";
+                start = i+1;
+                curVal = 0;
+            }
+            else if(IP[i] >= '0' && IP[i] <= '9') { 
+                curVal *= 10;
+                curVal += IP[i] - '0';
+                if(curVal > 255) return "Neither";
+            }
+            else return "Neither";
+        }
+        return numChunks == 4 ? "IPv4" : "Neither";
+    }
+    string validIP6Address(string& IP) {
+        unordered_set<char> validChars = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+                                         'A', 'B', 'C', 'D', 'E', 'F', ':'};
+        int start = 0, numChunks = 0;
+        for(int i = 0; i <= IP.size(); ++i) {
+            char cur = (i < IP.size()) ? IP[i] : ':';
+            if(validChars.find(cur) == validChars.end()) return "Neither";
+            if(cur == ':') {
+                int curLength = i - start;
+                if(++numChunks > 8 || curLength > 4 || curLength < 1) return "Neither";
+                start = i+1;
+            }
+        }
+        return numChunks == 8 ? "IPv6" : "Neither";
+    }
+    string validIPAddress(string IP) {
+        //Scan for a . or :
+        for(int i = 0; i < IP.size(); ++i) {
+            if(IP[i] == '.') return validIP4Address(IP);
+            else if(IP[i] == ':') return validIP6Address(IP);
+        }
+        return "Neither";
+    }
+};
