@@ -1,0 +1,46 @@
+//Run Time: 32ms - 19.67%
+//Memory Usage: 9.4MB - 36.96%
+//Unoptimal Solution - Memory needs improvement
+//Time O(n*m*N) Memory O(n*m*N)
+class Solution {
+public:
+    int findPaths(int m, int n, int N, int i, int j) {
+    //3D Dyanmic Programming
+    //Time O(m*n*N) Mem O(m*n*N)
+  
+    //Initalize base case
+    //0 steps is paths of 0
+    vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(N+1, 0)));
+    //directions
+    vector<vector<int>> directions = {{0,-1}, {-1, 0}, {0, 1}, {1, 0}};
+    //Iterate through the steps
+    for(int s = 1; s <= N; ++s) {
+      for(int x = 0; x < m; ++x) {
+        for(int y = 0; y < n; ++y) {
+          //Loop through the directions
+          int temp = dp[x][y][s];
+          for(int d = 0; d < directions.size(); ++d) {
+            int newX = x + directions[d][0];
+            int newY = y + directions[d][1];
+            //Bounds check
+            if(newX < 0 || newX >= m) {
+              temp++;
+              temp %= 1000000007; 
+              continue;
+            }
+            if(newY < 0 || newY >= n) {
+              temp++;
+              temp %= 1000000007; 
+              continue;
+            }
+            temp += dp[newX][newY][s-1];
+            temp %= 1000000007; 
+          }
+          dp[x][y][s] = temp;
+        }
+      }
+    }  
+
+  return dp[i][j][N] % 1000000007;
+};
+};
