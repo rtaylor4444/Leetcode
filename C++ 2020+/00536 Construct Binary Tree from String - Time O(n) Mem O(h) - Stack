@@ -1,0 +1,64 @@
+//Run Time: 28ms - 97.11%
+//Memory Usage: 24.8MB - 75.40%
+//Solved =)
+//Time O(n) Memory O(h)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* parseInt(string& s, int& i) {
+        int val = INT_MAX, sign = 1;
+        for(; i < s.size(); ++i) {
+            //check for the sign
+            if(s[i] == '-') {
+                sign = -1;
+                continue;
+            }
+            else if(s[i] < '0' || s[i] > '9') break;
+            
+            if(val == INT_MAX) val = 0;
+            val *= 10;
+            val += s[i] - '0';
+        }
+        if(val == INT_MAX) return nullptr;
+        return new TreeNode(val * sign);
+    }
+    TreeNode* str2tree(string s) {
+        if(s.empty()) return nullptr;
+        int i = 0;
+        TreeNode* curNode;
+        //{Node, isRight}
+        stack<pair<TreeNode*, bool>> nodeStk;
+        bool toPush = true;
+        while(i < s.size()) {
+            curNode = parseInt(s, i);
+            //set ourselves as previous left/right
+            if(!nodeStk.empty() && curNode) {
+                bool isRight = nodeStk.top().second;
+                if(isRight) nodeStk.top().first->right = curNode;
+                else nodeStk.top().first->left = curNode;
+                nodeStk.top().second = true;
+            }
+            //Add ourselves to the stack
+            if(toPush) {
+                nodeStk.push({curNode, false});
+                toPush = false;
+            }
+            if(s[i] == '(') toPush = true;
+            else if(s[i] == ')') {
+                nodeStk.pop();
+            }
+            ++i;
+        }
+        return nodeStk.top().first;
+    }
+};
