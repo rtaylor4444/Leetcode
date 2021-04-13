@@ -1,0 +1,21 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.1MB - 15.83%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string optimalDivision(vector<int>& nums) {
+        //minimize the final divisor as much as possible
+        //always pick the higher number first
+        string optDiv = to_string(nums[0]);
+        if(nums.size() == 1) return optDiv;
+        else if(nums.size() == 2) return optDiv + "/" + to_string(nums[1]);
+        optDiv += "/(";
+        for(int i = 1; i < nums.size(); ++i) {
+            optDiv += to_string(nums[i]) + "/";
+        }
+        optDiv.pop_back();
+        optDiv += ")";
+        return optDiv;
+    }
+};
