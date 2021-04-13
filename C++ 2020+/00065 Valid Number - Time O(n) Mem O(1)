@@ -1,0 +1,71 @@
+//Run Time: 4ms - 43.96%
+//Memory Usage: 7.4MB - 6.23%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+    unordered_set<char> validChars;
+public:
+    Solution() {
+     validChars = {'0', '1', '2', '3', '4', '5',
+                   '6', '7', '8', '9', 'e', 'E',
+                   '.', '-', '+'};   
+    }
+    bool validateLeadChar(string& s, int i, bool& usedDot, bool& isDigit) {
+        if(validChars.find(s[i]) == validChars.end())
+            return false;
+        //cannot lead with a  e
+        if(s[i] == 'e' || s[i] == 'E')
+            return false;
+        //can lead with a . but can only be used once entire num
+        if(s[i] == '.') {
+            if(usedDot) return false;
+            usedDot = true;
+        }
+        //if we find a digit we meet that condition
+        else if(s[i] >= '0' && s[i] <= '9') isDigit = true;
+        return true;
+    }
+    bool isNumberHelper(string& s, int& i, bool checkLead, bool usedDot, 
+                        bool isDigit, bool usedE) {
+        //Check lead character
+        if(checkLead && !validateLeadChar(s, i, usedDot, isDigit))
+            return false;
+        
+        //Check all other characters
+        ++i;
+        for(; i < s.size(); ++i) {
+            //cannot have signs past the lead character
+            if(s[i] == '-' || s[i] == '+') return false;
+            else if(s[i] == '.') {
+                //If a dot was used before exit
+                if(usedDot) return false;
+                usedDot = true;
+                //Otherwise ensure we follow with a digit
+                //(skip the lead)
+                return isNumberHelper(s, i, false, true, isDigit, usedE);
+            }
+            else if(s[i] == 'e' || s[i] == 'E') {
+                if(usedE) return false;
+                //if no previous digit before exit
+                if(!isDigit) return false;
+                //Otherwise ensure we follow with another integer (no dots)
+                //(check the lead since we are allowed a sign)
+                return isNumberHelper(s, ++i, true, true, false, true);
+            }
+            //if we find a digit we meet that condition
+            else if(s[i] >= '0' && s[i] <= '9') isDigit = true;
+            //We have an invalid character so exit
+            else return false;
+        }
+        return isDigit;
+    }
+    bool isNumber(string s) {
+        //valid numbers are integer or decimal
+        //only one e followed by an int(no decimal)
+        //only one dot followed by an int
+        //- and + must lead the number
+        //We care about e, ., - and + inside of the number
+        int i = 0;
+        return isNumberHelper(s, i, true, false, false, false);
+    }
+};
