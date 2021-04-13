@@ -1,0 +1,28 @@
+//Run Time: 16ms - 51.02%
+//Memory Usage: 13.4MB - 66.36%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int getMinutes(string& a) {
+        int minutesA = (a[3] - '0') * 10 + (a[4] - '0'); 
+        minutesA += ((a[0] - '0') * 10 + (a[1] - '0')) * 60;
+        return minutesA;
+    }
+    int minutesDiff(string& a, string& b) {
+        int maxMinutes = 60 * 24;
+        int minutesA = getMinutes(a), minutesB = getMinutes(b);
+        int diff = minutesB - minutesA;
+        diff = min(diff, abs(minutesB - (minutesA + maxMinutes)));
+        return diff;
+    }
+    int findMinDifference(vector<string>& timePoints) {
+        sort(timePoints.begin(), timePoints.end());
+        //start and end diff edge case
+        int minDiff = minutesDiff(timePoints[0], timePoints.back());
+        for(int i = 1; i < timePoints.size(); ++i) {
+            minDiff = min(minDiff, minutesDiff(timePoints[i-1], timePoints[i]));
+        }
+        return minDiff;
+    }
+};
