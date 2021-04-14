@@ -1,0 +1,65 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.8MB - 5.13%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    bool canFitMax(string& max, string &num) {
+        if(max.size() < num.size()) return false;
+        else if(num.size() < max.size()) return true;
+        return max.compare(num) >= 0;
+    }
+    bool compare(bool greater, int a, int b) {
+        if(greater) return a > b;
+        else return a < b;
+    }
+    bool compareEqual(bool greater, int a, int b) {
+        if(greater) return a >= b;
+        else return a <= b;
+    }
+    bool getNext(bool greater, int endPos, string& num, int& i) {
+        //start least significant digit and try to increase it - greater
+        //do reverse - try to decrease it - lesser
+        //BUG - can be opt with a monoStack
+        //cout << num << endl;
+        //if(!greater) cout << "looking smaller num ";
+        //else cout << "looking bigger num ";
+        //cout << "ending digit: " << endPos << endl;
+        
+        for(i = num.size() - 1; i >= endPos; --i) {
+            int minIndex = i;
+            for(int j = i+1; j < num.size(); ++j) {
+                //get smallest number greater than i - greater
+                //get largest number smaller then i - lesser
+                if(compare(greater, num[j], num[i])) {
+                    //cout << "comparing " << num[minIndex] << " to " << num[j] << endl;
+                    if(minIndex == i || compareEqual(greater, num[minIndex], num[j]))
+                        minIndex = j;
+                }
+            }
+            if(minIndex > i && compare(greater, num[minIndex], num[i])) {
+                //cout << "swapping " << num[i] << " with " << num[minIndex] << endl;
+                swap(num[i], num[minIndex]);
+                return true;
+            }
+        }
+        return false;
+    }
+    int nextGreaterElement(int n) {
+        //convert number to a string
+        //123 -> 132
+        //pick least significant digit and move rightward
+        //and try to increase its value, without decreasing overall number
+        string maxNum = to_string(INT_MAX);
+        string curNum = to_string(n), nextNum = curNum;
+        //get a larger number
+        int endPos = 0;
+        if(!getNext(true, endPos, nextNum, endPos)) return -1;
+        ++endPos;
+        int i = 0;
+        //makes smaller numbers until we cannot anymore
+        while(getNext(false, endPos, nextNum, i));
+        //cout << maxNum << "-" << nextNum << endl;
+        return canFitMax(maxNum, nextNum) ? stoi(nextNum) : -1;
+    }
+};
