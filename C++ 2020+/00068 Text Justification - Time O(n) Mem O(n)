@@ -1,0 +1,60 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.5MB - 44.46%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string createLeftLine(vector<int>& indices, vector<string>& words, int reqSpaces) {
+        string newLine;
+        for(int i = 0; i < indices.size(); ++i) {
+            newLine += words[indices[i]];
+            if(reqSpaces <= 0) break;
+            newLine += " ";
+            --reqSpaces;
+        }
+        if(reqSpaces > 0) newLine += string(reqSpaces, ' ');
+        return newLine;
+    }
+    string createLine(vector<int>& indices, vector<string>& words, int reqSpaces) {
+        //Create line assuming it will always be less than maxWidth
+        //avoid divide by zero
+        int numSpaces = max(1, (int)indices.size() - 1);
+        int spaceBetweenWords = reqSpaces / numSpaces;
+        string newLine;
+        for(int i = 0; i < indices.size(); ++i) {
+            newLine += words[indices[i]];
+            //calculate exact space size needed between words 
+            //- add 1 if number doesnt divide evenly
+            if(reqSpaces <= 0) break;
+            int spaceSize = spaceBetweenWords + min(1, reqSpaces % numSpaces);
+            newLine += string(spaceSize, ' ');
+            //update variable for next iteration
+            reqSpaces -= spaceSize;
+            numSpaces = max(1, numSpaces - 1);
+        }
+        return newLine;
+    }
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        //max words per line
+        //pad spaces for maxWidth chars (pad more spaces on left then to right)
+        vector<string> lines;
+        vector<int> wordIndices;
+        int curWord = 0;
+        while(curWord < words.size()) {
+            wordIndices.clear();
+            wordIndices.push_back(curWord);
+            int curLineSize = words[curWord++].size(), reqSpaces = 0;
+            //process line by line
+            while(curWord < words.size() && curLineSize+reqSpaces+words[curWord].size() < maxWidth) {
+                reqSpaces += 1;
+                curLineSize += words[curWord].size();
+                wordIndices.push_back(curWord++);
+            }
+            string curLine;
+            if(curWord < words.size()) curLine = createLine(wordIndices, words, maxWidth - curLineSize);
+            else curLine = createLeftLine(wordIndices, words, maxWidth - curLineSize);
+            lines.push_back(curLine);
+        }
+        return lines;
+    }
+};
