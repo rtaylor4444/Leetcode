@@ -1,0 +1,53 @@
+//Run Time: 84ms - 76.09%
+//Memory Usage: 46MB - 17.20%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    void parsePath(unordered_map<string, vector<string>>& contentToPath, string& s) {
+        //get directory
+        int directoryEnd = 0;
+        while(s[directoryEnd] != ' ') ++directoryEnd;
+        string directory = s.substr(0, directoryEnd) + "/";
+        //cout << directory << endl;
+        //get textNames + content;
+        vector<string> fileNames, content;
+        int start = ++directoryEnd;
+        while(directoryEnd < s.size()) {
+            //get the fileName
+            while(s[directoryEnd] != '(') ++directoryEnd;
+            fileNames.push_back(s.substr(start, directoryEnd - start));
+            //get the content
+            start = ++directoryEnd;
+            while(s[directoryEnd] != ')') ++directoryEnd;
+            content.push_back(s.substr(start, directoryEnd - start));
+            //end of file can only exist past a )
+            //update past the next space so we cna parse the next fileinfo
+            while(directoryEnd < s.size() && s[directoryEnd] != ' ') ++directoryEnd;
+            start = ++directoryEnd;
+        }
+        //place them inside of the hashmap
+        for(int i = 0; i < fileNames.size(); ++i) {
+            if(contentToPath.find(content[i]) == contentToPath.end())
+                contentToPath.emplace(content[i], vector<string>());
+            
+            contentToPath[content[i]].push_back(directory+fileNames[i]);
+        }
+    }
+    vector<vector<string>> findDuplicate(vector<string>& paths) {
+        //Hash-map
+        //content -> directory+filename(s)
+        unordered_map<string, vector<string>> contentToPath;
+        for(int i = 0; i < paths.size(); ++i) {
+            parsePath(contentToPath, paths[i]);
+        }
+        //convert our map into a list of groups
+        vector<vector<string>> duplicates;
+        for(auto it = contentToPath.begin(); it != contentToPath.end(); ++it) {
+            //skip single groups (meaning no dups)
+            if(it->second.size() < 2) continue;
+            duplicates.push_back(it->second);
+        }
+        return duplicates;
+    }
+};
