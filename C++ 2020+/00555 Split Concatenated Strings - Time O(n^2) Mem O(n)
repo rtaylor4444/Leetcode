@@ -1,0 +1,60 @@
+//Run Time: 220ms - 5.26%
+//Memory Usage: 233MB - 5.26%
+//Unoptimal Solution - Time/Memory needs improvement
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    void makeLarge(string& s) {
+        int l = 0, r = s.size() -1;
+        while(l < r) {
+            if(s[l] > s[r]) break;
+            else if(s[l] < s[r]) {
+                reverse(s.begin(), s.end());
+                break;
+            }
+            ++l;
+            --r;
+        }
+    }
+    string splitLoopedString(vector<string>& strs) {
+        //flip if it makes the string lexograph larger
+        //sort the strings and simply put them together
+        int numStrings = strs.size();
+        for(int i = 0; i < strs.size(); ++i) {
+            makeLarge(strs[i]);
+        }
+        
+        //Test all pivots and return the highest answer
+        string ans;
+        for(int i = 0; i < numStrings; ++i) {
+            //We can either reverse this option or not
+            string rev(strs[i]);
+            reverse(rev.begin(), rev.end());
+            vector<string> options = {strs[i], rev};
+            for(int o = 0; o < options.size(); ++o)
+            for(int j = 0; j < options[o].size(); ++j) {
+                //loop over the rest of the current string
+                string temp = "";
+                int pos = j, addedChars = 0, addedStrings = 0;
+                while(pos < options[o].size()) {
+                    temp += options[o][pos++];
+                    ++addedChars;
+                }
+                //loop over the other strings
+                for(int index = i+1; addedStrings < numStrings-1; ++index) {
+                    temp += strs[index % numStrings];
+                    ++addedStrings;
+                }
+                //add missing chars from before
+                pos = 0;
+                while(addedChars < options[o].size()) {
+                    temp += options[o][pos++];
+                    ++addedChars;
+                }
+                //set ans to the greatest string
+                if(ans.compare(temp) < 0) ans = temp;
+            }
+        }
+        return ans;
+    }
+};
