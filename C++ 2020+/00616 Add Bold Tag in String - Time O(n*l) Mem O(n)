@@ -1,0 +1,109 @@
+//Run Time: 308ms - 11.80%
+//Memory Usage: 121.7MB - 24.64%
+//Solved =)
+//Time O(n*l) Memory O(n)
+class Trie {
+  struct TrieNode {
+      unordered_map<char, TrieNode*> children;
+      bool isWord;
+      TrieNode() {
+          isWord = false;
+      }
+      ~TrieNode() {
+          for(auto it = children.begin(); it != children.end(); ++it)
+              delete it->second;
+      }
+  };
+    TrieNode *root, *curNode;
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+    ~Trie() {
+        delete root;
+    }
+    void addWord(string& s) {
+        curNode = root;
+        for(int i = 0; i < s.size(); ++i) {
+            if(curNode->children.find(s[i]) == curNode->children.end())
+                curNode->children[s[i]] = new TrieNode();
+            
+            curNode = curNode->children[s[i]];
+        }
+        curNode->isWord = true;
+    }
+    void addWords(vector<string>& words) {
+        for(int i = 0; i < words.size(); ++i)
+            addWord(words[i]);
+    }
+    int getLongestWord(string& s, int start) {
+        int maxLen = 0, length = 0;
+        curNode = root;
+        for(int i = start; i < s.size(); ++i) {
+            if(curNode->children.find(s[i]) == curNode->children.end())
+                break;
+            
+            curNode = curNode->children[s[i]];
+            ++length;
+            if(curNode->isWord) maxLen = max(maxLen, length);
+        }
+        return maxLen;
+    }
+};
+
+class Solution {
+public:
+    string addBoldTag(string s, vector<string>& dict) {
+        //token - O(n*l)
+        //find all occurances of dict in s
+        //{start, length}
+        //merge tokens
+        //process them
+        Trie trie;
+        trie.addWords(dict);
+        vector<vector<int>> stringTokens;
+        for(int i = 0; i < s.size(); ++i) {
+            int curLength = trie.getLongestWord(s, i);
+            if(curLength == 0) continue;
+            //merge token if it overlaps with previous
+            if(stringTokens.empty()) stringTokens.push_back({i, curLength});
+            else {
+                int newEnd = i + curLength;
+                int endPos = stringTokens.back()[0] + stringTokens.back()[1];
+                //if new token is outside of bounds add it
+                if (i > endPos) stringTokens.push_back({i, curLength});
+                //check if new token expands previous bounds
+                else if(newEnd >= endPos) {
+                    stringTokens.back()[1] = newEnd - stringTokens.back()[0];
+                }
+                //discard token if it is within previous bounds
+            }
+        }
+        
+        string bolded;
+        int curPos = 0, curToken = 0;
+        while(curPos < s.size()) {
+            //process tokens
+            if(curToken < stringTokens.size()) {
+                //make sure our position is within a token
+                //if its outside of a token append the substring outside of it
+                int tokenStart = stringTokens[curToken][0];
+                if(curPos < tokenStart) {
+                    bolded += s.substr(curPos, tokenStart - curPos);
+                    curPos = tokenStart;
+                }
+                else {
+                    bolded += "<b>" + s.substr(tokenStart, stringTokens[curToken][1]) + "</b>";
+                    curPos = tokenStart + stringTokens[curToken][1];
+                    ++curToken;
+                }
+            }
+            //if no tokens just append the rest of the string
+            else {
+                bolded += s.substr(curPos, s.size() - curPos);
+                break;
+            }
+        }
+        return bolded;
+    }
+};
