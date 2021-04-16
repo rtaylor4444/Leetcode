@@ -1,0 +1,41 @@
+//Run Time: 336ms - 13.78%
+//Memory Usage: 6.8MB - 74.72%
+//Unoptimal Solution - Time needs improvement
+//Time O(m*n) Memory O(m)
+class Solution {
+public:
+    int verifyStartPos(int start, string& a, string& b) {
+        int numRepeat = 1;
+        for(int i = 0; i < b.size(); ++i) {
+            //all chars must match
+            if(start == a.size()) {
+                ++numRepeat;
+                start = 0;
+            }
+            if(a[start] != b[i]) return -1;
+            ++start;
+        }
+        return numRepeat;
+    }
+    int repeatedStringMatch(string a, string b) {
+        //Two Pointers
+        //should be able to iterate over abcd multiple times
+        //find starting then loop over it
+        int startPos = 0;
+        vector<int> starting;
+        while(startPos < a.size()) {
+            if(a[startPos] == b[0]) {
+                starting.push_back(startPos);
+            }
+            ++startPos;
+        }
+        //If no characters match then task impossible
+        if(starting.empty()) return -1;
+        int minRepeat = INT_MAX;
+        for(int i = 0; i < starting.size(); ++i) {
+            int curRepeat = verifyStartPos(starting[i], a, b);
+            if(curRepeat > -1) minRepeat = min(minRepeat, curRepeat);
+        }
+        return minRepeat == INT_MAX ? -1 : minRepeat;
+    }
+};
