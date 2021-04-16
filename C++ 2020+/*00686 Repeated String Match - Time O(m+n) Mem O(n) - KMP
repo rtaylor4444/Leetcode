@@ -1,0 +1,54 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.8MB - 54.72%
+//Solved =)
+//Time O(m+n) Memory O(n)
+class Solution {
+public:
+    void computeLPS(vector<int>& lps, string& pat) {
+        lps[0] = 0;
+        int len = 0, i = 1;
+        while(i < pat.size()) {
+            if(pat[len] == pat[i]) lps[i++] = ++len;
+            else {
+                if(len == 0) {
+                    lps[i++] = 0;
+                }
+                else len = lps[len-1];
+            }
+        }
+    }
+    int repeatedStringMatch(string a, string b) {
+        //KMP
+        //string b becomes the needle and try to map that into a
+        vector<int> lps(b.size());
+        computeLPS(lps, b);
+        //loop around string a as many times needed to find b
+        //Exit Condition?
+        //no matches on a or mismatch when copied a second time
+        int i = 0, j = 0, numRepeats = 0;
+        int maxRepeats = (b.size() / a.size()) + 1;
+        while(numRepeats <= maxRepeats) {
+            //Increment when they are equal
+            if(a[i] == b[j]) {
+                ++i;
+                ++j;
+            }
+            else {
+                //Exit if we mismatch on the second copy
+                //(meaning j resets fully and no partial matches from prev copy)
+                if(numRepeats && j == 0) break;
+                //otherwise modify j per usual
+                if(j == 0) ++i;
+                else j = lps[j-1];
+            }
+            //verify we matched all chars
+            if(j >= b.size()) return numRepeats+1;
+            //reset pointer when out of a bounds
+            if(i >= a.size()) {
+                ++numRepeats;
+                i = 0;
+            }
+        }
+        return -1;
+    }
+};
