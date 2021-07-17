@@ -1,0 +1,73 @@
+class Solution {
+    vector<string> teens, tensplace, chunkplace;
+public:
+    Solution() {
+        //Form base words
+        teens = vector<string>(20, "");
+        teens[1] = "One";
+        teens[2] = "Two";
+        teens[3] = "Three";
+        teens[4] = "Four";
+        teens[5] = "Five";
+        teens[6] = "Six";
+        teens[7] = "Seven";
+        teens[8] = "Eight";
+        teens[9] = "Nine";
+        teens[10] = "Ten";
+        teens[11] = "Eleven";
+        teens[12] = "Twelve";
+        teens[13] = "Thirteen";
+        teens[14] = "Fourteen";
+        teens[15] = "Fifteen";
+        teens[16] = "Sixteen";
+        teens[17] = "Seventeen";
+        teens[18] = "Eighteen";
+        teens[19] = "Nineteen";
+        tensplace = {"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", 
+                     "Eighty", "Ninety", "Hundred"};
+        chunkplace = {"", " Thousand", " Million", " Billion", " Trillion"};
+        
+    }
+    string parseChunk(int numChunk, int& chunkCount) {
+        //Parse Hundred
+        string ans;
+        ans.reserve(30);
+        int hundred = numChunk / 100;
+        if(hundred) ans += teens[hundred] + " " + tensplace[10];
+        //Parse Tens
+        int tens = numChunk % 100;
+        if(tens) {
+            //Add space if hundred exists
+            if(hundred) ans += " ";
+            if(tens < 20) ans += teens[tens];
+            else if(tens % 10) ans += (tensplace[tens / 10] + " " +  teens[tens % 10]);
+            else ans += tensplace[tens / 10];
+        }
+        ans += chunkplace[chunkCount++];
+        return ans;
+    }
+    string numberToWords(int num) {
+        //Parse number by hundred chunks
+        if(num == 0) return "Zero";
+        //Build number stack
+        int chunkCount = 0;
+        stack<string> numStack;
+        while(num) {
+            int curChunk = num % 1000;
+            if(curChunk) numStack.push(parseChunk(curChunk, chunkCount));
+            else chunkCount++;
+            num -= curChunk;
+            num /= 1000;
+        }
+        //Empty stack
+        string ans;
+        ans.reserve(100);
+        while(!numStack.empty()) {
+            ans += numStack.top();
+            ans += " ";
+            numStack.pop();
+        }
+        ans.pop_back();
+        return ans;
+    }
+};
