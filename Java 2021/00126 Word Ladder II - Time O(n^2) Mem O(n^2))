@@ -1,0 +1,95 @@
+class Solution {
+    public void generateSeq(List<List<String>> seqList, 
+                            HashMap<String, ArrayList<String>> adjList, 
+                            ArrayList<String> curSeq, String curWord, int curIndex) {
+        //Exit Condition
+        curSeq.set(curIndex, curWord);
+        if(curIndex == 0) {
+            //Add final word to our list
+            seqList.add(new ArrayList(curSeq));
+            return;
+        }
+        
+        ArrayList<String> childNodes = adjList.get(curWord);
+        for(int i = 0; i < childNodes.size(); ++i) {
+            generateSeq(seqList, adjList, curSeq, childNodes.get(i), curIndex-1);
+        }
+    }
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        //BFS with hashmap
+        //Convert wordList to a dictionary for easy lookup
+        //word -> chain length
+        HashMap<String, Integer> wordToLength = new HashMap<>();
+        wordToLength.put(beginWord, 0);
+        for(int i = 0; i < wordList.size(); ++i) {
+            wordToLength.put(wordList.get(i), Integer.MAX_VALUE);
+        }
+        //Exit if endWord isnt in the list impossible to traverse to
+        if(!wordToLength.containsKey(endWord)) return new ArrayList<>();
+        
+        
+        //validchars[position] -> possible characters
+        ArrayList<HashSet<Character>> validChars = new ArrayList<>(beginWord.length());
+        for(int i = 0; i < beginWord.length(); ++i) {
+            validChars.add(new HashSet<Character>());
+        }
+        //Build all possible character transformations
+        for(int i = 0; i < wordList.size(); ++i) {
+            for(int j = 0; j < wordList.get(i).length(); ++j) {
+                validChars.get(j).add(wordList.get(i).charAt(j));
+            }
+        }
+        
+        //Use BFS to get shortest paths
+        int curLength = 1;
+        String curWord = "";
+        LinkedList<String> bfs = new LinkedList<>();
+        //Will be used to construct all sequences
+        HashMap<String, ArrayList<String>> parentWordToChildWords = new HashMap<>();
+        bfs.addLast(beginWord);
+        while(!bfs.isEmpty() && !curWord.equals(endWord)) {
+            for(int i = bfs.size()-1; i >= 0; --i) {
+                curWord = bfs.getFirst();
+                bfs.removeFirst();
+                
+                //Determine possible words we can make in our chain
+                StringBuilder strB = new StringBuilder(curWord);
+                for(int p = 0; p < curWord.length(); ++p) {
+                    Iterator<Character> it = validChars.get(p).iterator();
+                    while(it.hasNext()) {
+                        strB.replace(p, p+1, it.next().toString());
+                        String newWord = strB.toString();
+                        //revert stringbuilder back to original
+                        strB.replace(p, p+1, Character.toString(curWord.charAt(p)));
+                        if(newWord.equals(curWord)) continue;
+                        //verify that newWord is in our list
+                        if(wordToLength.containsKey(newWord)) {
+                            int minLength = wordToLength.get(newWord);
+                            //skip this word if we reached it with a smaller chain
+                            if(minLength < curLength) continue;
+                            wordToLength.replace(newWord, curLength);
+                            //construct our parent map if it doesnt exist then add this word
+                            if(!parentWordToChildWords.containsKey(newWord))
+                                parentWordToChildWords.put(newWord, new ArrayList<>());
+                            parentWordToChildWords.get(newWord).add(curWord);
+                            //process this word  - only if smaller chain is found
+                            if(minLength > curLength) bfs.addLast(newWord);
+                        }
+                    }
+                }
+                //Exit if we reach our destination
+                if(curWord.equals(endWord)) break;
+            }
+            ++curLength;
+        }
+        //if we couldnt reach our destination exit
+        if(wordToLength.get(endWord) == Integer.MAX_VALUE) return new ArrayList<>();
+        //Otherwise construct our list
+        List<List<String>> seqList = new ArrayList<>();
+        ArrayList<String> listTemplate = new ArrayList(curLength-1);
+        for(int i = 0; i < curLength-1; ++i)
+            listTemplate.add(" ");
+        generateSeq(seqList, parentWordToChildWords, listTemplate, endWord, curLength-2);
+        return seqList;
+    }
+}
