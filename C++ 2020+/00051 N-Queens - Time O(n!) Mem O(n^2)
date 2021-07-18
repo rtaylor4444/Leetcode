@@ -1,0 +1,60 @@
+//Run Time: 8ms - 64.96%
+//Memory Usage: 7.6MB - 45.72%
+//Solved =)
+//Time O(n!) Memory O(n^2)
+class Solution {
+    vector<vector<int>> dir;
+    vector<string> baseBoard;
+    vector<vector<string>> solution;
+public:
+    Solution() {
+        dir = {{1,1}, {-1,-1}, {1,-1}, {-1,1}};
+    }
+    void markQueen(vector<vector<int>>& board, int i, int j, int change) {
+        //unmmark/mark queen
+        if(change > 0) {
+            board[i][j] = -1;
+            baseBoard[i][j] = 'Q';
+        } else {
+            board[i][j] = 0;
+            baseBoard[i][j] = '.';
+        }
+        
+        //Horz can skip since we ensure one quen per row
+        //Vert - skip queen spot
+        for(int v = 0; v < board.size(); ++v)
+            if(v != i) board[v][j] += change;
+        
+        //Diagnol
+        for(int d = 0; d < dir.size(); ++d) {
+            int x = j+dir[d][0], y = i+dir[d][1];
+            //Check bounds
+            while(x >= 0 && x < board[j].size() && y >= 0 && y < board.size()) {
+                board[y][x] += change;
+                x += dir[d][0];
+                y += dir[d][1];
+            }
+        }
+    }
+    void solveHelper(vector<vector<int>>& board, int i, int j, int queensAdded) {
+        for(; i < board.size(); ++i) {
+            for(; j < board[i].size(); ++j) {
+                if(board[i][j] == 0) {
+                    markQueen(board, i, j, 1);
+                    solveHelper(board, i+1, 0, queensAdded+1);
+                    markQueen(board, i, j, -1);
+                }
+            }
+        }
+        if(queensAdded == board.size()) {
+            solution.push_back(baseBoard);
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        solution.clear();
+        baseBoard = vector<string>(n, string(n, '.'));
+        vector<vector<int>> board(n, vector<int>(n, 0));
+        solveHelper(board, 0, 0, 0);
+        return solution;
+    }
+};
