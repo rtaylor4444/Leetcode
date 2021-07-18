@@ -1,0 +1,91 @@
+//Run Time: 11ms - 79.18%
+//Memory Usage: 9.1MB - 81.17%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    void generateSeq(vector<vector<string>>& seqList, 
+                     unordered_map<string, vector<string>>& adjList,
+                    vector<string>& curSeq, string& curWord, int curIndex) {
+        //Exit Condition
+        curSeq[curIndex] = curWord;
+        if(curIndex == 0) {
+            //Add final word to our list
+            seqList.push_back(curSeq);
+            return;
+        }
+        
+        vector<string>& childNodes = adjList[curWord];
+        for(int i = 0; i < childNodes.size(); ++i) {
+            generateSeq(seqList, adjList, curSeq, childNodes[i], curIndex-1);
+        }
+    }
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        //BFS with hashmap
+        //Convert wordList to a dictionary for easy lookup
+        //word -> chain length
+        unordered_map<string, int> wordToLength;
+        for(int i = 0; i < wordList.size(); ++i) {
+            wordToLength.emplace(wordList[i], INT_MAX);
+        }
+        //Exit if endWord isnt in the list impossible to traverse to
+        if(wordToLength.find(endWord) == wordToLength.end()) return {};
+        
+        //validchars[position] -> possible characters
+        vector<unordered_set<char>> validChars(beginWord.size(), unordered_set<char>());
+        
+        //Build all possible character transformations
+        for(int i = 0; i < wordList.size(); ++i) {
+            for(int j = 0; j < wordList[i].size(); ++j) {
+                validChars[j].emplace(wordList[i][j]);
+            }
+        }
+        
+        //Use BFS to get shortest path
+        int curLength = 1;
+        string curWord;
+        //Will be used to construct all sequences
+        unordered_map<string, vector<string>> parentWordToChildWords;
+        queue<string> bfs;
+        bfs.push(beginWord);
+        while(!bfs.empty() && curWord != endWord) {
+            for(int i = bfs.size()-1; i >= 0; --i) {
+                curWord = bfs.front();
+                bfs.pop();
+                
+                //Determine possible words we can make in our chain
+                for(int p = 0; p < curWord.size(); ++p) {
+                    for(auto it = validChars[p].begin(); it != validChars[p].end(); ++it) {
+                        string newWord = curWord;
+                        newWord[p] = *it;
+                        if(newWord == curWord) continue;
+                        //verify that newWord is in our list
+                        if(wordToLength.find(newWord) != wordToLength.end()) {
+                            int minLength = wordToLength[newWord];
+                            //skip this word if we reached it with a smaller chain
+                            if(minLength < curLength) continue;
+                            wordToLength[newWord] = curLength;
+                            //construct our parent map if it doesnt exist then add this word
+                            if(parentWordToChildWords.find(newWord) == parentWordToChildWords.end())
+                                parentWordToChildWords.emplace(newWord, vector<string>());
+                            parentWordToChildWords[newWord].push_back(curWord);
+                            //process this word  - only if smaller chain is found
+                            if(minLength > curLength) bfs.push(newWord);
+                        }
+                    }   
+                }
+                
+                //Exit if we reach our destination
+                if(curWord == endWord) break;
+            }
+            ++curLength;
+        }
+        //if we couldnt reach our destination exit
+        if(wordToLength[endWord] == INT_MAX) return {};
+        //Otherwise construct our list
+        vector<vector<string>> seqList;
+        vector<string> listTemplate(curLength-1, " ");
+        generateSeq(seqList, parentWordToChildWords, listTemplate, endWord, curLength-2);
+        return seqList;
+    }
+};
