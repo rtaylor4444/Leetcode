@@ -1,0 +1,54 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 39.6MB - 26.40%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reverseList(ListNode head, ListNode tail) {
+        ListNode dummyHead = new ListNode();
+        ListNode curNode = null, nextNode = head;
+        while(curNode != tail) {
+            curNode = nextNode;
+            nextNode = curNode.next;
+            curNode.next = dummyHead.next;
+            dummyHead.next = curNode;
+        }
+    }
+    public ListNode reverseKGroup(ListNode head, int k) {
+        //End should remain as is if it doesnt reach k
+        //count k nodes
+        ListNode curNode = head, prevTail = null;
+        head = null;
+        while(curNode != null) {
+            //Count k nodes to swap
+            ListNode curHead = curNode, curTail = curNode;
+            for(int i = 0; i < k-1 && curNode != null; ++i) {
+                curNode = curNode.next;
+            }
+            curTail = curNode;
+            if(curTail != null) {
+                curNode = curNode.next;
+                reverseList(curHead, curTail);
+                //Set head if it wasnt set already
+                if(head == null) head = curTail;
+                //Set the previous reversed lists tail to the currrent head
+                if(prevTail != null) prevTail.next = curTail;
+                prevTail = curHead;
+            } else {
+                //Otherwise attach to the rest of the list
+                prevTail.next = curHead;
+            }
+            
+        }
+        return head;
+    }
+}
