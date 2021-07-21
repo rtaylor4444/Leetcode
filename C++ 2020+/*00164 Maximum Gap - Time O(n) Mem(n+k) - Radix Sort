@@ -1,0 +1,52 @@
+//Run Time: 184ms - 9.17%
+//Memory Usage: 75.8MB - 10.37%
+//Solved =)
+//k = base
+//n = num elements
+//Time O(n) Memory O(n+k)
+class Solution {
+public:
+    int maximumGap(vector<int>& nums) {
+        ///Radix Sort
+        if(nums.size() < 2) return 0;
+        int maxNum = 0;
+        for(int i = 0; i < nums.size(); ++i)
+            maxNum = max(nums[i], maxNum);
+        
+        int curDigit = 1, base = 1000;
+        vector<int> auxArray(nums.size(), 0);
+        while(maxNum) {
+            //Count sort
+            vector<int> digitCount(base, 0);
+            //Count the amount of each digit we have
+            for(int i = 0; i < nums.size(); ++i)
+                digitCount[(nums[i] / curDigit) % base]++;
+            
+            //Convert count array to an actual position
+            for(int i = 1; i < base; ++i) {
+                digitCount[i] += digitCount[i-1];
+            }
+            
+            //Place each element in proper position
+            for(int i = nums.size() - 1; i >= 0; --i) {
+                int index = --digitCount[(nums[i] / curDigit) % base];
+                auxArray[index] = nums[i];
+            }
+            
+            //Copy over elements
+            for(int i = 0; i < auxArray.size(); ++i)
+                nums[i] = auxArray[i];
+            
+            //Update to next digit
+            curDigit *= base;
+            maxNum /= base;
+        }
+        
+        //Calc maximum gap
+        int maxGap = 0;
+        for(int i = 1; i < nums.size(); ++i) {
+            maxGap = max(maxGap, nums[i] - nums[i-1]);
+        }
+        return maxGap;
+    }
+};
