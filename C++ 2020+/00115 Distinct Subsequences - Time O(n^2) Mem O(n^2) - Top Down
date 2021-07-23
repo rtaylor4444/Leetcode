@@ -1,0 +1,25 @@
+//Run Time: 20ms - 58.57%
+//Memory Usage: 12.7MB - 64.55%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+class Solution {
+public:
+    int genDistinct(vector<vector<int>>& dp, int i, int j, string& s, string& t) {
+        if(j == t.size()) return 1;
+        if(i == s.size()) return 0;
+        if(dp[i][j] != -1) return dp[i][j];
+        
+        int numDistinct = 0;
+        //We take the character - skip if chars do not match
+        if(s[i] == t[j]) numDistinct += genDistinct(dp, i+1, j+1, s, t);
+        //We do not take the character
+        numDistinct += genDistinct(dp, i+1, j, s, t);
+        dp[i][j] = numDistinct;
+        return numDistinct;
+    }
+    int numDistinct(string s, string t) {
+        //Generate t from s
+        vector<vector<int>> dp(s.size(), vector<int>(t.size(), -1));
+        return genDistinct(dp, 0, 0, s, t);
+    }
+};
