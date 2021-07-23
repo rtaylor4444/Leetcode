@@ -1,0 +1,42 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6MB - 44.73%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string generatePermutations(int total, string& curPerm, int k, vector<bool>& takenNums, 
+                                vector<int>& estPerms) {
+        //Exit Condition
+        if(curPerm.size() == takenNums.size() && k == total) return curPerm;
+        
+        for(int i = 0; i < takenNums.size(); ++i) {
+            if(takenNums[i]) continue;
+            curPerm.push_back('1'+i);
+            takenNums[i] = true;
+            
+            //Check if its worth going down this recursive branch
+            //cout << "estimated: " << k << " - " << total + estPerms[curPerm.size()] << endl;
+            if(total + estPerms[curPerm.size()] >= k && k >= total) {
+                string result = generatePermutations(total, curPerm, k, takenNums, estPerms);
+                if(result != "") return result;
+            }
+            total += estPerms[curPerm.size()];
+            
+            curPerm.pop_back();
+            takenNums[i] = false;
+        }
+        return "";
+    }
+    string getPermutation(int n, int k) {
+        vector<bool> takenNums(n, false);
+        vector<int> estPerms(n+1, 1);
+        estPerms[n] = 0;
+        for(int i = n-2; i >= 0; --i) {
+            estPerms[i] = estPerms[i+1] * (n-i);
+        }
+        
+        string curPerm;
+        curPerm.reserve(n);
+        return generatePermutations(0, curPerm, --k, takenNums, estPerms);
+    }
+};
