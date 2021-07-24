@@ -1,0 +1,39 @@
+//Run Time: 56ms - 59.31%
+//Memory Usage: 8.1MB - 68.37%
+//Solved =)
+//Time O(n^2) Memory O(n+n^2)
+class Solution {
+public:
+    void computeIsPalin(vector<vector<bool>>& isPalin, string& s) {
+        //size 1 always palindrome
+        for(int i = 0; i < s.size(); ++i)
+            isPalin[i][i] = true;
+        //size 2 
+        for(int i = 1; i < s.size(); ++i) 
+            isPalin[i-1][i] = (s[i-1] == s[i]) ? true : false;
+        
+        for(int j = 2; j < s.size(); ++j) {
+            for(int i = 0; i+j < s.size(); ++i) {
+                if(s[i] == s[i+j] && isPalin[i+1][i+j-1]) isPalin[i][i+j] = true;
+                else isPalin[i][i+j] = false;
+            }
+        }
+    }
+    int minCut(string s) {
+        //Dynamic Programming - Bottom Up
+        if(s.size() < 2) return 0;
+        vector<vector<bool>> isPalin(s.size(), vector<bool>(s.size()));
+        computeIsPalin(isPalin, s);
+        vector<int> minCuts(s.size()+1, INT_MAX);
+        //Undo previous cut
+        minCuts[s.size()] = -1;
+        //Start with the bigger cuts first
+        for(int end = s.size() - 1; end >= 0; --end) {
+            for(int start = 0; start <= end; ++start) {
+                if(!isPalin[start][end]) continue;
+                minCuts[start] = min(minCuts[start], 1 + minCuts[end+1]);
+            }
+        }
+        return minCuts[0];
+    }
+};
