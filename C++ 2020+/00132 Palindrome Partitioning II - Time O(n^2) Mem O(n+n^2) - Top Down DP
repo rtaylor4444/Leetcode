@@ -1,0 +1,45 @@
+//Run Time: 56ms - 59.31%
+//Memory Usage: 8.2MB - 68.37%
+//Solved =)
+//Time O(n^2) Memory O(n+n^2)
+class Solution {
+public:
+    void computeIsPalin(vector<vector<bool>>& isPalin, string& s) {
+        //size 1 always palindrome
+        for(int i = 0; i < s.size(); ++i)
+            isPalin[i][i] = true;
+        //size 2 
+        for(int i = 1; i < s.size(); ++i) 
+            isPalin[i-1][i] = (s[i-1] == s[i]) ? true : false;
+        
+        for(int j = 2; j < s.size(); ++j) {
+            for(int i = 0; i+j < s.size(); ++i) {
+                if(s[i] == s[i+j] && isPalin[i+1][i+j-1]) isPalin[i][i+j] = true;
+                else isPalin[i][i+j] = false;
+            }
+        }
+    }
+    int computeMinCuts(int start, vector<int>& minCuts, string& s, 
+                        vector<vector<bool>>& isPalin) {
+        //Exit Condition - undo previous cut
+        if(start == s.size()) return -1;
+        if(minCuts[start] != INT_MAX) return minCuts[start];
+        int minCut = INT_MAX-1;
+        //Start with the bigger cuts first
+        for(int end = s.size()-1; end >= start; --end) {
+            if(!isPalin[start][end]) continue;
+            minCut = min(minCut, 1 + computeMinCuts(end+1, minCuts, s, isPalin));
+        }
+        minCuts[start] = minCut;
+        return minCut;
+    }
+    int minCut(string s) {
+        //Dynamic Programming - Top Down
+        if(s.size() < 2) return 0;
+        //isPalin[start][end]
+        vector<vector<bool>> isPalin(s.size(), vector<bool>(s.size()));
+        computeIsPalin(isPalin, s);
+        vector<int> minCuts(s.size(), INT_MAX);
+        return computeMinCuts(0, minCuts, s, isPalin);
+    }
+};
