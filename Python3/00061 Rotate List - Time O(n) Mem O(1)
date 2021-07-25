@@ -1,0 +1,38 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def rotateRight(self, head: ListNode, k: int) -> ListNode:
+        # Exit if null list
+        if head == None:
+            return None
+        
+        # Get length of linked list
+        length :int = 0
+        curNode :ListNode = head
+        prevNode :ListNode = None
+        tail :ListNode = None
+        while curNode is not None:
+            length+=1
+            tail = curNode
+            curNode = curNode.next
+            
+        # Exit if k divides evenly
+        k %= length
+        if k == 0: 
+            return head
+        
+        # Find split point
+        numIter :int = length - k;
+        curNode = head
+        while numIter is not 0:
+            prevNode = curNode
+            curNode = curNode.next
+            numIter-=1
+            
+        # Break list + reattach list
+        prevNode.next = None
+        tail.next = head
+        return curNode
