@@ -1,0 +1,38 @@
+//Run Time: 4ms - 62.39%
+//Memory Usage: 7.5MB - 49.97%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(!head || !head->next) return head;
+        ListNode dummyHead;
+        ListNode* curNode = head, *prevTail = &dummyHead;
+        while(curNode) {
+            //Move forward two nodes
+            int i = 1;
+            ListNode* curHead = curNode;
+            for(i; i >= 0 && curNode; --i) {
+                curNode = curNode->next;
+            }
+            //Exit on incomplete pair (odd node count)
+            if(i != -1) break;
+            //Swap Node pair
+            curHead->next->next = curHead;
+            prevTail->next = curHead->next;
+            curHead->next = curNode;
+            prevTail = curHead;
+        }
+        return dummyHead.next;
+    }
+};
