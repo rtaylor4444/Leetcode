@@ -1,0 +1,34 @@
+//Run Time: 8ms - 35.05%
+//Memory Usage: 12.2MB - 34.48%
+//Unoptimal Solution - Time needs improvement
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        //n^2 
+        //decending order -> lowest possible perm
+        //no elements less than us
+        //no stack due to extra memory
+        //find the smallest number greater than us
+        //then sort remaining elements?
+        //[1,2,3,4,5] -> [1,2,3,5,4] -> [1,2,4,|5,3]
+        //^incorrect so sort remaining
+        //[1,2,4,5,3] -> [1,2,4,3,5]
+        int i = nums.size()-1, nextGreatestIndex = i;
+        for(i = nums.size()-1; i >= 0; --i) {
+            nextGreatestIndex = i;
+            int maxNum = INT_MAX;
+            for(int j = i+1; j < nums.size(); ++j) {
+                if(nums[j] <= nums[i]) continue;
+                if(nums[j] < maxNum) {
+                    nextGreatestIndex = j;
+                    maxNum = nums[j];
+                }
+            }
+            if(nums[i] < nums[nextGreatestIndex]) break;
+        }
+        if(i != -1) swap(nums[i], nums[nextGreatestIndex]);
+        //Return min array if no element was found
+        sort(nums.begin()+(i+1), nums.end());
+    }
+};
