@@ -1,0 +1,32 @@
+class Solution {
+    public void generateSolutions(HashSet<ArrayList<Integer>> combs, ArrayList<Integer> curComb,
+                             int[] candidates, int pos, int curTarget) {
+        if(curTarget == 0) {
+            combs.add(new ArrayList<>(curComb));
+            return;
+        }
+        if(curTarget < 0) return;
+        if(pos >= candidates.length) return;
+        for(int i = pos; i < candidates.length; ++i) {
+            //Process first number then skip duplicates
+            if(i>pos && candidates[i-1] == candidates[i]) continue;
+            curComb.add(candidates[i]);
+            generateSolutions(combs, curComb, candidates, i+1, curTarget - candidates[i]);
+            curComb.remove(curComb.size()-1);
+        }
+    }
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> solution = new ArrayList<>();
+        HashSet<ArrayList<Integer>> combs = new HashSet<>();
+        ArrayList<Integer> curComb = new ArrayList<>();
+        Arrays.sort(candidates);
+        generateSolutions(combs, curComb, candidates, 0, target);
+        
+        Iterator it = combs.iterator();
+        while(it.hasNext()) {
+            ArrayList<Integer> comb = (ArrayList<Integer>)it.next();
+            solution.add(comb);
+        }
+        return solution;
+    }
+}
