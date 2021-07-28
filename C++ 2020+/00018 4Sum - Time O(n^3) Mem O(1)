@@ -1,0 +1,41 @@
+//Run Time: 52ms - 72.31%
+//Memory Usage: 12.9MB - 94.51%
+//Solved =)
+//Time O(n^3) Memory O(1)
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        if(nums.size() < 4) return {};
+              
+        //[-2,-1,-1, 1, 1, 2, 2]
+        //     i  j  l        r
+        // 
+        vector<vector<int>> solution; 
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size()-3; ++i) {
+            //Skip duplicates - process the first non duplicate we see
+            if(i > 0 && nums[i] == nums[i-1]) continue;
+            //Check if a pair exists
+            for(int j = i+1; j < nums.size()-2; ++j) {
+                //Skip duplicates - process the first non duplicate
+                if(j > i+1 && nums[j] == nums[j-1]) continue;
+                int l = j+1;
+                int prevL = INT_MAX;
+                int r = nums.size()-1;
+                int prevR = INT_MAX;
+                long curSum1 = nums[i] + nums[j];
+                while(l<r) {
+                    long curSum2 = nums[l] + nums[r];
+                    long curSum = curSum1 + curSum2;
+                    if(curSum == target && prevR != nums[r] && prevL != nums[l]) {
+                        solution.push_back({nums[i], nums[j], nums[l], nums[r]});
+                    }
+                    //Store previous number and update pointers
+                    if(curSum < target) prevL = nums[l++];
+                    else prevR = nums[r--];
+                }
+            }
+        }
+        return solution;
+    }
+};
