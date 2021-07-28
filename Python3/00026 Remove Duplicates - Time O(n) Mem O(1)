@@ -1,0 +1,18 @@
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        #Fast-Slow Pointer
+        #[0,1,2,3,4,2,2,3,3,4]
+        #         s
+        #                   i
+        length: int = len(nums)
+        if length <= 1:
+            return length
+        
+        slow: int = 0
+        for i in range(length):
+            if nums[i] != nums[slow]:
+                slow+=1
+                nums[slow] = nums[i]
+                
+                
+        return slow+1
