@@ -1,0 +1,31 @@
+//Run Time: 8ms - 67.77%
+//Memory Usage: 10.6MB - 83.04%
+//Solved =)
+//Time O(2^n) Memory O(n)
+class Solution {
+public:
+    void generateSolutions(vector<vector<int>>& combs, vector<int>& curComb,
+                           vector<int>& candidates, int pos, int curTarget) {
+        if(curTarget == 0) {
+            combs.push_back(curComb);
+            return;
+        }
+        if(curTarget < 0) return;
+        if(pos >= candidates.size()) return;
+        for(int i = pos; i < candidates.size(); ++i) {
+            //Process first number then skip duplicates
+            if(i>pos && candidates[i-1] == candidates[i]) continue;
+            curComb.push_back(candidates[i]);
+            generateSolutions(combs, curComb, candidates, i+1, curTarget - candidates[i]);
+            curComb.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> solution;
+        vector<int> curComb;
+        curComb.reserve(candidates.size());
+        sort(candidates.begin(), candidates.end());
+        generateSolutions(solution, curComb, candidates, 0, target);
+        return solution;
+    }
+};
