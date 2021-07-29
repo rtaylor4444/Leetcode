@@ -1,0 +1,15 @@
+class Solution:
+    def mySqrt(self, x: int) -> int:
+        #Binary Search
+        if x < 2: return x
+        l, r = 2, x // 2 
+        while(l <= r):
+            m : int = l + ((r - l) // 2)
+            est_x = m * m
+            print(l, m, r)
+            if est_x == x: return m
+            #Go left if value is to big, right if too small
+            if est_x > x: r = m-1
+            else: l = m+1
+        # return the smaller of l and r        
+        return r
