@@ -1,0 +1,45 @@
+//Run Time: 16ms - 69.61%
+//Memory Usage: 17.2MB - 41.31%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        if(intervals.empty()) return {newInterval};
+        vector<vector<int>> solution;
+        //Merge new interval
+        int i;
+        for(i = 0; i < intervals.size(); ++i) {
+            //just insert if between bounds
+            int prevEnd = i-1 >= 0 ? intervals[i-1][1] : -1;
+            if(prevEnd < newInterval[0] && newInterval[1] < intervals[i][0]) {
+                solution.push_back(newInterval);
+                solution.push_back(intervals[i]);
+                break;
+            }
+            //check if overlap
+            else if(intervals[i][1] >= newInterval[0]) {
+                solution.push_back({min(intervals[i][0], newInterval[0]),
+                                   max(intervals[i][1], newInterval[1])});
+                break;
+            }
+            solution.push_back(intervals[i]);
+        }
+        //Account for unneeded next intervals (assuming overlap)
+        for(int j = i+1; j < intervals.size(); ++j) {
+            //skip if we are within edited interval bounds
+            if(intervals[j][0] >= solution[i][0] &&
+               intervals[j][1] <= solution[i][1])
+                continue;
+            
+            //merge if we overlap merged bounds
+            if(intervals[j][0] <= solution[i][1]) 
+                solution[i][1] = max(solution[i][1], intervals[j][1]);
+            else
+                solution.push_back(intervals[j]);
+        }
+        //check if interval was added
+        if(i == intervals.size()) solution.push_back(newInterval);
+        return solution;
+    }
+};
