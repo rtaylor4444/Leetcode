@@ -1,0 +1,32 @@
+//Run Time: 16ms - 91.26%
+//Memory Usage: 6.4MB - 82.97%
+//Solved =)
+//Time O(?) Memory O(?)
+class Solution {
+public:
+    void generateCombs(vector<vector<int>>& solution, vector<int>& curComb, 
+                       vector<int>& nums, int startPos, int steps, int k) {
+        if(steps >= k) {
+            solution.push_back(curComb);
+            return;
+        }
+        
+        for(int i = startPos; i < nums.size(); ++i) {
+            curComb.push_back(nums[i]);
+            generateCombs(solution, curComb, nums, i+1, steps+1, k);
+            curComb.pop_back();
+        }
+        
+    }
+    vector<vector<int>> combine(int n, int k) {
+        //permutations?
+        //k = 3
+        //[1,2,3,4]
+        vector<vector<int>> solution;
+        vector<int> nums, curComb;
+        for(int i = 1; i <= n; ++i)
+            nums.push_back(i);
+        generateCombs(solution, curComb, nums, 0, 0, k);
+        return solution;
+    }
+};
