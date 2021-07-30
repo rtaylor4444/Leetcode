@@ -1,0 +1,43 @@
+//Run Time: 4ms - 87.75%
+//Memory Usage: 11MB - 36.03%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void updateConsec(vector<int>& nums, int j, int& curNum, int& numConsec) {
+        //Reset our number and consec count when we hit a mismatch
+        if(nums[j] == curNum) 
+            ++numConsec;
+        else {
+            curNum = nums[j];
+            numConsec = 1;
+        }
+    }
+    int removeDuplicates(vector<int>& nums) {
+        /* fails
+        [1,1,1]
+        [1,1,1,2]
+        */
+        //[1,1,1]
+        //     s
+        //     i
+        //numConsec: 3
+        //consecNum: 1
+        //start at 1
+        //*stop iterating s once we hit numConsec of 3
+        //only replace s with i if they dont match and numconsec of over 2
+        //*check prev for true numConsec if its 0
+        int numConsec = 0, curNum = nums[0];
+        int j = 0;
+        for(int i = 1; i < nums.size(); ++i) {
+            updateConsec(nums, j, curNum, numConsec);
+            //increment j until we hit 3rd duplicate
+            if(numConsec < 3) ++j;
+            //copy over i
+            nums[j] = nums[i];
+        }
+        //edge case: Confirm we are not at a duplicate at the end of the array
+        updateConsec(nums, j, curNum, numConsec);
+        return numConsec < 3 ? j+1 : j;
+    }
+};
