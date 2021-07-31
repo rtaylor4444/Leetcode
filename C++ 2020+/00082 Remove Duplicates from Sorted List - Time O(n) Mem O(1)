@@ -1,0 +1,38 @@
+//Run Time: 4ms - 94.22%
+//Memory Usage: 11.2MB - 18.18%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode dummyHead, *curNode = head, *newListPos = &dummyHead;
+        int curNum = INT_MAX;
+        while(curNode) {
+            ListNode *nextNode = curNode->next;
+            //set current duplicate number
+            if(nextNode && curNode->val == nextNode->val)
+                curNum = curNode->val;
+            
+            //if we match duplicate number delete us
+            if(curNode->val == curNum) delete curNode;
+            else {
+                newListPos->next = curNode;
+                curNode->next = nullptr;
+                newListPos = newListPos->next;
+            }
+            
+            curNode = nextNode;
+        }
+        return dummyHead.next;
+    }
+};
