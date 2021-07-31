@@ -1,0 +1,36 @@
+//Run Time: 8ms - 47.65%
+//Memory Usage: 10.1MB - 94.01%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        if(head == nullptr) return head;
+        ListNode greater, lesser;
+        ListNode *gp = &greater, *lp = &lesser, *curNode = head;
+        while(curNode) {
+            ListNode* next = curNode->next;
+            if(curNode->val < x) {
+                lp->next = curNode;
+                lp = lp->next;
+            } else {
+                gp->next = curNode;
+                gp = gp->next;
+            }
+            curNode->next = nullptr;
+            curNode = next;
+        }
+        lp->next = greater.next;
+        return lesser.next;
+    }
+};
