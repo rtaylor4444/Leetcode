@@ -1,0 +1,39 @@
+//Run Time: 4ms - 91.46%
+//Memory Usage: 13.9MB - 90.26%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            if(nums[m] == target) return true;
+            //left half is correctly sorted
+            if(nums[l] < nums[m]) {
+                //check if our target is in this half
+                if(target < nums[m] && target >= nums[l]) r = m-1;
+                else l = m+1;
+            }
+            //right half is correctly sorted
+            else if(nums[r] > nums[m]) {
+                //check if our target is in ths half
+                if(target > nums[m] && target <= nums[r]) l = m+1;
+                else r = m-1;
+            }
+            //various duplicate edge cases
+            else {
+                //the remaining array contains all duplicates
+                if(nums[r] == nums[m] && nums[l] == nums[m]) {
+                    --r;
+                    ++l;
+                }
+                //right contain all duplicates
+                else if(nums[r] == nums[m]) r = m-1;
+                //left contain all duplicates
+                else if(nums[l] == nums[m]) l = m+1;
+            }
+        }
+        return false;
+    }
+};
