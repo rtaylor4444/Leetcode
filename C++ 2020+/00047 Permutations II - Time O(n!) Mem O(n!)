@@ -1,0 +1,36 @@
+//Run Time: 4ms - 94.56%
+//Memory Usage: 39.1MB - 81.04%
+//Solved =)
+//Time O(n! * n) Memory O(n!)
+class Solution {
+public:
+    void generatePerms(vector<vector<int>>& solution, vector<int>& count, 
+                       vector<int>& curPerm, int size) {
+        //exit condition
+        if(curPerm.size() >= size) {
+            solution.push_back(curPerm);
+            return;
+        }
+        for(int i = 0; i < count.size(); ++i) {
+            if(!count[i]) continue;
+            --count[i];
+            curPerm.push_back(i-10);
+            generatePerms(solution, count, curPerm, size);
+            curPerm.pop_back();
+            ++count[i];
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        /*Failed tests
+        [2,2,1,1]
+        [-1,2,0,-1,1,0,1]
+        */
+        vector<vector<int>> solution;
+        vector<int> curPerm, count(21, 0);
+        for(int i = 0; i < nums.size(); ++i)
+            count[nums[i]+10]++;
+        
+        generatePerms(solution, count, curPerm, nums.size());
+        return solution;
+    }
+};
