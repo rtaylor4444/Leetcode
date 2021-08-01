@@ -1,0 +1,25 @@
+//Run Time: 12ms - 26.36%
+//Memory Usage: 11.2MB - 91.08%
+//Solved =)
+//Time O(2^n) Memory O(2^n)
+
+class Solution {
+public:
+    void generateCode(vector<int>& solution, vector<bool>& takenNums, int curNum, int n) {
+        solution.push_back(curNum);
+        for(int i = 0; i < n; ++i) {
+            int nextNum = curNum | (1 << i);
+            if(takenNums[nextNum]) continue;
+            takenNums[nextNum] = true;
+            generateCode(solution, takenNums, nextNum, n);
+        }
+    }
+    vector<int> grayCode(int n) {
+        //Backtracking
+        vector<int> solution;
+        solution.reserve(1 << n);
+        vector<bool>takenNums(1 << n, false);
+        generateCode(solution, takenNums, 0, n);
+        return solution;
+    }
+};
