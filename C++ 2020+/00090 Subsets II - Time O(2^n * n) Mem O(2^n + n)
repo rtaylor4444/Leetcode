@@ -1,0 +1,30 @@
+//Run Time: 4ms - 76.77%
+//Memory Usage: 7.5MB - 71.61%
+//Solved =)
+//Time O(n!) Memory O(n!)
+class Solution {
+public:
+    void generateSubsets(vector<vector<int>>& solution, vector<int>& curSubset, 
+                         vector<int>& count, int curPos) {
+        solution.push_back(curSubset);
+        for(int i = curPos; i < count.size(); ++i) {
+            if(!count[i]) continue;
+            curSubset.push_back(i-10);
+            --count[i];
+            generateSubsets(solution, curSubset, count, i);
+            ++count[i];
+            curSubset.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        //use a count to store exact numbers
+        //use recursion with a 'set'
+        vector<vector<int>> solution;
+        vector<int> curSubset, count(21, 0);
+        for(int i = 0; i < nums.size(); ++i)
+            ++count[nums[i]+10];
+        
+        generateSubsets(solution, curSubset, count, 0);
+        return solution;
+    }
+};
