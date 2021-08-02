@@ -1,0 +1,73 @@
+//Run Time: 8ms - 99.64%
+//Memory Usage: 13.9MB - 84.91%
+//Solved =)
+//Time O(n*2^n) Memory O(n*2^n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteTree(TreeNode* node) {
+        if(node == nullptr) return;
+        deleteTree(node->left);
+        deleteTree(node->right);
+        delete node;
+    }
+    TreeNode* cloneTree(TreeNode* node) {
+        if(node == nullptr) return nullptr;
+        TreeNode* newNode = new TreeNode();
+        newNode->left = cloneTree(node->left);
+        newNode->right = cloneTree(node->right);
+        return newNode;
+    }
+    void makeBSTValues(TreeNode* node, int& val) {
+        if(node == nullptr) return;
+        makeBSTValues(node->left, val);
+        node->val = ++val;
+        makeBSTValues(node->right, val);
+    }
+    vector<TreeNode*> generateTrees(int n) {
+        vector<vector<TreeNode*>> dp(n+1, vector<TreeNode*>());
+        //dp[number of nodes] = all possible trees
+        dp[0].push_back(nullptr);
+        dp[1].push_back(new TreeNode());
+        //Loop through all sizes up to n
+        for(int i = 2; i <= n; ++i) {
+            //construct all possible trees
+            for(int j = 0; j < i; ++j) {
+                //get all possible left and right nodes
+                vector<TreeNode*>& leftNodes = dp[j];
+                vector<TreeNode*>& rightNodes = dp[(i-1)-j];
+                //construct all combinations of the above
+                for(int l = 0; l < leftNodes.size(); ++l) {
+                    for(int r = 0; r < rightNodes.size(); ++r) {
+                        TreeNode* root = new TreeNode();
+                        root->left = cloneTree(leftNodes[l]);
+                        root->right = cloneTree(rightNodes[r]);
+                        dp[i].push_back(root);
+                    }
+                }
+            }
+        }
+        //Delete the trees we made since we have no use for them
+        for(int i = 1; i < n; ++i) {
+            for(int j = 0; j < dp[i].size(); ++j)
+                deleteTree(dp[i][j]);
+            dp[i].clear();
+        }
+        //Turn our trees into bsts by setting values
+        for(int i = 0; i < dp[n].size(); ++i) {
+            int val = 0;
+            makeBSTValues(dp[n][i], val);
+        }
+        return dp[n];
+    }
+};
