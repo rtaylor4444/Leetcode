@@ -1,0 +1,40 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.4MB - 58.52%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if(left == right) return head;
+        ListNode *curNode = head, dummyHead, *finalRevNode = nullptr;
+        ListNode *prevNode = nullptr, *nextNode = nullptr;
+        int nodeNum = 1;
+        while(nodeNum <= right) {
+            nextNode = curNode->next;
+            //keep track of prev node (before reversed list)
+            if(nodeNum < left) prevNode = curNode;
+            //otherwise reverse these nodes
+            else if(nodeNum >= left && nodeNum <= right) {
+                curNode->next = dummyHead.next;
+                if(!dummyHead.next) finalRevNode = curNode;
+                dummyHead.next = curNode;
+            }
+            curNode = nextNode;
+            ++nodeNum;
+        }
+        //Attach list together
+        if(prevNode) prevNode->next = dummyHead.next;
+        finalRevNode->next = curNode;
+        return prevNode ? head : dummyHead.next;
+    }
+};
