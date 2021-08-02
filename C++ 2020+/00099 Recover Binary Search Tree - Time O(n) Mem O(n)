@@ -1,0 +1,50 @@
+//Run Time: 36ms - 36.44%
+//Memory Usage: 59.6MB - 6.07%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        /* fails
+        [3,null,2,null,1]
+        [2,3,1]
+        */
+        //Inorder iterative 
+        vector<TreeNode*> nodesToSwap(2, nullptr);
+        TreeNode *curNode = root, *prevNode = nullptr;
+        stack<TreeNode*> inOrder;
+        while(curNode || !inOrder.empty()) {
+            //Populate stack
+            while(curNode) {
+                inOrder.push(curNode);
+                curNode = curNode->left;
+            }
+            //Process node
+            curNode = inOrder.top();
+            inOrder.pop();
+            //swap if values break the bst property
+            if(prevNode && curNode->val < prevNode->val) {
+                nodesToSwap[0] = curNode;
+                //keep track of the first node to be swapped
+                if(!nodesToSwap[1]) nodesToSwap[1] = prevNode;
+            }
+            prevNode = curNode;
+            
+            //process next node
+            curNode = curNode->right;
+        }
+        swap(nodesToSwap[0]->val, nodesToSwap[1]->val);
+    }
+};
