@@ -1,0 +1,29 @@
+//Run Time: 12ms - 33.70%
+//Memory Usage: 5.9MB - 84.93%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        //Count the bits in the numbers
+        //if the same bit appearance count is not a multiple
+        //of 3 turn on that bit in the result
+        //Ex: [1, 1, 1, 3]
+        //01
+        //01
+        //01
+        //11
+        //check each bit
+        int missingNum = 0;
+        for(int i = 0; i < 32; ++i) {
+            int bitCount = 0;
+            for(int j = 0; j < nums.size(); ++j) {
+                if(nums[j] & (1 << i)) ++bitCount;
+            }
+            
+            //Turn on this bit if it isnt a mutliple of 3
+            if(bitCount % 3) missingNum |= (1 << i);
+        }
+        return missingNum;
+    }
+};
