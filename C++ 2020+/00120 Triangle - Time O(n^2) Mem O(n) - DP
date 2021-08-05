@@ -1,0 +1,27 @@
+//Run Time: 4ms - 90.85%
+//Memory Usage: 8.4MB - 77.36%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        vector<vector<int>> dp(2, vector<int>(triangle.size(), INT_MAX));
+        //Set first row
+        dp[0][0] = triangle[0][0];
+        //cout << dp[0][0] << endl;
+        //Fill rest of the triangle
+        for(int i = 1; i < triangle.size(); ++i) {
+            for(int j = 0; j < triangle[i].size(); ++j) {
+                int topLeft = (j-1) >= 0 ? dp[(i-1)%2][j-1] : INT_MAX;
+                dp[i%2][j] = min(dp[(i-1)%2][j], topLeft) + triangle[i][j];
+                //cout << dp[i%2][j] << " ";
+            }
+            //cout << endl;
+        }
+        int minNum = INT_MAX;
+        for(int i = 0; i < dp[0].size(); ++i)
+            minNum = min(minNum, dp[(triangle.size()-1)%2][i]);
+        
+        return minNum;
+    }
+};
