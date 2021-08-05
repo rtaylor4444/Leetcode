@@ -1,0 +1,55 @@
+//Run Time: 36ms - 82.21%
+//Memory Usage: 17.8MB - 49.68%
+//Solved =)
+//Time O(logn) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        //Reverse half of the linked-list
+        //Then merge them
+        
+        //Find mid point
+        ListNode *fast = head, *slow = head, *prev = nullptr; 
+        while(fast) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next;
+            if(fast) fast = fast->next;
+        }
+        //break list in half
+        prev->next = nullptr;
+        //Reverse the 2nd half of linked list
+        ListNode dummyHead, *curNode = slow;
+        while(curNode) {
+            ListNode* next = curNode->next;
+            curNode->next = dummyHead.next;
+            dummyHead.next = curNode;
+            curNode = next;
+        }
+        //Merge linkedLists
+        //1 2
+        //3 4
+        //1 -> 3 -> 2
+        ListNode* curNode2 = dummyHead.next;
+        curNode = head;
+        while(curNode && curNode2) {
+            ListNode* next1 = curNode->next;
+            ListNode* next2 = curNode2->next;
+            curNode->next = curNode2;
+            curNode2->next = next1;
+            //iterate pointers
+            curNode = next1;
+            curNode2 = next2;
+        }
+    }
+};
