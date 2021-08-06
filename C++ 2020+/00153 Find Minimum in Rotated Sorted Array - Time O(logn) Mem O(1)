@@ -1,0 +1,35 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 68.94%
+//Solved =)
+//Time O(logn) Memory O(1)
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        /* fails
+        [5,1,2,3,4]
+        */
+        if(nums.size() == 1) return nums[0];
+        int l = 0, r = nums.size() - 1;
+        //Exit if array is already sorted
+        if(nums[l] < nums[r]) return nums[0];
+        int smallest = nums[0];
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            //Exit when rotation point is found
+            if(nums[m+1] < nums[m]) {
+                smallest = nums[m+1];
+                break;
+            }
+            else if(nums[m-1] > nums[m]) {
+                smallest = nums[m];
+                break;
+            }
+            
+            //Check if left isnt sorted
+            if(nums[l] > nums[m]) r = m-1;
+            //Check if right isnt sorted
+            else if(nums[m] > nums[r]) l = m+1;
+        }
+        return smallest;
+    }
+};
