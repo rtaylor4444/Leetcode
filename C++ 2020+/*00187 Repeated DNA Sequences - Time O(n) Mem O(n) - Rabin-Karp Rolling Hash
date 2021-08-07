@@ -1,0 +1,40 @@
+//Run Time: 40ms - 96.40%
+//Memory Usage: 5.9MB - 98.39%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        //Rabin-Karp Rolling Hash
+        int strSize = 10;
+        if(s.size() < strSize) return {};
+        
+        //Rolling Hash params
+        int base = 4, baseEnd = pow(base, strSize);
+        
+        //compute initial hashcode
+        int hashCode = 0;
+        unordered_map<char, int> charToInt = { {'A', 0}, {'C', 1}, {'G', 2}, {'T', 3} };
+        for(int i = 0; i < strSize; ++i) hashCode = (hashCode * base) + charToInt[s[i]];
+        
+        unordered_set<int> seenHashCodes = { hashCode };
+        unordered_set<string> seenStrings;
+        vector<string> solution;
+        for(int i = 1; i < s.size() - strSize + 1; ++i) {
+            //update the hashCode
+            hashCode = hashCode * base - charToInt[s[i-1]] * baseEnd + charToInt[s[i+strSize-1]]; 
+            if(seenHashCodes.find(hashCode) != seenHashCodes.end()) {
+                //add unique strings as an answer
+                string ans = s.substr(i, strSize);
+                if(seenStrings.find(ans) == seenStrings.end()) {
+                    seenStrings.emplace(ans);
+                    solution.push_back(ans);
+                }
+            }
+            seenHashCodes.emplace(hashCode);
+        }
+        
+        return solution;
+    }
+};
