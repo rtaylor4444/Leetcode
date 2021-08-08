@@ -1,6 +1,6 @@
 //Run Time: 0ms - 100.00%
 //Memory Usage: 5.9MB - 40.87%
-//Solved =)
+//*Upsolved
 //Time O(logn) Memory O(1)
 class Solution {
 public:
