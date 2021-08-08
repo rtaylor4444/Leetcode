@@ -1,0 +1,43 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.3MB - 35.70%
+//*Upsolved
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        if (denominator == 1) return to_string(numerator);
+        if (numerator == 0) return "0";
+        string ans;
+        //Check for negatives - either one negative but not both
+        if(numerator < 0 ^ denominator < 0) {
+            ans += "-";
+        }
+        
+        //Convert to long to avoid overflow
+        long num = abs(numerator);
+        long denom = abs(denominator);
+        long div = num / denom;
+        ans += to_string(div);
+        num -= div * denom;
+        
+        //Exit no remainder to process
+        if(!num) return ans;
+        ans += ".";
+        unordered_map<long, int> numToPos;
+        while(num) {
+            //Exit on repeated remainder
+            if(numToPos.find(num) != numToPos.end()) {
+                ans.insert(ans.begin() + numToPos[num], '(');
+                ans.push_back(')');
+                break;
+            }
+            numToPos[num] = ans.size();
+            
+            num *= 10;
+            div = num / denom;
+            ans += to_string(div);
+            num -= div * denom;
+        }
+        return ans;
+    }
+};
