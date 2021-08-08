@@ -1,0 +1,81 @@
+//Run Time: 92ms - 53.03%
+//Memory Usage: 46.4MB - 38.91%
+//Solved =)
+//d = number of dots
+//Time O(n*26^d) Memory O(n)
+struct TrieNode {
+    vector<TrieNode*> children;
+    bool isWord;
+    TrieNode() {
+        children = vector<TrieNode*>(26, nullptr);
+        isWord = false;
+    }
+    ~TrieNode() {
+        for(int i = 0; i < 26; ++i)
+            if(children[i]) delete children[i];
+    }
+};
+
+class Trie {
+    TrieNode *root;
+    
+    bool dfs(string& word, TrieNode* cur, int pos) {
+        if(pos >= word.size()) return cur->isWord;
+        
+        if(word[pos] == '.') {
+            //search all possible characters
+            for(int i = 0; i < 26; ++i) {
+                if(!cur->children[i]) continue;
+                if(dfs(word, cur->children[i], pos+1)) return true;
+            }
+            return false;
+        }
+        
+        if(!cur->children[word[pos] - 'a']) return false;
+        return dfs(word, cur->children[word[pos] - 'a'], pos+1);
+    }
+public:  
+    Trie() {
+        root = new TrieNode();
+    }
+    ~Trie() {
+        delete root;
+    }
+    void addWord(string& word) {
+        TrieNode* curNode = root;
+        for(int i = 0; i < word.size(); ++i) {
+            if(!curNode->children[word[i] - 'a'])
+                curNode->children[word[i] - 'a'] = new TrieNode();
+            
+            curNode = curNode->children[word[i] - 'a'];
+        }
+        curNode->isWord = true;
+    }
+    bool search(string& word) {
+        return dfs(word, root, 0);
+    }
+};
+
+class WordDictionary {
+    Trie trie;
+public:
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        
+    }
+    
+    void addWord(string word) {
+        trie.addWord(word);
+    }
+    
+    bool search(string word) {
+        return trie.search(word);
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
