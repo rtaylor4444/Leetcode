@@ -1,0 +1,25 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 78.75%
+//*Upsolved
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int calcRob(vector<int>& nums, int start, int end) {
+        if(end-start == 1) return nums[start];
+        vector<int> dp(4, 0);
+        dp[start%4] = nums[start];
+        for(int i = start+1; i < end; ++i) {
+            dp[i%4] = nums[i];
+            int adj1 = i-2 >= 0 ? dp[(i-2)%4] : 0;
+            int adj2 = i-3 >= 0 ? dp[(i-3)%4] : 0;
+            dp[i%4] += max(adj1, adj2);
+        }
+        return max(dp[(end-2)%4], dp[(end-1)%4]);
+    }
+    int rob(vector<int>& nums) {
+        if(nums.size() == 1) return nums[0];
+        int max1 = calcRob(nums, 1, nums.size());
+        int max2 = calcRob(nums, 0, nums.size()-1);
+        return max(max1, max2);
+    }
+};
