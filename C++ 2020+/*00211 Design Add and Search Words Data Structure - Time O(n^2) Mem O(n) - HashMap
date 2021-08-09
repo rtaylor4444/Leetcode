@@ -1,0 +1,40 @@
+//Run Time: 52ms - 99.41%
+//Memory Usage: 5.9MB - 98.82%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class WordDictionary {
+    vector<vector<string>> lenToWords;
+public:
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        lenToWords = vector<vector<string>>(500, vector<string>());
+    }
+    
+    void addWord(string word) {
+        lenToWords[word.size()-1].push_back(word);
+    }
+    
+    bool search(string word) {
+        vector<string>& wordList = lenToWords[word.size()-1];
+        for(int i = 0; i < wordList.size(); ++i) {
+            bool isMatch = true;
+            for(int j = 0; j < wordList[i].size(); ++j) {
+                if(word[j] == '.') continue;
+                //exit on mismatch
+                if(word[j] != wordList[i][j]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if(isMatch) return true;
+        }
+        return false;
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
