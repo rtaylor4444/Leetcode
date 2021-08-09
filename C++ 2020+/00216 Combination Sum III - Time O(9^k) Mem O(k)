@@ -1,0 +1,33 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.4MB - 61.68%
+//Solved =)
+//Time O(9^k) Memory O(k)
+class Solution {
+    int target;
+    vector<vector<int>> solution;
+    vector<int> curComb;
+public:
+    void generateCombs(vector<bool>& usedNums, int curStep, int curSum, int numPos) {
+        //Exit Condition
+        if(curStep-- == 0) {
+            if(curSum == target) solution.push_back(curComb);
+            return;
+        }
+        
+        for(int i = numPos; i < usedNums.size(); ++i) {
+            if(usedNums[i]) continue;
+            usedNums[i] = true;
+            curComb.push_back(i+1);
+            generateCombs(usedNums, curStep, curSum+(i+1), i+1);
+            curComb.pop_back();
+            usedNums[i] = false;
+        }
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        solution.clear();
+        target = n;
+        vector<bool> usedNums(9, false);
+        generateCombs(usedNums, k, 0, 0);
+        return solution;
+    }
+};
