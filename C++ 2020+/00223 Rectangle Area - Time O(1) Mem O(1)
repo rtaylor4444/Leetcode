@@ -1,0 +1,21 @@
+//Run Time: 12ms - 20.57%
+//Memory Usage: 5.9MB - 72.96%
+//*Upsolved
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    int calcRectArea(int x1, int y1, int x2, int y2) {
+        int length = x2 - x1;
+        int height = y2 - y1;
+        return length * height;
+    }
+    int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
+        int totalArea = calcRectArea(ax1, ay1, ax2, ay2) + calcRectArea(bx1, by1, bx2, by2);
+        //check for intersect
+        //left/right
+        if(ax1 >= bx2 or bx1 >= ax2) return totalArea;
+        //top/bottom
+        if(by1 >= ay2 or by2 <= ay1) return totalArea;
+        return totalArea - calcRectArea(max(ax1, bx1), max(ay1, by1), min(ax2, bx2), min(ay2, by2));
+    }
+};
