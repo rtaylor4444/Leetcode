@@ -1,0 +1,18 @@
+//Run Time: 4ms - 53.11%
+//Memory Usage: 8.6MB - 76.77%
+//*Upsolved
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        //n log n
+        sort(citations.begin(), citations.end());
+        int h_index = 0;
+        //Linear scan in descending order
+        for(int i = citations.size()-1; i >= 0; --i) {
+            if(citations[i] <= h_index) break;
+            ++h_index;
+        }
+        return h_index;
+    }
+};
