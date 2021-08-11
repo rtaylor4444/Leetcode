@@ -1,0 +1,18 @@
+//Run Time: 12ms - 38.44%
+//Memory Usage: 5.8MB - 73.56%
+//*Upsolved 
+//Time O(1) Memory O(1)
+class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        //Get the common prefix by right shifting until
+        //the numbers are equal keeping track of shifts to return the value
+        int numShifts = 0;
+        while(left < right) {
+            left >>= 1;
+            right >>= 1;
+            ++numShifts;
+        }
+        return left << numShifts;
+    }
+};
