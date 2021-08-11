@@ -1,0 +1,23 @@
+//Run Time: 8ms - 94.75%
+//Memory Usage: 15.9MB - 46.05%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        unordered_map<int, int> numToCount;
+        for(int i = 0; i < nums.size(); ++i) {
+           if(numToCount.find(nums[i]) == numToCount.end())
+               numToCount.emplace(nums[i], 0);
+
+           numToCount[nums[i]]++; 
+        }       
+        vector<int> solution;
+        int target = (nums.size() / 3) + 1;
+        for(auto it = numToCount.begin(); it != numToCount.end(); ++it) {
+            if(it->second >= target) solution.push_back(it->first);
+        }
+        return solution;
+    }
+};
