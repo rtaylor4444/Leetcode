@@ -1,0 +1,29 @@
+//Run Time: 48ms - 36.29%
+//Memory Usage: 18.7MB - 26.97%
+//Solved =)
+//Time O(nlogk) Memory O(k)
+
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        //Balanced BST
+        set<long> bst;
+        for(int i = 0; i < nums.size(); ++i) {
+            //See if we can find any number that gets us lower than t
+            //smallest value in the tree greater or equal to lower
+            long lower = (long)nums[i] - t;
+            auto it = bst.lower_bound(lower);
+            if(it != bst.end() && abs(*it - nums[i]) <= t) return true;
+            
+            //largest value in the tree smaller or equal to upper
+            //long upper = (long)nums[i] + t;
+            //it = bst.upper_bound(upper);
+            //if(it != bst.end() && abs(*it - nums[i]) <= t) return true;
+            
+            //Maintain balanced bst 
+            bst.insert(nums[i]);
+            if(i - k >= 0) bst.erase(nums[i-k]);
+        }
+        return false;
+    }
+};
