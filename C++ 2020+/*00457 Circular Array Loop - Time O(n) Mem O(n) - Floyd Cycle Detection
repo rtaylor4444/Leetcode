@@ -1,0 +1,48 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 71.28%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int next(vector<int>& nums, int pos) {
+        int newPos = (pos + nums[pos]) % (int)nums.size();
+        return newPos >= 0 ? newPos : newPos + (int)nums.size();
+    }
+    bool verifyPosition(vector<int>& nums, int cur, int next) {
+        //check self loops
+        if(cur == next) return false;
+        //Check sign mismatch
+        if((nums[cur] > 0 && nums[next] < 0) ||
+           (nums[cur] < 0 && nums[next] > 0)) 
+            return false;
+        return true;
+    }
+    bool circularArrayLoop(vector<int>& nums) {
+        vector<bool> visited(nums.size(), false);
+        for(int i = 0; i < nums.size(); ++i) {
+            if(visited[i]) continue;
+            int slowPos = i, fastPos = i;
+            visited[i] = true;
+            bool isValidChain = true;
+            do {
+                slowPos = next(nums, slowPos);
+                
+                int nextFastPos = next(nums, fastPos);
+                if(!verifyPosition(nums, fastPos, nextFastPos))
+                    isValidChain = false;
+                else visited[nextFastPos] = true;
+                
+                fastPos = nextFastPos;
+                nextFastPos = next(nums, fastPos);
+                visited[nextFastPos] = true;
+                if(!verifyPosition(nums, fastPos, nextFastPos))
+                    isValidChain = false;
+                else visited[nextFastPos] = true;
+                
+                fastPos = nextFastPos;
+            } while(slowPos != fastPos && isValidChain);
+            if(isValidChain) return true;
+        }
+        return false;
+    }
+};
