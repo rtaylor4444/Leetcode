@@ -1,0 +1,28 @@
+//Run Time: 60ms - 65.21%
+//Memory Usage: 15MB - 84.72%
+//Solved =)
+//s = size of longest word
+//Time O(n*s) Memory O(s)
+class Solution {
+public:
+    bool isSubsequence(string& wordInDict, string& curWord) {
+        int j = 0;
+        for(int i = 0; i < curWord.size(); ++i) {
+            if(curWord[i] == wordInDict[j]) ++j;
+        }
+        return j == wordInDict.size();
+    }
+    string findLongestWord(string s, vector<string>& dictionary) {
+        string longest;
+        for(int i = 0; i < dictionary.size(); ++i) {
+            if(dictionary[i].size() < longest.size()) continue;
+            //set longest if this word can be made
+            if(isSubsequence(dictionary[i], s)) {
+                if(dictionary[i].size() > longest.size()) longest = dictionary[i];
+                else if(dictionary[i].size() == longest.size() && longest.compare(dictionary[i]) > 0)
+                    longest = dictionary[i];
+            }
+        }
+        return longest;
+    }
+};
