@@ -1,0 +1,36 @@
+//Run Time: 36ms - 80.88%
+//Memory Usage: 31.1MB - 72.29%
+//Solved =)
+//Time O(logn+k) Memory O(k)
+class Solution {
+public:
+    vector<int> findClosestElements(vector<int>& arr, int k, int x) {
+        //Binary Search
+        //find the element that is closest to the target
+        //expand outward to find k elements
+        
+        //find closest element
+        int closestIdx = 0, l = 0, r = arr.size()-1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            int curDist = abs(x - arr[m]);
+            if(curDist < abs(x - arr[closestIdx]))
+                closestIdx = m;
+            
+            //Move left or right depending on which one is closer to x
+            if(abs(x - arr[l]) <= abs(x - arr[r])) r = m-1;
+            else l = m+1;
+        }
+        l = r = closestIdx;
+        while(r - l < k - 1 and r - l < arr.size() - 1) {
+            int left = l-1 >= 0 ? abs(x - arr[l-1]) : INT_MAX;
+            int right = r+1 < arr.size() ? abs(x - arr[r+1]) : INT_MAX;
+            if(left <= right) --l;
+            else ++r;
+        }
+        vector<int> ans;
+        ans.reserve(r+1-l);
+        for(int i = l; i <= r; ++i) ans.push_back(arr[i]);
+        return ans;
+    }
+};
