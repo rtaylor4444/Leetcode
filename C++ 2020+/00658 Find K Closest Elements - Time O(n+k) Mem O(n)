@@ -1,0 +1,33 @@
+//Run Time: 40ms - 64.97%
+//Memory Usage: 31.1MB - 86.65%
+//Solved =)
+//Time O(n+k) Memory O(k)
+class Solution {
+public:
+    vector<int> findClosestElements(vector<int>& arr, int k, int x) {
+        //Heap - N log k + k log k
+        //maintain a heap of size k based on abs value
+        //the sort it by value to sort by asc order
+        //Two Pass N + N
+        //find the element that is closest to the target
+        //expand outward to find k elements
+        
+        //find closest element
+        int closestIdx = 0;
+        for(int i = 0; i < arr.size(); ++i) {
+            if(abs(x - arr[i]) < abs(x - arr[closestIdx]))
+                closestIdx = i;
+        }
+        int l = closestIdx, r = closestIdx;
+        while(r - l < k - 1 and r - l < arr.size() - 1) {
+            int left = l-1 >= 0 ? abs(x - arr[l-1]) : INT_MAX;
+            int right = r+1 < arr.size() ? abs(x - arr[r+1]) : INT_MAX;
+            if(left <= right) --l;
+            else ++r;
+        }
+        vector<int> ans;
+        ans.reserve(r+1-l);
+        for(int i = l; i <= r; ++i) ans.push_back(arr[i]);
+        return ans;
+    }
+};
