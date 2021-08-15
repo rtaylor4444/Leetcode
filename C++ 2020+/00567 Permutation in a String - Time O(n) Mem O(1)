@@ -1,0 +1,38 @@
+//Run Time: 8ms - 80.99%
+//Memory Usage: 7.2MB - 77.27%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        //Counting Sort
+        //since letters can be in any order
+        array<int,26> count{0}, maxCount{0};
+        for(int i = 0; i < s1.size(); ++i) {
+            maxCount[s1[i] - 'a'] = ++count[s1[i] - 'a'];
+        }
+        //Iterate until we find a match
+        //Sliding Window
+        int numMatched = 0;
+        for(int i = 0; i < s2.size(); ++i) {
+            //remove from end of the window
+            if(i - (int)s1.size() >= 0) {
+                int prevIndex = s2[i - (int)s1.size()] - 'a';
+                if(maxCount[prevIndex]) {
+                    if(++count[prevIndex] <= maxCount[prevIndex] and count[prevIndex] > 0) {
+                        --numMatched;
+                    }
+                }
+            }
+            //add to matching characters
+            int index = s2[i] - 'a';
+            if(maxCount[index]) {
+                if(--count[index] >= 0 and count[index] < maxCount[index]) {
+                    ++numMatched;
+                }
+            }
+            if(numMatched == s1.size()) return true;
+        }
+        return false;
+    }
+};
