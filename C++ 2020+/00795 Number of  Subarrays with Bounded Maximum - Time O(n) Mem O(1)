@@ -1,0 +1,27 @@
+//Run Time: 60ms - 15.51%
+//Memory Usage: 52.3MB - 9.59%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int numSubarrayBoundedMax(vector<int>& nums, int left, int right) {
+        array<int, 2> dp;
+        //base case: number must be inside bounds to count as subarray
+        dp[0] = nums[0] >= left and nums[0] <= right ? 1 : 0;
+        int numSubarrays = dp[0], startPos = nums[0] > right ? 0 : -1;
+        for(int i = 1; i < nums.size(); ++i) {
+            //outside of upper bound no subarray can include this
+            //mark start pos to ensure no subarrays include this
+            if(nums[i] > right) {
+                dp[i%2] = 0;
+                startPos = i;
+            }
+            //outside of lower bound subarray can include; but no new ones added
+            else if(nums[i] < left) dp[i%2] = dp[(i-1)%2];
+            //all subarrays that include this one are valid
+            else dp[i%2] = i - startPos;
+            numSubarrays += dp[i%2];
+        }
+        return numSubarrays;
+    }
+};
