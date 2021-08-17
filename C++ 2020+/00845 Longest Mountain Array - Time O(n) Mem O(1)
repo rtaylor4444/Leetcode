@@ -1,0 +1,32 @@
+//Run Time: 20ms - 57.07%
+//Memory Usage: 5.9MB - 83.59%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int longestMountain(vector<int>& arr) {
+        if(arr.size() < 3) return 0;
+        int maxMountain = 0, curMountain = 1;
+        //iterate slope up
+        for(int i = 1; i < arr.size() - 1; ++i) {
+            if(arr[i-1] >= arr[i]) {
+                curMountain = 1;
+                continue;
+            }
+            else ++curMountain;
+            //iterate slope down
+            int j = i;
+            while(j+1 < arr.size()) {
+                if(arr[j] <= arr[j+1]) break;
+                ++j;
+                ++curMountain;
+            }
+            if(i != j) {
+                maxMountain = max(maxMountain, curMountain);
+                curMountain = 1;
+            }
+            i = j;
+        }
+        return maxMountain;
+    }
+};
