@@ -1,0 +1,32 @@
+//Run Time: 4ms - 92.79%
+//Memory Usage: 10.7MB - 23.05%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    int bagOfTokensScore(vector<int>& tokens, int power) {
+        //play the tokens with the least power first
+        int curScore = 0, maxScore = 0;
+        sort(tokens.begin(), tokens.end());
+        int l = 0, r = tokens.size() - 1;
+        while(l <= r) {
+            //play token up
+            bool canPlayUp = (power >= tokens[l]);
+            if(canPlayUp) {
+                power -= tokens[l++];
+                ++curScore;
+            }
+            maxScore = max(maxScore, curScore);
+            //play token down
+            bool canPlayDown = (curScore);
+            //only play down if its our only possible move to max score
+            if(canPlayDown and !canPlayUp) {
+                power += tokens[r--];
+                --curScore;
+            }
+            //check if we are out of moves
+            if(!canPlayDown and !canPlayUp) break;
+        }
+        return maxScore;
+    }
+};
