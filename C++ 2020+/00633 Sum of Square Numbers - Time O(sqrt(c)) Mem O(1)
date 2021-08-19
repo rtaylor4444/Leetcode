@@ -1,0 +1,25 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 27.61%
+//Solved =)
+//Time O(sqrt(c)) Memory O(1)
+class Solution {
+public:
+    bool judgeSquareSum(int c) {
+        int l = 0, r = sqrt(c);
+        if(r * r == c) return true;
+        while(l <= r) {
+            //Overflow check
+            int sqR = r * r, sqL = l * l;
+            if(INT_MAX - sqR < sqL) {
+                --r;
+                continue;
+            }
+
+            int sum = sqL + sqR;
+            if(sum == c) return true;
+            else if(sum < c) ++l;
+            else --r;
+        }
+        return false;
+    }
+};
