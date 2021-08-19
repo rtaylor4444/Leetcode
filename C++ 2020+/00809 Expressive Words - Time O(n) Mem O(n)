@@ -1,0 +1,41 @@
+//Run Time: 4ms - 88.60%
+//Memory Usage: 5.9MB - 99.66%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int expressiveWords(string s, vector<string>& words) {
+        //Determine the size of each consecutive character
+        vector<int> groupSizes;
+        int consecMatch = 1;
+        for(int i = 1; i < s.size(); ++i) {
+            if(s[i] == s[i-1]) ++consecMatch;
+            else {
+                groupSizes.push_back(consecMatch);
+                consecMatch = 1;
+            }
+        }
+        if(consecMatch) groupSizes.push_back(consecMatch);
+        
+        int numStretchy = 0;
+        for(int i = 0; i < words.size(); ++i) {
+            if(words[i].size() > s.size()) continue;
+            //Two Pointers
+            int k = 0, g = 0, consecMatch = 0;
+            for(int j = 0; j < words[i].size(); ++j) {
+                if(words[i][j] == s[k]) ++consecMatch;
+                //Check mismatch + end of string
+                if(j+1 >= words[i].size() or words[i][j] != words[i][j+1]) {
+                    if(groupSizes[g] < consecMatch) break;
+                    //group size 1 and 2 must be matched exactly
+                    if(groupSizes[g] < 3 and groupSizes[g] != consecMatch) 
+                        break;
+                    consecMatch = 0;
+                    k += groupSizes[g++];
+                }
+            }
+            if(g == groupSizes.size()) ++numStretchy;
+        }
+        return numStretchy;
+    }
+};
