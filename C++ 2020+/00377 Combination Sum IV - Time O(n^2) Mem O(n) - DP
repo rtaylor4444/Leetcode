@@ -1,0 +1,22 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.6MB - 89.62%
+//Solved =)
+//Time O(n^2) Memory O(n)
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<int> dp(target+1, 0);
+        dp[target] = 1;
+        for(int i = target; i >= 0; --i) {
+            if(!dp[i]) continue;
+            for(int j = 0; j < nums.size(); ++j) {
+                int newSum = i - nums[j];
+                if(newSum < 0) continue;
+                //skip overflow
+                if(INT_MAX - dp[i] < dp[newSum]) continue;
+                dp[newSum] += dp[i];
+            }
+        }
+        return dp[0];
+    }
+};
