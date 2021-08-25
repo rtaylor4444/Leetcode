@@ -1,0 +1,52 @@
+//Run Time: 32ms - 54.75%
+//Memory Usage: 71.3MB - 67.32%
+//Solved =)
+//Time O(n) Memory O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode* node) {
+        ListNode* cur = node, *prev = nullptr;
+        while(cur) {
+            ListNode* next = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //reverse linked list
+        ListNode* head1 = reverse(l1);
+        ListNode* head2 = reverse(l2);
+        //Add them together
+        int carry = 0;
+        ListNode  dummyHead, *cur = &dummyHead;
+        while(head1 or head2 or carry) {
+            int newVal = carry;
+            if(head1) {
+                newVal += head1->val;
+                head1 = head1->next;
+            }
+            if(head2){
+                newVal += head2->val;
+                head2 = head2->next;
+            }
+            if(newVal > 9) carry = 1;
+            else carry = 0;
+            newVal %= 10;
+            cur->next = new ListNode(newVal);
+            cur = cur->next;
+        }
+        return reverse(dummyHead.next);
+    }
+};
