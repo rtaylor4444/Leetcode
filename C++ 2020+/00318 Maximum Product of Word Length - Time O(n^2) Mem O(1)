@@ -1,0 +1,30 @@
+//Run Time: 212ms - 20.80%
+//Memory Usage: 16.6MB - 39.17%
+//Solved =)
+//Time O(n^2) Memory O(1)
+class Solution {
+public:
+    bool isMatch(vector<string>& words, vector<bool>& letters, int idx) {
+        for(int i = 0; i < words[idx].size(); ++i) {
+            if(letters[words[idx][i] - 'a']) return true;
+        }
+        return false;
+    }
+    int maxProduct(vector<string>& words) {
+        //O(n^2)
+        int product = 0;
+        for(int i = 0; i < words.size(); ++i) {
+            //get letters we have
+            vector<bool> lettersOwned(26, false);
+            for(int j = 0; j < words[i].size(); ++j) {
+                lettersOwned[words[i][j] - 'a'] = true;
+            }
+            for(int j = i+1; j < words.size(); ++j) {
+                if(!isMatch(words, lettersOwned, j)) {
+                    product = max(product, (int)(words[i].size() * words[j].size()));
+                }
+            }
+        }
+        return product;
+    }
+};
