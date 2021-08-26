@@ -1,0 +1,23 @@
+//Run Time: 8ms - 81.22%
+//Memory Usage: 10.2MB - 98.97%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    void getLexicalNums(int start, vector<int>& ans, int end) {
+        if(start > end) return;
+        ans.push_back(start);
+        //try numbers 0-9
+        for(int i = 0; i < 10; ++i) {
+            if((start*10)+i > end) break;
+            getLexicalNums((start*10)+i, ans, end);
+        }
+    }
+    vector<int> lexicalOrder(int n) {
+        vector<int> ans;
+        ans.reserve(n+1);
+        int end = min(9, n);
+        for(int i = 1; i <= end; ++i) getLexicalNums(i, ans, n);
+        return ans;
+    }
+};
