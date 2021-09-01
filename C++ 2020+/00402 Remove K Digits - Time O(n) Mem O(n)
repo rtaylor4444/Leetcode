@@ -1,0 +1,37 @@
+//Run Time: 4ms - 88.37%
+//Memory Usage: 7MB - 72.10%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        //Greedily pick which numbers to remove
+        /*
+        "100"
+        1
+        "12345"
+        2
+        */
+        //Edge case k is same size as num
+        //Stack
+        if(k == num.size()) return "0";
+        int finalSize = num.size() - k;
+        string ans;
+        for(int i = 0; i < num.size(); ++i) {
+            while(k and !ans.empty()) {
+                char c = ans.back();
+                if(c > num[i]) {
+                    ans.pop_back();
+                    --k;
+                } else break;
+            }
+            ans.push_back(num[i]);
+        }
+        //ensure we take the top smallest characters for the answer
+        ans = ans.substr(0, finalSize);
+        //get rid of leading 0s
+        int i = 0;
+        while(ans.size() - i > 1 and ans[i] == '0') ++i;
+        return ans.empty() ? "0" : ans.substr(i, ans.size() - i);
+    }
+};
