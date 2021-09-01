@@ -1,0 +1,32 @@
+//Run Time: 136ms - 50.23%
+//Memory Usage: 95.9MB - 18.76%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxRotateFunction(vector<int>& nums) {
+        //[4,3,2,6]
+        // f(0) (0 * 4) + (1 * 3) + (2 * 2) + (3 * 6)
+        // f(1) (3 * 4) + (0 * 3) + (1 * 2) + (2 * 6)
+        // diff => -(3 + 2 + 6) + add prev 0 * size  
+        // sum = 7
+        // f(0) (0 * 4) + (1 * 3) = 3
+        // f(1) (1 * 4) + (0 * 3) = 4
+        //calc starting function and sum
+        int sum = 0, curFunc = 0, size = nums.size();
+        for(int i = 0; i < size; ++i) {
+            curFunc += (nums[i] * i);
+            sum += nums[i];
+        }
+        //Do math to calc the func at each rotation point
+        int maxFunc = curFunc;
+        for(int i = 1; i < size; ++i) {
+            //deduct every element once for -1 shift (except previous which was 0)
+            curFunc -= (sum - nums[i-1]);
+            //add in previous rotation max value since 0 -> max value
+            curFunc += (nums[i-1] * (size - 1));
+            maxFunc = max(curFunc, maxFunc);
+        }
+        return maxFunc;
+    }
+};
