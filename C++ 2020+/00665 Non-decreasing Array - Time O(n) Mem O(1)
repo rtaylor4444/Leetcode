@@ -1,0 +1,30 @@
+//Run Time: 62ms - 12.08%
+//Memory Usage: 27MB - 81.34%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool checkPossibilityRecursive(vector<int>& nums, int prevNum, int i, int numModifyElements) {
+        for(; i < nums.size()-1; ++i) {
+            int currentNum = nums[i];
+            if(nums[i] > nums[i+1]) { 
+                if(++numModifyElements > 1) return false; 
+                //We can modify either element
+                //Modify first element; this cannot be modified if less than prevNum
+                nums[i] = nums[i+1];
+                if(prevNum <= nums[i] and checkPossibilityRecursive(nums, prevNum, i, numModifyElements)) return true;
+                //Modify second element
+                nums[i] = currentNum;
+                nums[i+1] = nums[i];
+                if(checkPossibilityRecursive(nums, prevNum, i, numModifyElements)) return true;
+                //If niether pass then its not possible
+                return false;
+            }
+            prevNum = currentNum;
+        }
+        return true;
+    }
+    bool checkPossibility(vector<int>& nums) {
+        return checkPossibilityRecursive(nums, INT_MIN, 0, 0);
+    }
+};
