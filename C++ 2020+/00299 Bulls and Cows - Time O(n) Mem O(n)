@@ -1,0 +1,35 @@
+//Run Time: 14ms - 14.09%
+//Memory Usage: 6.7MB - 43.15%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        //create map
+        int numBulls = 0, numCows = 0;
+        unordered_map<char, int> charsInSecret;
+        for(int i = 0; i < secret.size(); ++i) {
+            if(secret[i] == guess[i]) ++numBulls;
+            else {
+                if(charsInSecret.find(secret[i]) == charsInSecret.end()) 
+                    charsInSecret.emplace(secret[i], 1);
+                else charsInSecret[secret[i]]++;
+            }
+        }
+        
+        //Find cows last
+        for(int i = 0; i < secret.size(); ++i) {
+            if(secret[i] == guess[i]) continue;
+            if(charsInSecret.find(guess[i]) != charsInSecret.end()) {
+                if(charsInSecret[guess[i]]-- > 0) {
+                    ++numCows;
+                }
+            }
+        }
+        
+        string result;
+        result += to_string(numBulls) + "A";
+        result += to_string(numCows) + "B";
+        return result;    
+    }
+};
