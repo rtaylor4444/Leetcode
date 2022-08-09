@@ -1,0 +1,46 @@
+//Run Time: 236ms - 8.08%
+//Memory Usage: 5.9MB - 45.08%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    long long maximumSubsequenceCount(string text, string pattern) {
+        //Dynamic Programming
+        //Get subsequences in string
+        //We can iterate over the text get inital count
+        //*iterate over array in reverse count the opposite letter * current one
+        //*each time we count a add opposite letter to the count
+        //   'abdcdbc
+        //#a 01111111
+        //#c 00001112
+        //count = 2
+        
+        //"abdcdbc"
+        // i
+        //c = 2
+        //max = 2
+        
+        vector<vector<long long>> numLettersSoFar(2, vector<long long>(26, 0));
+        vector<long long> maxCount(2, 0);
+        vector<long long> startingCount(2, 0);
+        for(int i = text.size() - 1; i >= 0; --i) {
+            if(pattern[0] == text[i]) {
+                startingCount[0] += (numLettersSoFar[0][pattern[1] - 'a']);
+            }
+            numLettersSoFar[0][text[i] - 'a']++;
+            //adding an additional pattern[0]
+            maxCount[0] = max(maxCount[0], startingCount[0] + numLettersSoFar[0][pattern[1] - 'a']);
+        }
+        
+        for(int i = 0; i < text.size(); ++i) {
+            if(pattern[1] == text[i]) {
+                startingCount[1] += (numLettersSoFar[1][pattern[0] - 'a']);
+            }
+            numLettersSoFar[1][text[i] - 'a']++;
+            //adding an additional pattern[1]
+            maxCount[1] = max(maxCount[1], startingCount[1] + numLettersSoFar[1][pattern[0] - 'a']);
+        }
+        //cout << maxCount[0] << " vs " << maxCount[1] << endl;
+        return max(maxCount[0], maxCount[1]);
+    }
+};
