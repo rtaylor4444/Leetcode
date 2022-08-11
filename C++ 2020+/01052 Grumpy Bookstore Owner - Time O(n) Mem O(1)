@@ -1,0 +1,29 @@
+//Run Time: 44ms - 76.64%
+//Memory Usage: 32MB - 14.13%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {
+        //Sliding Window
+        //[1,0,1,2,1,1,7,5]
+        //[0,1,0,1,0,1,0,1]
+        //           |    |
+        int curSatisfied = 0;
+        for(int i = 0; i < customers.size(); ++i) {
+            curSatisfied += customers[i] * (grumpy[i] ^ 1);
+        }
+        
+        int bestSatisfied = 0;
+        for(int i = customers.size() - 1; i >= 0; --i) {
+            //Assume this minute starts consec
+            curSatisfied += grumpy[i] * customers[i];
+            //Remove the minute outside of bounds
+            if(i+minutes < customers.size())
+                curSatisfied -= grumpy[i+minutes] * customers[i+minutes];
+            
+            bestSatisfied = max(bestSatisfied, curSatisfied);
+        }
+        return bestSatisfied;
+    }
+};
