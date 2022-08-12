@@ -1,0 +1,64 @@
+//Run Time: 6ms - 43.75%
+//Memory Usage: 10.5MB - 17.19%
+//Solved =)
+//n = number of nodes
+//Time O(n) Memory O(1)
+struct NodeInfo {
+    int curSum;
+    int curDepth;
+    int curPosition;
+    NodeInfo() {
+        curSum = curDepth = curPosition = 0;
+    }
+    NodeInfo(int sum, int depth, int pos) {
+        curSum = sum;
+        curDepth = depth;
+        curPosition = pos;
+    }
+};
+
+class Solution {
+public:
+    int pathSum(vector<int>& nums) {
+        //BFS
+        //Make adj list then run bfs keeping track of the sums
+        vector<vector<int>> adjList(6, vector<int>(9, -1));
+        int rootIndex = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            int depth = nums[i] / 100;
+            int position = (nums[i] % 100) / 10;
+            int value = nums[i] % 10;
+            adjList[depth][position] = value;
+            if(depth == 1) rootIndex = i;
+        }
+        
+        //Add root to the queue assuming
+        int totalSum = 0;
+        queue<NodeInfo> bfs;
+        bfs.push(NodeInfo(nums[rootIndex] % 10, 1, 1));
+        while(!bfs.empty()) {
+            NodeInfo curNode = bfs.front();
+            bfs.pop();
+            
+            //1-> (1, 2)
+            //2-> (3, 4)
+            //3-> (5, 6)
+            //4-> (7, 8)
+            int nextDepth = curNode.curDepth + 1;
+            int rightChild = min(8, (curNode.curPosition * 2));
+            int leftChild = rightChild - 1;
+            //Check for left child
+            if(adjList[nextDepth][leftChild] > -1) {
+                bfs.push(NodeInfo(adjList[nextDepth][leftChild] + curNode.curSum, nextDepth, leftChild));
+            }
+            //Check for right child
+            if(adjList[nextDepth][rightChild] > -1) {
+                bfs.push(NodeInfo(adjList[nextDepth][rightChild] + curNode.curSum, nextDepth, rightChild));
+            }
+            //If neither child exist add cursum to the total
+            if(adjList[nextDepth][leftChild] < 0 and adjList[nextDepth][rightChild] < 0)
+                totalSum += curNode.curSum;
+        }
+        return totalSum;
+    }
+};
