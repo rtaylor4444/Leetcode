@@ -1,0 +1,61 @@
+//Run Time: 152ms - 50.75%
+//Memory Usage: 5.9MB - 87.22%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    vector<string> watchedVideosByFriends(vector<vector<string>>& watchedVideos, vector<vector<int>>& friends, int id, int level) {
+        //Get list of friends using bfs
+        vector<bool> seenFriends(friends.size(), false);
+        seenFriends[id] = true;
+        queue<int> bfs;
+        bfs.push(id);
+        while(!bfs.empty()) {
+            for(int i = bfs.size() - 1; i >= 0; --i) {
+                int curId = bfs.front();
+                bfs.pop();
+                
+                for(int i = 0; i < friends[curId].size(); ++i) {
+                    if(seenFriends[friends[curId][i]]) continue;
+                    bfs.push(friends[curId][i]);
+                    seenFriends[friends[curId][i]] = true;
+                }
+            }
+            if(--level == 0) break;
+        }
+        
+        //Get the frequency of the videos they have seen  
+        unordered_map<string, int> videoFreq;
+        int maxFreq = 1;
+        while(!bfs.empty()) {
+            int curId = bfs.front();
+            bfs.pop();
+            
+            for(int i = 0; i < watchedVideos[curId].size(); ++i) {
+                string& curVideo = watchedVideos[curId][i];
+                if(videoFreq.find(curVideo) == videoFreq.end()) {
+                    videoFreq.emplace(curVideo, 1);
+                } else {
+                    maxFreq = max(maxFreq, ++videoFreq[curVideo]);
+                }
+            }
+        }
+        
+        //Make frequency map for efficiency
+        vector<vector<string>> freqToVideos(maxFreq+1, vector<string>());
+        for(auto it = videoFreq.begin(); it != videoFreq.end(); ++it) {
+            freqToVideos[it->second].push_back(it->first);
+        }
+        
+        //Finally collect the movies seen
+        vector<string> videosSeen;
+        for(int i = 0; i < maxFreq+1; ++i) {
+            sort(freqToVideos[i].begin(), freqToVideos[i].end());
+            for(int j = 0; j < freqToVideos[i].size(); ++j) {
+                videosSeen.push_back(freqToVideos[i][j]);
+            }
+        }
+        return videosSeen;
+    }
+};
