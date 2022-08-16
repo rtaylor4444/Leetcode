@@ -1,0 +1,51 @@
+//Run Time: 214ms - 85.50%
+//Memory Usage: 5.9MB - 18.97%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+class Solution {
+public:
+    bool isPossibleDivide(vector<int>& nums, int k) {
+        //Hashmap + Sorting
+        //[1,2,2,3,3,3,4,4,5,9,10,11,13,14,15]
+        //[1,2,3], [2,3,4], [3,4,5], 
+        //Start loop back at smallest number with a dup
+        //1 -> 0
+        //2 -> 0
+        //3 -> 0
+        //4 -> 0
+        //5 -> 0
+        //9 -> 1
+        //10 -> 1
+        //11 -> 1
+        
+        //Get the frequency of each number
+        //and get starting points
+        sort(nums.begin(), nums.end());
+        vector<int> startingPoints;
+        unordered_map<int, int> numToCount;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(numToCount.find(nums[i]) == numToCount.end()) {
+                numToCount.emplace(nums[i], 1);
+                startingPoints.push_back(nums[i]);
+            } else
+                ++numToCount[nums[i]];
+        }
+        
+        //Iterate using our start points array
+        int pointIndex = 0;
+        while(pointIndex < startingPoints.size()) {
+            int startingNum = startingPoints[pointIndex];
+            for(int i = 0; i < k; ++i) {
+                //Exit if k consec doesnt exist
+                if(numToCount.find(startingNum + i) == numToCount.end())
+                    return false;
+                
+                if(--numToCount[startingNum + i] == 0) {
+                    numToCount.erase(startingNum + i);
+                    ++pointIndex;
+                }
+            }
+        }
+        return true;
+    }
+};
