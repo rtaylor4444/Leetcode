@@ -1,0 +1,48 @@
+//Run Time: 196ms - 67.58%
+//Memory Usage: 5.9MB - 49.88%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minDominoRotations(vector<int>& tops, vector<int>& bottoms) {
+        //Counting 
+        //count the numbers ensure to treat same-value dominoes as a single count
+        //if none of them add up to the size of dominos it isnt possible
+        //each track of number of each for top and bottom
+        //[2,1,2,4,2,2]
+        //[5,2,6,2,3,2]
+        //1 -> 1
+        //2 -> 6
+        //3 -> 1
+        //4 -> 1
+        //5 -> 1
+        //6 -> 1
+        //also keep track of count for both top and bottom ignoring same-value dominoes
+        //the lower count will be the answer
+        //Two numbers with the same count?
+        //Rotations should be the same
+        
+        vector<int> numberCount(7, 0);
+        vector<int> topCount(7, 0), bottomCount(7, 0);
+        for(int i = 0; i < tops.size(); ++i) {
+            if(tops[i] == bottoms[i]) {
+                numberCount[tops[i]]++;
+            }
+            else {
+                numberCount[tops[i]]++;
+                topCount[tops[i]]++;
+                numberCount[bottoms[i]]++;
+                bottomCount[bottoms[i]]++;
+            }
+        }
+        
+        int minRotations = INT_MAX;
+        for(int i = 1; i < 7; ++i) {
+            if(numberCount[i] == tops.size()) {
+                minRotations = min(topCount[i], bottomCount[i]);
+            }
+        }
+        return minRotations == INT_MAX ? -1 : minRotations;
+    }
+};
