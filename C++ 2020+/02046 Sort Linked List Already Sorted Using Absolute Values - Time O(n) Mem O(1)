@@ -1,0 +1,40 @@
+//Run Time: 338ms - 85.48%
+//Memory Usage: 5.9MB - 51.61%
+//Solved =)
+//Time O(n) Memory O(1)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* sortLinkedList(ListNode* head) {
+        ListNode *positiveHead = nullptr, *negativeTail = nullptr;
+        ListNode *curPosNode = nullptr, *curNegNode = nullptr;
+        while(head) {
+            ListNode *curNode = head;
+            head = head->next;
+            curNode->next = nullptr;
+            
+            if(curNode->val < 0) {
+                if(negativeTail == nullptr) negativeTail = curNode;
+                else curNode->next = curNegNode;
+                curNegNode = curNode;
+            }
+            else {
+                if(positiveHead == nullptr) positiveHead = curNode;
+                else curPosNode->next = curNode;
+                curPosNode = curNode;
+            }
+        }
+        if(curNegNode) negativeTail->next = positiveHead;
+        return curNegNode == nullptr ? positiveHead : curNegNode;
+    }
+};
