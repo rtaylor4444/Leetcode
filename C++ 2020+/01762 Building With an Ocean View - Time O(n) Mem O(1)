@@ -1,0 +1,19 @@
+//Run Time: 207ms - 57.87%
+//Memory Usage: 68.8MB - 69.13%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    vector<int> findBuildings(vector<int>& heights) {
+        //MonoStack
+        vector<int> oceanViews;
+        for(int i = 0; i < heights.size(); ++i) {
+            //Pop off lesser or equal values off the stack
+            while(!oceanViews.empty() and heights[oceanViews.back()] <= heights[i]) {
+                oceanViews.pop_back();
+            }
+            oceanViews.push_back(i);
+        }
+        return oceanViews;
+    }
+};
