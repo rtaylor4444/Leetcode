@@ -1,0 +1,54 @@
+//Run Time: 7ms - 81.88%
+//Memory Usage: 11.2MB - 57.50%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    bool isInBounds(vector<vector<char>>& board, int r, int c) {
+        if(r < 0 or c < 0) return false;
+        if(r >= board.size() or c >= board[r].size()) return false;
+        return true;
+    }
+    bool checkNextTile(vector<vector<char>>& board, int r, int c, char color) {
+        if(!isInBounds(board, r, c)) return false;
+        //Tile check
+        if(board[r][c] == '.') return false;
+        if(board[r][c] == color) return false;
+        return true;
+    }
+    bool checkLine(vector<vector<char>>& board, int r, int c, char color, int dirX, int dirY) {
+        r+=dirY; c+= dirX;
+        if(!checkNextTile(board, r, c, color)) return false;
+        //Check to see if we can find a matching end point
+        r+=dirY; c+= dirX;
+        while(isInBounds(board, r, c)) {
+            //Exit on empty space
+            if(board[r][c] == '.') return false;
+            if(board[r][c] == color) return true;
+            r+=dirY; c+= dirX;
+        }
+        return false;
+    }
+    bool checkMove(vector<vector<char>>& board, int rMove, int cMove, char color) {
+        //three functions check vert, horz and diag
+        
+        //Vertical Check
+        if(checkLine(board, rMove, cMove, color, 0, 1) or checkLine(board, rMove, cMove, color, 0, -1))
+            return true;
+        
+        //Horizonal Check
+        if(checkLine(board, rMove, cMove, color, 1, 0) or checkLine(board, rMove, cMove, color, -1, 0))
+            return true;
+        
+        //Diagnol 1 check '\'
+        if(checkLine(board, rMove, cMove, color, 1, 1) or checkLine(board, rMove, cMove, color, -1, -1))
+            return true;
+        
+        //Diagnol 2 check '/'
+        if(checkLine(board, rMove, cMove, color, 1, -1) or checkLine(board, rMove, cMove, color, -1, 1))
+            return true;
+        
+        return false;
+    }
+};
