@@ -1,0 +1,21 @@
+//Run Time: 4ms - 5.01%
+//Memory Usage: 5.9MB - 39.44%
+//Solved =)
+//Time O(n^2) Memory O(n)
+
+class Solution {
+public:
+    int triangularSum(vector<int>& nums) {
+        vector<vector<int>> dp(2, vector<int>(nums.size(), 0));
+        for(int i = 0; i < nums.size(); ++i)
+            dp[0][i] = nums[i];
+        
+        for(int i = 1; i < nums.size(); ++i) {
+            for(int j = 0; j < nums.size() - 1; ++j) {
+                int prevIndex = (i-1) % 2;
+                dp[i%2][j] = (dp[prevIndex][j] + dp[prevIndex][j+1]) % 10;
+            }
+        }
+        return dp[(nums.size()-1) % 2][0];
+    }
+};
