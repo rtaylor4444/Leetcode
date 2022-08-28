@@ -1,0 +1,47 @@
+//Run Time: 186ms - 66.88%
+//Memory Usage: 67.3MB - 80.26%
+//Solved =)
+//Time O(n) Memory O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* correctBinaryTree(TreeNode* root) {
+        //BFS
+        unordered_map<TreeNode*, TreeNode*> childToParent;
+        queue<TreeNode*> bfs;
+        bfs.push(root);
+        while(!bfs.empty()) {
+            TreeNode* node = bfs.front();
+            bfs.pop();
+            
+            //Exit if our child already has parent (this node is invalid)
+            if(childToParent.find(node->right) != childToParent.end()) {
+                //cout << "invalid node: " << node->val << endl;
+                TreeNode* parent = childToParent[node];
+                if(parent->left == node) parent->left = nullptr;
+                if(parent->right == node) parent->right = nullptr;
+                break;
+            }
+            
+            if(node->left) {
+                childToParent.emplace(node->left, node);
+                bfs.push(node->left);
+            }
+            if(node->right) {
+                childToParent.emplace(node->right, node);
+                bfs.push(node->right);
+            }
+        }
+        return root;
+    }
+};
