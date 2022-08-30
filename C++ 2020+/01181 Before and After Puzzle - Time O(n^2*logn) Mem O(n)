@@ -1,0 +1,51 @@
+//Run Time: 7ms - 90.91%
+//Memory Usage: 10.4MB - 81.82%
+//Solved =)
+//n = number of words
+//Time O(n^2*logn) Memory O(n)
+class Solution {
+public:
+    vector<string> beforeAndAfterPuzzles(vector<string>& phrases) {
+        //Phrases
+        //Hashmap vs Trie
+        //Trie - easy to lexographically sort
+        //Hashmap - faster lookup (due to the way machine memory is setup)
+        
+        //Get all first word links
+        unordered_map<string, vector<int>> firstWordToIndices;
+        for(int i = 0; i < phrases.size(); ++i) {
+            istringstream iss(phrases[i]);
+            string firstWord;
+            iss >> firstWord;
+            if(firstWordToIndices.find(firstWord) == firstWordToIndices.end()) {
+                firstWordToIndices.emplace(firstWord, vector<int>());
+            }
+            firstWordToIndices[firstWord].push_back(i);
+        }
+        
+        set<string> after;
+        for(int i = 0; i < phrases.size(); ++i) {
+            //Parse string for the last word
+            string lastWord;
+            for(int j = phrases[i].size() - 1; j >=0; --j) {
+                if(phrases[i][j] == ' ') break;
+                lastWord += phrases[i][j];
+            }
+            reverse(lastWord.begin(), lastWord.end());
+            
+            //Link last to first word
+            if(firstWordToIndices.find(lastWord) == firstWordToIndices.end())
+                continue;
+            
+            vector<int>& matches = firstWordToIndices[lastWord];
+            for(int m = 0; m < matches.size(); ++m) {
+                //ensure we are not using the same string
+                if(matches[m] == i) continue;
+                string matchingWord = phrases[matches[m]];
+                string secondHalf = matchingWord.substr(lastWord.size(), matchingWord.size() - lastWord.size());
+                after.emplace(phrases[i] + secondHalf);
+            }
+        }
+        return vector<string>(after.begin(), after.end());
+    }
+};
