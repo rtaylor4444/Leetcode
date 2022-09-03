@@ -1,0 +1,76 @@
+//Run Time: 67ms - 28.49%
+//Memory Usage: 12.6MB - 5.91%
+//Solved =)
+//Time O(n^3) Memory O(n^2)
+class Solution {
+public:
+    int largest1BorderedSquare(vector<vector<int>>& grid) {
+        //as long as there is a square of 1s I'm good
+        //rectangle? actually has to be a square
+        // 1 1 1
+        // 1 1 1
+        // 1 1 1
+        
+        vector<vector<int>> rightConsec(grid.size(), vector<int>(grid[0].size()));
+        for(int i = 0; i < grid.size(); ++i) {
+            int numConsec = 0;
+            for(int j = grid[i].size() - 1; j >= 0; --j) {
+                if(grid[i][j] == 1) ++numConsec;
+                else numConsec = 0;
+                rightConsec[i][j] = numConsec;
+            }
+        }
+        
+        vector<vector<int>> leftConsec(grid.size(), vector<int>(grid[0].size()));
+        for(int i = 0; i < grid.size(); ++i) {
+            int numConsec = 0;
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 1) ++numConsec;
+                else numConsec = 0;
+                leftConsec[i][j] = numConsec;
+            }
+        }
+        
+        vector<vector<int>> upConsec(grid.size(), vector<int>(grid[0].size()));
+        for(int j = 0; j < grid[0].size(); ++j) {
+            int numConsec = 0;
+            for(int i = 0; i < grid.size(); ++i) {
+                if(grid[i][j] == 1) ++numConsec;
+                else numConsec = 0;
+                upConsec[i][j] = numConsec;
+            }
+        }
+        
+        vector<vector<int>> downConsec(grid.size(), vector<int>(grid[0].size()));
+        for(int j = 0; j < grid[0].size(); ++j) {
+            int numConsec = 0;
+            for(int i = grid.size() - 1; i >= 0; --i) {
+                if(grid[i][j] == 1) ++numConsec;
+                else numConsec = 0;
+                downConsec[i][j] = numConsec;
+            }
+        }
+        
+        int maxSqSize = 0; 
+        for(int startY = 0; startY < grid.size(); ++startY) {
+            for(int startX = 0; startX < grid[startY].size(); ++startX) {
+                int numDownConsec = downConsec[startY][startX];
+                int numRightConsec = rightConsec[startY][startX];
+                if(grid[startY][startX] == 0) continue;
+                
+                for(int sqSize = 0; 
+                    sqSize+startY < grid.size() and sqSize+startX < grid[startY].size(); ++sqSize)  {
+                    int numUpConsec = upConsec[startY+sqSize][startX+sqSize];
+                    int numLeftConsec = leftConsec[startY+sqSize][startX+sqSize];
+                    if(numUpConsec <= sqSize or numLeftConsec <= sqSize or
+                       numDownConsec <= sqSize or numRightConsec <= sqSize) {
+                        continue;
+                    }
+                    
+                    maxSqSize = max(maxSqSize, (sqSize+1) * (sqSize+1));
+                }
+            }
+        }
+        return maxSqSize;
+    }
+};
