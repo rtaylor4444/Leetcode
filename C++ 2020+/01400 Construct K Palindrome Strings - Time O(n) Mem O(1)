@@ -1,0 +1,27 @@
+//Run Time: 56ms - 46.46%
+//Memory Usage: 5.9MB - 10.19%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    bool isPartition(string s, int start, int end, int k) {
+        //If we arent at the end of the string at k 0 exit
+        if(k == 0) return start == end;
+        
+        int oddCount = 0;
+        vector<int> charCount(26, 0);
+        for(int i = start; i < end; ++i) {
+            if(++charCount[s[i] - 'a'] % 2) {
+                oddCount++;
+            }
+            else {
+                oddCount--;
+            }
+        }
+        return oddCount <= k;
+    }
+    bool canConstruct(string s, int k) {
+        if(k > s.size()) return false;
+        return isPartition(s, 0, s.size(), k);
+    }
+};
