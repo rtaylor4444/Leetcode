@@ -1,0 +1,14 @@
+//Run Time: 3ms - 50.87%
+//Memory Usage: 6.1MB - 19.71%
+//Solved =)
+//Time O(1) Memory O(1)
+
+class Solution {
+public:
+    vector<long long> sumOfThree(long long num) {
+        long long midNum = num / 3;
+        long long startNum = midNum - 1, endNum = midNum + 1;
+        if(startNum + midNum + endNum !=  num) return vector<long long>();
+        return vector<long long>{ startNum, midNum, endNum };
+    }
+};
