@@ -1,0 +1,33 @@
+//Run Time: 49ms - 35.12%
+//Memory Usage: 5.9MB - 91.53%
+//Solved =)
+//Time O(logn) Memory O(1)
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        int m = 0, l = 0, r = nums.size() - 1;
+        while(l <= r) {
+            m = l + ((r - l) / 2);
+            int leftValue = m - 1 >= 0 ? nums[m-1] : INT_MAX;
+            int rightValue = m + 1 < nums.size() ? nums[m+1] : INT_MAX;
+            //Exit Condition
+            if(nums[m] != leftValue and nums[m] != rightValue)
+                break;
+            
+            //Even Indexed
+            if(m % 2 == 0) {
+                //Check the positioning of the single element and move accordingly
+                if(nums[m] == rightValue) l = m+1;
+                else r = m-1;
+            }
+            //Odd Indexed
+            else {
+                //Check the positioning of the single element and move accordingly
+                if(nums[m] == leftValue) l = m+1;
+                else r = m-1;
+            }
+        }
+        return nums[m];
+    }
+};
