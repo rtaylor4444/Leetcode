@@ -1,0 +1,47 @@
+//Run Time: 12ms - 48.40%
+//Memory Usage: 7.6MB - 61.52%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int maxRepOpt1(string text) {
+        //"aaabaaa" -> "aba" [3,1,3]
+        //Create condensed string and consecCount array
+        string condensed;
+        vector<int> consecCount, charCount(26, 0);
+        int curCount = 0;
+        for(int i = 0; i < text.size(); ++i) {
+            charCount[text[i] -'a']++;
+            //Check mismatched chars if in bounds
+            if(i > 0 and text[i] != text[i-1]) {
+                consecCount.push_back(curCount);
+                condensed += text[i-1];
+                curCount = 1;
+            }
+            else curCount++;
+        }
+        //Add final charcter end of string
+        consecCount.push_back(curCount);
+        condensed += text.back();
+        
+     
+        //get maxConsec
+        int maxConsec = 0;
+        for(int i = 0; i < condensed.size(); ++i) {
+            //Determine if we would gain an extra character from a swap or not
+            int extraSwapChar = 0;
+            if(charCount[condensed[i] - 'a'] - consecCount[i]) extraSwapChar = 1;
+            //We can either take the current block
+            maxConsec = max(maxConsec, consecCount[i] + extraSwapChar);
+            //or two of the same block with a single char between
+            if(i >= 2 and condensed[i] == condensed[i-2]) {
+                if(consecCount[i-1] > 1) continue;
+                if(charCount[condensed[i] - 'a'] - (consecCount[i]+ consecCount[i-2])) extraSwapChar = 1;
+                else extraSwapChar = 0;
+                maxConsec = max(maxConsec, consecCount[i] + consecCount[i-2] + extraSwapChar);
+            }
+        }
+        return maxConsec;
+    }
+};
