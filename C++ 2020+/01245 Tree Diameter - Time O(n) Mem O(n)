@@ -1,0 +1,54 @@
+//Run Time: 168ms - 10.83%
+//Memory Usage: 27.1MB - 24.27%
+//Solved =)
+//Time O(n) Memory O(n)
+class Solution {
+public:
+    int getFurthestNode(int startNode, unordered_map<int, vector<int>>& adjList, int& numIterations) {
+        numIterations = 0;
+        queue<int> bfs;
+        bfs.push(startNode);
+        unordered_set<int> seenNodes;
+        vector<int> currentNodes;
+        
+        while(!bfs.empty()) {
+            currentNodes.clear();
+            
+            for(int i = bfs.size() - 1; i >= 0; --i) {
+                int curNode = bfs.front();
+                bfs.pop();
+                
+                seenNodes.emplace(curNode);
+                vector<int>& childNodes = adjList[curNode];
+                for(int j = 0; j < childNodes.size(); ++j) {
+                    if(seenNodes.find(childNodes[j]) != seenNodes.end())
+                        continue;
+                    
+                    currentNodes.push_back(childNodes[j]);
+                    bfs.push(childNodes[j]);
+                }
+            }
+            
+            ++numIterations;
+        }
+        return currentNodes[0];
+    }
+    int treeDiameter(vector<vector<int>>& edges) {
+        //Adjacency List
+        if(edges.empty()) return 0;
+        
+        unordered_map<int, vector<int>> nodeToChildren;
+        for(int i = 0; i < edges.size(); ++i) {
+            if(nodeToChildren.find(edges[i][0]) == nodeToChildren.end()) {
+                nodeToChildren.emplace(edges[i][0], vector<int>());
+            }
+            nodeToChildren[edges[i][0]].push_back(edges[i][1]);
+            nodeToChildren[edges[i][1]].push_back(edges[i][0]);
+        }
+        
+        int numIterations, testNode = edges[0][0];
+        int startNode = getFurthestNode(testNode, nodeToChildren, numIterations);
+        getFurthestNode(startNode, nodeToChildren, numIterations);
+        return numIterations-1;
+    }
+};
