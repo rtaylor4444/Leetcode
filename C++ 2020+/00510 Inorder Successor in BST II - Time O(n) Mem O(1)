@@ -1,0 +1,32 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* parent;
+};
+*/
+
+//Run Time: 54ms - 16.79%
+//Memory Usage: 5.9MB - 92.91%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    Node* inorderSuccessor(Node* node) {
+        Node* childSuccessor = node->right;
+        while(childSuccessor and childSuccessor->left) {
+            childSuccessor = childSuccessor->left;
+        }
+        Node* parentNode = node->parent, *curNode = node; 
+        while(parentNode) {
+            if(parentNode->left == curNode) break;
+            curNode = parentNode;
+            parentNode = parentNode->parent;
+        }
+        return childSuccessor ? childSuccessor : parentNode;
+    }
+};
