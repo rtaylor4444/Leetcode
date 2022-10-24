@@ -1,0 +1,27 @@
+//Run Time: 230ms - 84.22%
+//Memory Usage: 5.9MB - 48.17%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    int maximumBags(vector<int>& capacity, vector<int>& rocks, int additionalRocks) {
+        //place rocks in bags that are closest to capacity
+        //[rocks, capacity]
+        priority_queue<int, vector<int>, greater<int>> p_q;
+        int maxBags = 0;
+        for(int i = 0; i < rocks.size(); ++i) {
+            if(capacity[i] <= rocks[i]) ++maxBags;
+            else p_q.push(capacity[i] - rocks[i]);
+        }
+        
+        while(!p_q.empty() and additionalRocks > 0) {
+            int currDiff = p_q.top();
+            p_q.pop();
+            
+            if(currDiff <= additionalRocks) ++maxBags;
+            additionalRocks -= currDiff;
+        }
+        return maxBags;
+    }
+};
