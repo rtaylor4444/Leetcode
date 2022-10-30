@@ -1,0 +1,106 @@
+//Run Time: 69ms - 34.83%
+//Memory Usage: 17.2MB - 28.27%
+//Solved =)
+//Time O(1) Memory O(n)
+
+struct DequeNode {
+    int value;
+    DequeNode *prev, *next;
+    DequeNode(int val) {
+        value = val;
+        prev = next = nullptr;
+    }
+};
+
+class MyCircularDeque {
+    int maxSize, curSize;
+    DequeNode *first, *last;
+    
+    void deleteNode(DequeNode* toDelete) {
+        if(toDelete == first) first = toDelete->next;
+        if(toDelete == last) last = toDelete->prev;
+        if(toDelete->prev) toDelete->prev->next = toDelete->next;
+        if(toDelete->next) toDelete->next->prev = toDelete->prev;
+        delete toDelete;
+    }
+    
+public:
+    MyCircularDeque(int k) {
+        maxSize = k;
+        curSize = 0;
+        first = last = nullptr;
+    }
+    
+    bool insertFront(int value) {
+        if(isFull()) return false;
+        DequeNode* newNode = new DequeNode(value);
+        if(first) {
+            newNode->next = first;
+            first->prev = newNode;
+        }
+        first = newNode;
+        if(last == nullptr) last = newNode;
+        ++curSize;
+        return true;
+    }
+    
+    bool insertLast(int value) {
+        if(isFull()) return false;
+        DequeNode* newNode = new DequeNode(value);
+        if(last) { 
+            newNode->prev = last;
+            last->next = newNode;
+        }
+        last = newNode;
+        if(first == nullptr) first = newNode;
+        ++curSize;
+        return true;
+    }
+    
+    bool deleteFront() {
+        if(isEmpty()) return false;
+        deleteNode(first);
+        --curSize;
+        return true;
+    }
+    
+    bool deleteLast() {
+        if(isEmpty()) return false;
+        deleteNode(last);
+        --curSize;
+        return true;
+    }
+    
+    int getFront() {
+        if(isEmpty()) return -1;
+        return first->value;
+    }
+    
+    int getRear() {
+        if(isEmpty()) return -1;
+        return last->value;
+    }
+    
+    bool isEmpty() {
+        return curSize == 0;
+    }
+    
+    bool isFull() {
+        return curSize >= maxSize;
+    }
+    
+    //27 -> 80
+};
+
+/**
+ * Your MyCircularDeque object will be instantiated and called as such:
+ * MyCircularDeque* obj = new MyCircularDeque(k);
+ * bool param_1 = obj->insertFront(value);
+ * bool param_2 = obj->insertLast(value);
+ * bool param_3 = obj->deleteFront();
+ * bool param_4 = obj->deleteLast();
+ * int param_5 = obj->getFront();
+ * int param_6 = obj->getRear();
+ * bool param_7 = obj->isEmpty();
+ * bool param_8 = obj->isFull();
+ */
