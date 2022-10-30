@@ -1,0 +1,42 @@
+//Run Time: 389ms - 54.32%
+//Memory Usage: 60.4MB - 81.73%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+    int totalTime;
+public:
+    int determineTime(int curNode, vector<vector<int>>& adjList, 
+                      vector<bool>& hasApple, vector<bool>& seenNodes) {
+        int curTime = 0, applesSoFar = 0;
+        if(seenNodes[curNode]) return 0;
+        seenNodes[curNode] = true;
+        
+        //Increment time for traversing to this node
+        if(curNode != 0) ++curTime;
+        
+        //Count the apples we have found so far
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            applesSoFar += determineTime(adjList[curNode][i], adjList, hasApple, seenNodes);
+        }
+        if(hasApple[curNode]) applesSoFar++;
+        
+        //Increment time for the return trip
+        if(curNode != 0) ++curTime;
+        
+        if(applesSoFar) totalTime += curTime;
+        return applesSoFar;
+    }
+    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
+        //make an adj list
+        vector<vector<int>> adjList(hasApple.size(), vector<int>());
+        for(int i = 0; i < edges.size(); ++i) {
+            adjList[edges[i][0]].push_back(edges[i][1]);
+            adjList[edges[i][1]].push_back(edges[i][0]);
+        }
+        totalTime = 0;
+        vector<bool> seenNodes(hasApple.size(), false);
+        determineTime(0, adjList, hasApple, seenNodes);
+        return totalTime;
+    }
+};
