@@ -1,0 +1,95 @@
+//Run Time: 91ms - 48.95%
+//Memory Usage: 61MB - 65.73%
+//Solved =)
+//Time O(9^n*(n-m)) Memory O(9^n*(n-m))
+
+enum ConnectReq {
+    CONNECT_ANY = 0,
+    CONNECT_1 = 1,
+    CONNECT_2 = 2,
+    CONNECT_3 = 3,
+    CONNECT_4 = 4,
+    CONNECT_5 = 5,
+    CONNECT_6 = 6,
+    CONNECT_7 = 7,
+    CONNECT_8 = 8,
+    CONNECT_9 = 9
+};
+
+class Solution {
+    vector<vector<int>> connectionsReq;
+public:
+    Solution() {
+        connectionsReq = vector<vector<int>>(10, vector<int>(10, CONNECT_ANY));
+        //We assume 0 means that no position was selected previously
+        //therefore all connections are valid for Node 0
+        
+        //Node 1
+        connectionsReq[1][3] = CONNECT_2;
+        connectionsReq[1][7] = CONNECT_4;
+        connectionsReq[1][9] = CONNECT_5;
+        
+        //Node 2
+        connectionsReq[2][8] = CONNECT_5;
+        
+        //Node 3
+        connectionsReq[3][1] = CONNECT_2;
+        connectionsReq[3][7] = CONNECT_5;
+        connectionsReq[3][9] = CONNECT_6;
+        
+        //Node 4
+        connectionsReq[4][6] = CONNECT_5;
+        
+        //We can reach all nodes from Node 5
+        
+        //Node 6
+        connectionsReq[6][4] = CONNECT_5;
+        
+        //Node 7
+        connectionsReq[7][1] = CONNECT_4;
+        connectionsReq[7][3] = CONNECT_5;
+        connectionsReq[7][9] = CONNECT_8;
+        
+        //Node 8
+        connectionsReq[8][2] = CONNECT_5;
+        
+        //Node 9
+        connectionsReq[9][1] = CONNECT_5;
+        connectionsReq[9][3] = CONNECT_6;
+        connectionsReq[9][7] = CONNECT_8;
+        
+    }
+    
+    int calcPatterns(int prevPos, int numSteps, vector<bool>& pickedConnections) {
+        if(numSteps == 0) return 1;
+        int unlockPatternsFound = 0;
+        for(int i = 1; i <= 9; ++i) {
+            //Skip if this node was used previously in this chain
+            if(pickedConnections[i]) continue;
+            
+            //check if this connection is valid
+            if(connectionsReq[prevPos][i] != CONNECT_ANY) {
+                //Check if we can make this connection valid
+                if(!pickedConnections[connectionsReq[prevPos][i]])
+                    continue;
+            }
+        
+            pickedConnections[i] = true;
+            unlockPatternsFound += calcPatterns(i, numSteps-1, pickedConnections);
+            pickedConnections[i] = false;
+        }
+        return unlockPatternsFound;
+    }
+
+    int numberOfPatterns(int m, int n) {
+        //Reucrsion Top-Down DP
+        vector<bool> pickedConnections(n+1, false);
+        
+        //Add up final count
+        int totalPatterns = 0;
+        for(int i = m; i <= n; ++i) {
+            totalPatterns += calcPatterns(0, i, pickedConnections);
+        }
+        return totalPatterns;
+    }
+};
