@@ -1,0 +1,32 @@
+//Run Time: 1389ms - 21.68%
+//Memory Usage: 5.9MB - 32.37%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+
+class Solution {
+public:
+    int tupleSameProduct(vector<int>& nums) {
+        //look up the products we need
+        //count all the way to make the products
+        unordered_map<int, int> productToCount;
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = i+1; j < nums.size(); ++j) {
+                int product = nums[i] * nums[j];
+                if(productToCount.find(product) == productToCount.end())
+                    productToCount.emplace(product, 1);
+                else {
+                    productToCount[product]++;
+                }
+            }
+        }
+        
+        int totalTuples = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = i+1; j < nums.size(); ++j) {
+                int numUniqueDuo = productToCount[nums[i] * nums[j]] - 1;
+                totalTuples += numUniqueDuo * 4;
+            }
+        }
+        return totalTuples;
+    }
+};
