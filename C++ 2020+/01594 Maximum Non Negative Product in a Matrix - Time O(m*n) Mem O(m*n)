@@ -1,0 +1,41 @@
+//Run Time: 13ms - 50.63%
+//Memory Usage: 5.9MB - 38.27%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+
+class Solution {
+public:
+    int maxProductPath(vector<vector<int>>& grid) {
+        vector<vector<long>> dp_max(grid.size(), vector<long>(grid[0].size(), LONG_MIN));
+        vector<vector<long>> dp_min(grid.size(), vector<long>(grid[0].size(), LONG_MAX));
+        //set starting point max prodict
+        dp_max[0][0] = dp_min[0][0] = grid[0][0];
+        //Set first column max product
+        for(int i = 1; i < grid.size(); ++i)
+            dp_max[i][0] = dp_min[i][0] = grid[i][0] * dp_max[i-1][0];
+        //set first row max product
+        for(int j = 1; j < grid[0].size(); ++j)
+            dp_max[0][j] = dp_min[0][j] = grid[0][j] * dp_max[0][j-1];
+        
+        for(int i = 1; i < grid.size(); ++i) {
+            for(int j = 1; j < grid[i].size(); ++j) {
+                //keep track of min and max product
+                if(grid[i][j] > 0) {
+                    dp_max[i][j] = max(grid[i][j] * dp_max[i-1][j], grid[i][j] * dp_max[i][j-1]);
+                    dp_min[i][j] = min(grid[i][j] * dp_min[i-1][j], grid[i][j] * dp_min[i][j-1]);
+                }
+                else if(grid[i][j] < 0) {
+                    dp_max[i][j] = max(grid[i][j] * dp_min[i-1][j], grid[i][j] * dp_min[i][j-1]);
+                    dp_min[i][j] = min(grid[i][j] * dp_max[i-1][j], grid[i][j] * dp_max[i][j-1]);
+                }
+                else {
+                    dp_max[i][j] = dp_min[i][j] = 0;
+                }
+                
+            }
+        }
+        
+        return dp_max[grid.size()-1][grid[0].size()-1] < 0 ? -1 : 
+        dp_max[grid.size()-1][grid[0].size()-1] % 1000000007;
+    }
+};
