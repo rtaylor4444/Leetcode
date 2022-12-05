@@ -1,0 +1,23 @@
+//Run Time: 239ms - 73.32%
+//Memory Usage: 52.7MB - 98.96%
+//Solved =)
+//Time O(n) Memory O(r)
+//r = the maximum range of the possible numbers
+class Solution {
+public:
+    int longestSubsequence(vector<int>& arr, int difference) {
+        int longestSeq = 1;
+        vector<int> dp(20001, 0);
+        for(int i = arr.size() - 1; i >= 0; --i) {
+            int curIndex = arr[i] + 10000;
+            int target = curIndex + difference;
+            //check bounds
+            if(target < 0 or target >= dp.size()) dp[curIndex] = 1;
+            else {
+                dp[curIndex] = max(dp[curIndex], dp[target] + 1);
+            }
+            longestSeq = max(longestSeq, dp[curIndex]);
+        }
+        return longestSeq;
+    }
+};
