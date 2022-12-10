@@ -1,0 +1,32 @@
+//Run Time: 4ms - 96.83%
+//Memory Usage: 5.9MB - 55.27%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+struct SortRestuarant {
+    bool operator()(vector<int>& a, vector<int>& b) {
+        if(a[1] > b[1]) return true;
+        else if(a[1] < b[1]) return false;
+
+        return a[0] > b[0];
+    }
+};
+
+class Solution {
+public:
+    vector<int> filterRestaurants(vector<vector<int>>& restaurants, int veganFriendly, int maxPrice, int maxDistance) {
+        vector<vector<int>> filteredResults;
+        vector<int> filteredIDs;
+        for(int i = 0; i < restaurants.size(); ++i) {
+            if(veganFriendly and !restaurants[i][2]) continue;
+            if(restaurants[i][3] > maxPrice) continue;
+            if(restaurants[i][4] > maxDistance) continue;
+
+            filteredResults.push_back(restaurants[i]);
+        }
+        sort(filteredResults.begin(), filteredResults.end(), SortRestuarant());
+        for(int i = 0; i < filteredResults.size(); ++i) 
+            filteredIDs.push_back(filteredResults[i][0]);
+        return filteredIDs;
+    }
+};
