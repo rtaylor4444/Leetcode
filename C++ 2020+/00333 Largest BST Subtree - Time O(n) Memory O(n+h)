@@ -1,0 +1,52 @@
+//Run Time: 30ms - 46.22%
+//Memory Usage: 27.1MB - 25.8%
+//Solved =)
+//h = height of tree
+//Time O(n) Memory O(n+h)
+
+class Solution {
+    unordered_map<TreeNode*, int> nodeToMaxValue, nodeToMinValue;
+    int maxSubTree;
+public:
+    int subtreeHelper(TreeNode* node) {
+        //Post-Order Traversal - subtree values are dependant on its children
+        if(node == nullptr) return -1;
+        int leftCount = subtreeHelper(node->left);
+        int rightCount = subtreeHelper(node->right);
+        
+        //Get min and max values for this subtree
+        int localMin = node->val, localMax = node->val;
+        if(node->left) {
+            localMin = min(localMin, nodeToMinValue[node->left]);
+            localMax = max(localMax, nodeToMaxValue[node->left]);
+        }
+        if(node->right) {
+            localMin = min(localMin, nodeToMinValue[node->right]);
+            localMax = max(localMax, nodeToMaxValue[node->right]);
+        }
+        nodeToMaxValue.emplace(node, localMax);
+        nodeToMinValue.emplace(node, localMin);
+
+        //Confirm children are valid + fix null node -1 counts
+        if(!leftCount or !rightCount) return 0;
+        if(leftCount > 0) {
+            if(node->left->val >= node->val) return 0;
+            if(nodeToMaxValue[node->left] >= node->val) return 0;
+        }
+        else leftCount = 0;
+
+        if(rightCount > 0) {
+            if(node->right->val <= node->val) return 0;
+            if(nodeToMinValue[node->right] <= node->val) return 0;
+        }
+        else rightCount = 0;
+
+        maxSubTree = max(maxSubTree, leftCount + rightCount + 1);
+        return leftCount + rightCount + 1;
+    } 
+    int largestBSTSubtree(TreeNode* root) {
+        maxSubTree = 0;
+        subtreeHelper(root);
+        return maxSubTree;
+    }
+};
