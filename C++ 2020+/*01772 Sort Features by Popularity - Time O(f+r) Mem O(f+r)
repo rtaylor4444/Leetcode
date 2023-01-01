@@ -1,0 +1,53 @@
+//Run Time: 191ms - 100.00%
+//Memory Usage: 64.7MB - 94.29%
+//Solved =)
+//f = number of features
+//r = number of responses
+//Time O(f+r) Memory O(f+r)
+
+class Solution {
+public:
+    vector<string> sortFeatures(vector<string>& features, vector<string>& responses) {
+        //Counting Sort
+        //Setup
+        unordered_set<string> featuresToFind(features.begin(), features.end());
+        vector<int> featureToAppearance(features.size(), 0), foundFeatures(features.size(), -1);
+        unordered_map<string, int> featureToIndex;
+        for(int i = 0; i < features.size(); ++i) {
+            featureToIndex.emplace(features[i], i);
+        }
+
+        //Count feature appearences
+        for(int i = 0; i < responses.size(); ++i) {
+            string curWord;
+            istringstream iss;
+            iss.str(responses[i]);
+
+            while(iss >> curWord) {
+                if(featuresToFind.find(curWord) != featuresToFind.end()) {
+                    int index = featureToIndex[curWord];
+                    //Skip if we have seen this feature for this response
+                    if(foundFeatures[index] == i) continue;
+                    ++featureToAppearance[index];
+                    foundFeatures[index] = i;
+                }
+            }
+        }
+
+        //Build count sort array
+        vector<vector<int>> appearenceToFeature(responses.size()+1, vector<int>());
+        for(int i = 0; i < featureToAppearance.size(); ++i) {
+            appearenceToFeature[featureToAppearance[i]].push_back(i);
+        }
+
+        //Finally sort the features
+        vector<string> sortedFeatures;
+        sortedFeatures.reserve(features.size());
+        for(int i = appearenceToFeature.size() - 1; i >= 0; --i) {
+            for(int j = 0; j < appearenceToFeature[i].size(); ++j) {
+                sortedFeatures.push_back(features[appearenceToFeature[i][j]]);
+            }
+        }
+        return sortedFeatures;
+    }
+};
