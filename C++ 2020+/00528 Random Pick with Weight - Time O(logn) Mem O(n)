@@ -1,0 +1,46 @@
+
+//Run Time: 102ms - 68.16%
+//Memory Usage: 42.8MB - 5.13%
+//Solved =)
+//Time O(logn) Memory O(n)
+
+class Solution {
+    int totalSum;
+    vector<vector<int>> rangeList;
+
+    int searchRanges(int pick) {
+        int l = 0;
+        int r = rangeList.size();
+        while(l < r) {
+            int m = l + ((r - l) / 2);
+            if(pick >= rangeList[m][0] and pick <= rangeList[m][1])
+                return m;
+
+            if(pick < rangeList[m][0]) r = m-1;
+            else l = m+1;
+        }
+        return l;
+    }
+public:
+    Solution(vector<int>& w) {
+        int prevSum = 0;
+        totalSum = 0;
+        rangeList.clear();
+        for(int i = 0; i < w.size(); ++i) {
+            prevSum = totalSum + 1;
+            totalSum += w[i];
+            rangeList.push_back({prevSum, totalSum});
+        }
+    }
+    
+    int pickIndex() {
+        int pick = rand() % totalSum;
+        return searchRanges(pick+1);
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
