@@ -1,0 +1,30 @@
+//Run Time: 165ms - 71.25%
+//Memory Usage: 82.7MB - 27.50%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minimumOperations(vector<int>& nums) {
+        int l = 0;
+        int r = nums.size() - 1;
+        int numMerges = 0;
+        long currentLeft = nums[l];
+        long currentRight = nums[r];
+        while(l < r) {
+            if(currentLeft == currentRight) {
+                currentLeft = nums[++l];
+                currentRight = nums[--r];
+            }
+            else if(currentLeft > currentRight) {
+                currentRight += nums[--r];
+                ++numMerges;
+            }
+            else {
+                currentLeft += nums[++l];
+                ++numMerges;
+            }
+        }
+        return numMerges;
+    }
+};
