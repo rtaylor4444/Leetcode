@@ -1,0 +1,81 @@
+//Run Time: 513ms - 81.40%
+//Memory Usage: 185.9MB - 14.69%
+//Solved =)
+//Time O(n) Memory O(n)
+
+struct LockingTreeNode {
+    LockingTreeNode *parent;
+    vector<LockingTreeNode*> children;
+    int owner;
+    LockingTreeNode() {
+        parent = nullptr;
+        owner = 0;
+    }
+};
+
+class LockingTree {
+    vector<LockingTreeNode*> nodes;
+public:
+    LockingTree(vector<int>& parent) {
+        //Construct a tree
+        for(int i = 0; i < parent.size(); ++i) {
+            nodes.push_back(new LockingTreeNode());
+        }
+
+        for(int i = 1; i < parent.size(); ++i) {
+            nodes[i]->parent = nodes[parent[i]];
+            nodes[parent[i]]->children.push_back(nodes[i]);
+        }
+    }
+    
+    bool lock(int num, int user) {
+        if(nodes[num]->owner != 0) return false;
+        nodes[num]->owner = user;
+        return true;
+    }
+    
+    bool unlock(int num, int user) {
+        if(nodes[num]->owner != user) return false;
+        nodes[num]->owner = 0;
+        return true;
+    }
+    
+    bool upgrade(int num, int user) {
+        //check if unlocked
+        if(nodes[num]->owner != 0) return false;
+        //check if locked ancestors
+        LockingTreeNode* curNode = nodes[num]->parent;
+        while(curNode) {
+            if(curNode->owner != 0) return false;
+            curNode = curNode->parent;
+        }
+        //check if locked descendant
+        bool isLock = false;
+        queue<LockingTreeNode*> bfs;
+        for(int i = 0; i < nodes[num]->children.size(); ++i) 
+            bfs.push(nodes[num]->children[i]);
+
+        while(!bfs.empty()) {
+            curNode = bfs.front();
+            bfs.pop();
+
+            if(curNode->owner != 0) isLock = true;
+            curNode->owner = 0;
+
+            for(int i = 0; i < curNode->children.size(); ++i) 
+                bfs.push(curNode->children[i]);
+        }
+
+        //only lock if there was a locked decendant
+        if(isLock) lock(num, user);
+        return isLock;
+    }
+};
+
+/**
+ * Your LockingTree object will be instantiated and called as such:
+ * LockingTree* obj = new LockingTree(parent);
+ * bool param_1 = obj->lock(num,user);
+ * bool param_2 = obj->unlock(num,user);
+ * bool param_3 = obj->upgrade(num,user);
+ */
