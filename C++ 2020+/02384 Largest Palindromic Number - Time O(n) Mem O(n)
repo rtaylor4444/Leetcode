@@ -1,0 +1,46 @@
+//Run Time: 26ms - 76.55%
+//Memory Usage: 5.9MB - 23.10%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    string largestPalindromic(string num) {
+        //palin all evens or all evens + one odd in the middle
+
+        //Count the digits
+        vector<int> digitCount(10, 0);
+        for(int i = 0; i < num.size(); ++i) {
+            digitCount[num[i] - '0']++;
+        }
+
+        //Get the largest evens + odd
+        char largestOdd = 0;
+        string sortedEvens; 
+        for(int i = digitCount.size() - 1; i >= 0; --i) {
+            //Keep track of the largest odd digit found
+            if(digitCount[i] % 2 and !largestOdd) largestOdd = ('0'+ i);
+
+            //Add even characters from largest to smallest
+            if(digitCount[i] > 1) {
+                for(int j = 0; j < digitCount[i] / 2; ++j) sortedEvens += ('0'+ i);
+            }
+        }
+
+        //Leading zero edge case
+        int validStartIndex = 0;
+        while(validStartIndex < sortedEvens.size() and sortedEvens[validStartIndex] == '0')
+            ++validStartIndex;
+        string largestEvenDigit = sortedEvens.substr(0, 1);
+        sortedEvens = sortedEvens.substr(validStartIndex, sortedEvens.size());
+
+        //Make the palindrome
+        string finalPalindrome = sortedEvens;
+        reverse(sortedEvens.begin(), sortedEvens.end());
+        if(largestOdd) finalPalindrome += largestOdd;
+        finalPalindrome += sortedEvens;
+
+        if(finalPalindrome.empty()) return largestEvenDigit;
+        return finalPalindrome;
+    }
+};
