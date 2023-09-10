@@ -1,67 +1,62 @@
-//Run Time: 1124ms - 15.46%
-//Memory Usage: 279MB - 5.01%
-//Unoptimal Solution - Time/Memory needs improvement
+//Run Time: 141ms - 47.98%
+//Memory Usage: 20.9MB - 20.96%
 //Time O(n^2) Memory O(n^2)
 class Solution {
 public:
-    bool compareWords(string& cur, string& next) {
-        int numDiff = 0;
-        for(int i = 0; i < cur.size(); ++i) {
-            if(cur[i] != next[i]) ++numDiff;
+    vector<int> getValidTransformations(string& curWord, 
+    unordered_map<string, int>& validWordToIndex, 
+    vector<vector<bool>>& validLetters) {
+        vector<int> validWords;
+        for(int i = 0; i < curWord.size(); ++i) {
+            char originalChar = curWord[i];
+            for(int j = 0; j < validLetters[i].size(); ++j) {
+                if(!validLetters[i][j]) continue;
+                curWord[i] = 'a' + j;
+                if(validWordToIndex.find(curWord) != validWordToIndex.end())
+                    validWords.push_back(validWordToIndex[curWord]);
+            }
+            curWord[i] = originalChar;
         }
-        return numDiff == 1;
+        return validWords;
     }
+
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        //BFS
-        //iterate through the words in the list
-        //check and see if we can make them
-        //aka only a difference by one letter
-        if(beginWord == endWord) return 1;
-        
-        //Build transformation map
-        unordered_map<string, vector<string>> transformMap;
+        //BFS + hashset
+        //fill out info we need to validate a letter transformation
+        unordered_map<string, int> validWordToIndex;
+        vector<vector<bool>> validLetters(wordList[0].size(), vector<bool>(26, false));
         for(int i = 0; i < wordList.size(); ++i) {
+            validWordToIndex.emplace(wordList[i], i);
             for(int j = 0; j < wordList[i].size(); ++j) {
-                string trans = wordList[i].substr(0, j) + "*" 
-                    + wordList[i].substr(j+1, wordList[i].size());
-                
-                if(transformMap.find(trans) == transformMap.end()) {
-                    transformMap.emplace(trans, vector<string>());
-                }
-                transformMap[trans].push_back(wordList[i]);
+                validLetters[j][wordList[i][j] - 'a'] = true;
             }
         }
-        
-        //Perform BFS 
-        unordered_map<string, int> wordToLength;
-        wordToLength.emplace(beginWord, 0);
-        int curLevel = 1;
+        //exit if our endword is not in our wordlist
+        if(validWordToIndex.find(endWord) == validWordToIndex.end()) return 0;
+
+        //preform bfs to determine the shortest path to each word
+        vector<int> wordToTransformSeqLength(wordList.size(), INT_MAX);
+        int numIterations = 0;
         queue<string> bfs;
         bfs.push(beginWord);
         while(!bfs.empty()) {
-            for(int w = bfs.size() - 1; w >= 0; --w) {
+            ++numIterations;
+            for(int i = bfs.size(); i > 0; --i) {
                 string curWord = bfs.front();
-                bfs.pop();
-                
-                if(curWord == endWord)
-                    return curLevel;
-                
-                wordToLength.emplace(curWord, curLevel);
-                for(int i = 0; i < curWord.size(); ++i) {
-                    string trans = curWord.substr(0, i) + "*" 
-                    + curWord.substr(i+1, curWord.size());
-                    
-                    vector<string> commonWords = transformMap[trans];
-                    for(int j = 0; j < commonWords.size(); ++j) {
-                        if(wordToLength.find(commonWords[j]) != wordToLength.end())
-                            continue;
+                bfs.pop(); 
 
-                        bfs.push(commonWords[j]);
-                    }
+                vector<int> indices = getValidTransformations(curWord,validWordToIndex, validLetters);
+                for(int j = 0; j < indices.size(); ++j) {
+                    if(wordToTransformSeqLength[indices[j]] <= numIterations)
+                        continue;
+
+                    wordToTransformSeqLength[indices[j]] = numIterations;
+                    // cout << numIterations << ": added " << wordList[indices[j]] << endl;
+                    bfs.push(wordList[indices[j]]);
                 }
             }
-            ++curLevel;
         }
-        return 0;
+        int finalLength = wordToTransformSeqLength[validWordToIndex[endWord]];
+        return finalLength == INT_MAX ? 0 : finalLength+1;
     }
 };
