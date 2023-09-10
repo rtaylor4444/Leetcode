@@ -1,0 +1,64 @@
+//Run Time: 34ms - 66.54%
+//Memory Usage: 30.1MB - 8.99%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+
+class Solution {
+public:
+    bool isValidCell(vector<vector<int>>& heights, int i, int j, int i2, int j2) {
+        //we can assume i and j are valid
+        if(i2 < 0 || j2 < 0) return false;
+        if(i2 >= heights.size() || j2 >= heights[i2].size()) return false;
+        return heights[i2][j2] >= heights[i][j];
+    }
+    void bfs(vector<vector<int>>& heights, vector<vector<int>>& canReachOcean, int bitFlag, int i, int j) {
+        queue<pair<int, int>> levelOrder;
+        levelOrder.push(make_pair(i, j));
+        while(!levelOrder.empty()) {
+            pair<int, int> pos = levelOrder.front();
+            levelOrder.pop();
+
+            if((canReachOcean[pos.first][pos.second] & bitFlag) != 0) continue;
+
+            canReachOcean[pos.first][pos.second] |= bitFlag;
+            if(isValidCell(heights, pos.first, pos.second, pos.first+1, pos.second))
+                levelOrder.push(make_pair(pos.first+1, pos.second));
+
+            if(isValidCell(heights, pos.first, pos.second, pos.first-1, pos.second))
+                levelOrder.push(make_pair(pos.first-1, pos.second));
+
+            if(isValidCell(heights, pos.first, pos.second, pos.first, pos.second+1))
+                levelOrder.push(make_pair(pos.first, pos.second+1));
+
+            if(isValidCell(heights, pos.first, pos.second, pos.first, pos.second-1))
+                levelOrder.push(make_pair(pos.first, pos.second-1));
+        }
+    }
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        vector<vector<int>> ans;
+        vector<vector<int>> canReachOcean(heights.size(), vector<int>(heights[0].size(), 0));
+        //Run bfs for pacific ocean points
+        for(int i = 0; i < heights.size(); ++i) {
+            bfs(heights, canReachOcean, 1, i, 0);
+        }
+        for(int i = 0; i < heights[0].size(); ++i) {
+            bfs(heights, canReachOcean, 1, 0, i);
+        }
+
+        //Run bfs for atlantic ocean points
+        for(int i = 0; i < heights.size(); ++i) {
+            bfs(heights, canReachOcean, 2, i, heights[i].size()-1);
+        }
+        for(int i = 0; i < heights[0].size(); ++i) {
+            bfs(heights, canReachOcean, 2, heights.size()-1, i);
+        }
+
+        //Fill out ans
+        for(int i = 0; i < heights.size(); ++i) {
+            for(int j = 0; j < heights[i].size(); ++j) {
+                if(canReachOcean[i][j] == 3) ans.push_back(vector<int>({i, j}));
+            }
+        }
+        return ans;
+    }
+};
