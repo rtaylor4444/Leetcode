@@ -1,0 +1,90 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 28.27%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Twitter {
+    struct TwitterInfo {
+        int tweetId;
+        int timeStamp;
+        TwitterInfo(int tweetId, int timeStamp) {
+            this->tweetId = tweetId;
+            this->timeStamp = timeStamp;
+        }
+        bool operator()(TwitterInfo& a, TwitterInfo& b) {
+            return a.timeStamp > b.timeStamp;
+        }
+    };
+
+    int currentTime;
+    vector<vector<TwitterInfo>> userIdToTweets;
+    unordered_map<int, unordered_set<int>> userToFollowee;
+
+    void print(priority_queue<TwitterInfo, vector<TwitterInfo>, TwitterInfo>& p_q) {
+        priority_queue<TwitterInfo, vector<TwitterInfo>, TwitterInfo> temp(p_q);
+        while(!temp.empty()) {
+            cout << temp.top().tweetId << " ";
+            temp.pop(); 
+        }
+        cout << endl;
+    }
+    void addToPriorityQueue(priority_queue<TwitterInfo, vector<TwitterInfo>, TwitterInfo>& p_q,
+    vector<TwitterInfo> info) {
+        for(int i = 0; i < info.size(); ++i) {
+            p_q.push(info[i]);
+            if(p_q.size() > 10) p_q.pop();
+        }
+    }
+public:
+    Twitter() {
+        currentTime = 0;
+        userIdToTweets = vector<vector<TwitterInfo>>(500, vector<TwitterInfo>());   
+    }
+    
+    void postTweet(int userId, int tweetId) {
+        userIdToTweets[userId].push_back(TwitterInfo(tweetId, currentTime++));
+    }
+    
+    vector<int> getNewsFeed(int userId) {
+        TwitterInfo sortInfo(0, 0);
+        priority_queue<TwitterInfo, vector<TwitterInfo>, decltype(sortInfo)> p_q(sortInfo);
+        addToPriorityQueue(p_q, userIdToTweets[userId]);
+
+        if(userToFollowee.find(userId) != userToFollowee.end()) {
+            unordered_set<int>& followees = userToFollowee[userId];
+            for(auto it = followees.begin(); it != followees.end(); ++it) {
+                int followeeId = *it;
+                addToPriorityQueue(p_q, userIdToTweets[followeeId]);
+            }
+        }
+
+        int i = min((int)p_q.size(), 10); 
+        vector<int> ans(i, 0);
+        while(!p_q.empty()) {
+            ans[--i] = p_q.top().tweetId;
+            p_q.pop();
+        }
+        return ans;
+    }
+    
+    void follow(int followerId, int followeeId) {
+        if(userToFollowee.find(followerId) == userToFollowee.end())
+            userToFollowee.emplace(followerId, unordered_set<int>());
+
+        userToFollowee[followerId].emplace(followeeId);
+    }
+    
+    void unfollow(int followerId, int followeeId) {
+        if(userToFollowee.find(followerId) == userToFollowee.end()) return;
+        userToFollowee[followerId].erase(followeeId);
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter* obj = new Twitter();
+ * obj->postTweet(userId,tweetId);
+ * vector<int> param_2 = obj->getNewsFeed(userId);
+ * obj->follow(followerId,followeeId);
+ * obj->unfollow(followerId,followeeId);
+ */
