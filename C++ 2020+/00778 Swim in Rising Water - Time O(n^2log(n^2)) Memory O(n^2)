@@ -1,0 +1,47 @@
+//Run Time: 98ms - 8.67%
+//Memory Usage: 16.8MB - 8.36%
+//Solved =)
+//Time O(n^2log(n^2)) Memory O(n^2)
+
+
+class Solution {
+    struct SortPos {
+        bool operator()(vector<int>& a, vector<int>& b) {
+            return a[0] > b[0];
+        }
+    };
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    }
+    bool checkPos(vector<vector<int>>& grid, int i, int j, int& curTime) {
+        if(i < 0 || j < 0) return false;
+        if(i >= grid.size() || j >= grid.size()) return false;
+        if(curTime < grid[i][j]) curTime = grid[i][j];
+        return true;
+    }
+    int swimInWater(vector<vector<int>>& grid) {
+        int n = grid.size();
+        vector<vector<int>> posToTime(n, vector<int>(n, INT_MAX));
+        //[time, i, j]
+        priority_queue<vector<int>, vector<vector<int>>, SortPos> pq;
+        pq.push({grid[0][0],0,0});
+        while(!pq.empty()) {
+            vector<int> curPos = pq.top();
+            pq.pop();
+
+            //Skip this if we been to this position at a earlier time
+            if(curPos[0] >= posToTime[curPos[1]][curPos[2]]) continue;
+            posToTime[curPos[1]][curPos[2]] = curPos[0];
+            if(curPos[1] == n-1 && curPos[2] == n-1) return posToTime[n-1][n-1];
+
+            for(int i = 0; i < dir.size(); ++i) {
+                int curTime = curPos[0];
+                if(checkPos(grid, curPos[1]+dir[i][0], curPos[2]+dir[i][1], curTime))
+                    pq.push({curTime, curPos[1]+dir[i][0], curPos[2]+dir[i][1]});
+            }
+        }
+        return posToTime[n-1][n-1];
+    }
+};
