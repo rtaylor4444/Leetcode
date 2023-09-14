@@ -1,0 +1,32 @@
+//Run Time: 172ms - 76.70%
+//Memory Usage: 95.4MB - 30.93%
+//Solved =)
+//Time O(n*s) Memory O(n*s)
+
+class Solution {
+public:
+    bool topDown(vector<vector<int>>& memo, vector<int>& nums, int pos, int target) {
+        if(target < 0) return false;
+        if(target == 0) return true;
+        if(memo[pos][target] == 1) return true;
+        else if(memo[pos][target] == -1) return false;
+        for(int i = pos+1; i < nums.size(); ++i) {
+            if(topDown(memo, nums, i, target-nums[i])) {
+                memo[pos][target] = 1;
+                return true;
+            }
+        }
+        memo[pos][target] = -1; 
+        return false;
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int totalSum = 0;
+        for(int i = 0; i < nums.size(); ++i) totalSum += nums[i];
+        //not possible to partition odd numbers
+        if(totalSum % 2 != 0) return false;
+        
+        vector<vector<int>> memo(nums.size(), vector<int>((totalSum/2)+1, 0));
+        return topDown(memo, nums, 0, totalSum/2);
+    }
+};
