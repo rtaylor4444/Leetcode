@@ -1,0 +1,31 @@
+//Run Time: 219ms - 65.88%
+//Memory Usage: 10MB - 89.34%
+//Solved =)
+//Time O(n*s) Memory O(s)
+
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int totalSum = 0;
+        for(int i = 0; i < nums.size(); ++i) totalSum += nums[i];
+        //not possible to partition odd numbers
+        if(totalSum % 2 != 0) return false;
+        
+        //store all of the possible sums we can make
+        int target = (totalSum/2);
+        vector<bool> dp(target+1, 0);
+        //Base Case: we can make 0 by picking no elements
+        dp[0] = true;
+        for(int i = 0; i < nums.size(); ++i) {
+            for(int j = dp.size()-1; j >= 0; --j) {
+                if(dp[target]) return true;
+                //bounds check
+                if(j-nums[i] < 0) continue;
+                //skip if this target was not able to be made
+                if(!dp[j-nums[i]]) continue;
+                dp[j] = true;
+            }
+        }
+        return false;
+    }
+};
