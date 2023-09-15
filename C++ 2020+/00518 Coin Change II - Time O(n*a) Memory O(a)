@@ -1,0 +1,23 @@
+//Run Time: 7ms - 84.41%
+//Memory Usage: 7.4MB - 71.36%
+//Solved =)
+//Time O(n*a) Memory O(a)
+
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        //  0 1 2 3 4 5
+        //1 1 1 1 1 1 1
+        //2 1 1 2 2 3 3
+        //5 1 1 2 2 3 4
+        //dp[i] += dp[i-coins[j]]
+        vector<int> dp(amount+1, 0);
+        dp[0] = 1;
+        for(int i = 0; i < coins.size(); ++i) {
+            for(int j = coins[i]; j <= amount; ++j) {
+                dp[j] += dp[j-coins[i]];
+            }
+        }
+        return dp[amount];
+    }
+};
