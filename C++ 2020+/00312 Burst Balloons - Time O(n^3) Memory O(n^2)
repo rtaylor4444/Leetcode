@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int topDown(vector<vector<int>>& memo, vector<int>& nums, int l, int r) {
+        int maxCoins = 0;
+        if(memo[l][r] != -1) return memo[l][r];
+        for(int i = l; i <= r; ++i) {
+            //access the values outside of our bounds
+            int curCoins = nums[l-1] * nums[i] * nums[r+1];
+            curCoins += topDown(memo, nums, l, i-1);
+            curCoins += topDown(memo, nums, i+1, r);
+            maxCoins = max(maxCoins, curCoins);
+        }
+        memo[l][r] = maxCoins;
+        return maxCoins;
+    }
+    int maxCoins(vector<int>& nums) {
+        //Modify the array and pad ones for easy access
+        vector<int> modNums;
+        modNums.push_back(1);
+        for(int i = 0; i < nums.size(); ++i) modNums.push_back(nums[i]);
+        modNums.push_back(1);
+        // vector<vector<int>> memo(modNums.size(), vector<int>(modNums.size(), -1));
+        // return topDown(memo, modNums, 1, nums.size());
+
+        vector<vector<int>> dp(modNums.size(), vector<int>(modNums.size(), 0));
+        for(int size = 0; size < nums.size(); ++size) {
+            for(int l = 1; l < (modNums.size()-1)-size; ++l) {
+                int r = l+size;
+                for(int i = l; i <= r; ++i) {
+                    //access the values outside of our bounds
+                    int curCoins = modNums[l-1] * modNums[i] * modNums[r+1];
+                    curCoins += dp[l][i-1];
+                    curCoins += dp[i+1][r];
+                    dp[l][r] = max(dp[l][r], curCoins);
+                }
+            }
+        }
+        return dp[1][nums.size()];
+    }
+};
