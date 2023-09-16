@@ -1,0 +1,40 @@
+//Run Time: 0ms - 100%
+//Memory Usage: 6.4MB - 69%
+//Solved =)
+//Time O(n^2) w/ Memo Memory O(n^2)
+
+class Solution {
+public:
+    bool topDown(string& s, int p1, string& p, int p2) {
+        //bounds check
+        bool sOutBounds = p1 <= 0;
+        bool pOutBounds = p2 < 0;
+        if(sOutBounds && pOutBounds) return true;
+        if(pOutBounds) return false;
+
+        //* matching logic
+        if(p[p2] == '*') {
+            //try 0 uses for that character
+            if(topDown(s, p1, p, p2-2)) return true;
+            //try 1-n uses for that character
+            bool isDot = p[p2-1] == '.';
+            for(int i = p1; i >= 0; --i) {
+                if(topDown(s, i, p, p2-1)) return true;
+                //if the characters arent equal stop the chain
+                if((p[p2-1] != s[i] && !isDot)) break;
+            }
+        }
+
+        if(sOutBounds) return false;
+
+        //char match check
+        bool isDot = (p[p2] == '.');
+        if(isDot || s[p1] == p[p2]) return topDown(s, p1-1, p, p2-1);
+        return false;
+    }
+    bool isMatch(string s, string p) {
+        //pad an extra char for "" vs "*c" edge case
+        string newS = " " + s;
+        return topDown(newS, newS.size()-1, p, p.size()-1);
+    }
+};
