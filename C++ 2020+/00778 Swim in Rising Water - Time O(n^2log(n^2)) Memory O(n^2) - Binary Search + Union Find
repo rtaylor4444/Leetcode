@@ -1,0 +1,86 @@
+//Run Time: 98ms - 8.67%
+//Memory Usage: 16.8MB - 8.36%
+//Solved =)
+//Time O(n^2log(n^2)) Memory O(n^2)
+
+class DisjointSet {
+    vector<int> nodes;
+public:
+    DisjointSet(int size) {
+        nodes = vector<int>();
+        for(int i = 0; i < size; ++i) nodes.push_back(i);
+    }
+
+    int getParent(int node) {
+        int root = node;
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int prevNode = node;
+            node = nodes[node];
+            nodes[prevNode] = root;
+        }
+        return root;
+    }
+
+    void unite(int node1, int node2) {
+        int root1 = getParent(node1);
+        int root2 = getParent(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+    }
+
+    bool isUnited(int node1, int node2) { 
+        return getParent(node1) == getParent(node2);
+    }
+};
+
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    }
+    bool checkPos(vector<vector<int>>& grid, int i, int j, int curTime) {
+        if(i < 0 || j < 0) return false;
+        if(i >= grid.size() || j >= grid.size()) return false;
+        return curTime >= grid[i][j];
+    }
+    bool isTimeValid(vector<vector<int>>& grid, int time) {
+        DisjointSet disjointSet(grid.size() * grid.size());
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                //skip tiles we cannot reach
+                if(grid[i][j] > time) continue;
+                int curNode = (i * grid.size())+j;
+                for(int d = 0; d < dir.size(); ++d) {
+                    int i2 = i+dir[d][0];
+                    int j2 = j+dir[d][1];
+                    if(checkPos(grid, i2, j2, time)) {
+                        disjointSet.unite(curNode, (i2 * grid.size())+j2);
+                    }
+                }
+            }
+        }
+        return disjointSet.isUnited(0, (grid.size() * grid.size()) -1);
+    }
+    int swimInWater(vector<vector<int>>& grid) {
+        int maxTime = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                maxTime = max(maxTime, grid[i][j]);
+            }
+        }
+
+        int l = 0, ans = maxTime, r = maxTime;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            bool isValid = isTimeValid(grid, m);
+            if(isValid) {
+                ans = min(ans, m);
+                r = m-1;
+            } else l = m+1;
+        }
+        return ans;
+    }
+};
