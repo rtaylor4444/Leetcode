@@ -1,0 +1,30 @@
+//Run Time: 84ms - 21.43%
+//Memory Usage: 28.5MB - 23.13%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    bool isNStraightHand(vector<int>& hand, int groupSize) {
+        if(hand.size() % groupSize != 0) return false;
+        map<int, int> numToCount;
+        for(int i = 0; i < hand.size(); ++i) {
+            if(numToCount.find(hand[i]) == numToCount.end())
+                numToCount.emplace(hand[i], 0);
+            numToCount[hand[i]]++;
+        }
+
+        int numLeft = (int)hand.size();
+        while(numLeft > 0) {
+            //find a chain starting from minNum
+            int minNum = numToCount.begin()->first;
+            for(int i = minNum; i < minNum+groupSize; ++i) {
+                //exit if we cant find a number in the chain
+                if(numToCount.find(i) == numToCount.end()) return false;
+                if(--numToCount[i] == 0) numToCount.erase(i);
+                --numLeft;
+            }
+        }
+        return true;
+    }
+};
