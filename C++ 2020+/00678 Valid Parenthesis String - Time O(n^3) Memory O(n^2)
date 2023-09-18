@@ -1,0 +1,44 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.5MB - 8.25%
+//Solved =)
+//Time O(n^3) Memory O(n^2)
+
+class Solution {
+public:
+    bool topDown(vector<vector<int>>& memo, string &s, int pos, int numLeft) {
+        if(pos >= s.size()) return numLeft == 0;
+        //if we ever get a negative balance its impossible to balance
+        //Ex: ())()(
+        if(numLeft < 0) return false;
+
+        int startingLeft = numLeft;
+        if(memo[pos][startingLeft] != 0) return memo[pos][startingLeft] > 0;
+
+        for(int i = pos; i < s.size(); ++i) {
+            if(s[i] == '(') ++numLeft;
+            else if(s[i] == ')') --numLeft;
+            else if(s[i] == '*') {
+                for(int option = -1; option < 2; ++option) {
+                    if(!topDown(memo, s, i+1, numLeft+option)) continue;
+                    memo[pos][startingLeft] = 1;
+                    return true;
+                }
+                memo[pos][startingLeft] = -1;
+                return false;
+            }
+
+            if(numLeft == -1) {
+                memo[pos][startingLeft] = -1;
+                return false;
+            }
+        } 
+
+        if(numLeft == 0) memo[pos][startingLeft] = 1;
+        else memo[pos][startingLeft] = -1;
+        return numLeft == 0;
+    }
+    bool checkValidString(string s) {
+        vector<vector<int>> memo(s.size()+1, vector<int>(s.size()+1, 0));
+        return topDown(memo, s, 0, 0);
+    }
+};
