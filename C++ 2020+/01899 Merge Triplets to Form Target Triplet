@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool mergeTriplets(vector<vector<int>>& triplets, vector<int>& target) {
+        //O(n)
+        //all numbers have to exist in the triplets for it to possible
+        //any triplet with a number greater than target must be ignored
+        //iterate and keep track of maxSoFar for all 3 values
+        int maxXSoFar = 0, maxYSoFar = 0, maxZSoFar = 0;
+        for(int i = 0; i < triplets.size(); ++i) {
+            //skip triplets that have any number greater than target
+            if(triplets[i][0] > target[0] || triplets[i][1] > target[1] 
+            || triplets[i][2] > target[2]) continue;
+
+            maxXSoFar = max(maxXSoFar, triplets[i][0]);
+            maxYSoFar = max(maxYSoFar, triplets[i][1]);
+            maxZSoFar = max(maxZSoFar, triplets[i][2]);
+        }
+        return (maxXSoFar == target[0] && maxYSoFar == target[1] && maxZSoFar == target[2]);
+    }
+};
