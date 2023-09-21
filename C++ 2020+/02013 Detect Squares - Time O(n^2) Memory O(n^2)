@@ -1,0 +1,49 @@
+//Run Time: 382ms - 26.75%
+//Memory Usage: 199.88MB - 5.12%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+
+class DetectSquares {
+    vector<vector<int>> xPlanePoints, grid;
+public:
+    DetectSquares() {
+        xPlanePoints = vector<vector<int>>(1001, vector<int>());
+        grid = vector<vector<int>>(1001, vector<int>(1001, 0));
+    }
+    
+    void add(vector<int> point) {
+        xPlanePoints[point[0]].push_back(point[1]);
+        grid[point[0]][point[1]]++;
+    }
+
+    int count(vector<int> point) {
+        int squareCount = 0;
+        //check x-aligned for possible second point
+        for(int i = 0; i < xPlanePoints[point[0]].size(); ++i) {
+            vector<int> matchingPoint1 = {point[0], xPlanePoints[point[0]][i]};
+            int edgeLength = abs(matchingPoint1[1] - point[1]);
+            if(edgeLength == 0) continue;
+
+            //lookup the remaining two points that we need
+            //add edgelength
+            if(max(point[0]+edgeLength, matchingPoint1[0]+edgeLength) < 1001) {
+                if(grid[point[0]+edgeLength][point[1]] && grid[point[0]+edgeLength][matchingPoint1[1]])
+                    squareCount += grid[point[0]+edgeLength][point[1]] * grid[point[0]+edgeLength][matchingPoint1[1]];
+            }
+
+            //remove edgelength
+            if(min(point[0]-edgeLength, matchingPoint1[0]-edgeLength) > -1) {
+                if(grid[point[0]-edgeLength][point[1]] && grid[point[0]-edgeLength][matchingPoint1[1]])
+                    squareCount += grid[point[0]-edgeLength][point[1]] * grid[point[0]-edgeLength][matchingPoint1[1]];
+            }
+        }
+        return squareCount;
+    }
+};
+
+/**
+ * Your DetectSquares object will be instantiated and called as such:
+ * DetectSquares* obj = new DetectSquares();
+ * obj->add(point);
+ * int param_2 = obj->count(point);
+ */
