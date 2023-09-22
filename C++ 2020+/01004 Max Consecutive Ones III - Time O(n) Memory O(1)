@@ -1,0 +1,19 @@
+//Run Time: 35ms - 94.64%
+//Memory Usage: 55.7MB - 14.71%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int flipsUsed = 0, winStart = 0, maxSubarray = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == 0) ++flipsUsed;
+            if(flipsUsed > k) {
+                if(nums[winStart++] == 0) --flipsUsed;
+            }
+            maxSubarray = max(maxSubarray, 1 + (i - winStart));
+        }
+        return maxSubarray;
+    }
+};
