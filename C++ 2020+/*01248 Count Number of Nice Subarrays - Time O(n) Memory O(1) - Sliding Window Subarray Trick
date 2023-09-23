@@ -1,0 +1,37 @@
+//Run Time: 100ms - 76.12%
+//Memory Usage: 67.9MB - 51.43%
+//Solved =)
+//Time O(n) Memory O(1)
+//helpful link - https://leetcode.com/problems/count-number-of-nice-subarrays/solutions/508217/c-visual-explanation-o-1-space-two-pointers/
+
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int totalSubarray = 0, winStart = 0, oddCount = 0, subCountSoFar = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            //keep track of odd count - every diff odd count is a new subarray chain
+            if(nums[i] % 2 != 0) {
+                ++oddCount;
+                subCountSoFar = 1;
+            }
+            //shrink our window once we exceed our count
+            while (oddCount > k) {
+                //keep track of odd count - every diff odd count is a new subarray chain
+                if(nums[winStart++] % 2 != 0) {
+                    --oddCount;
+                    subCountSoFar = 1;
+                }
+            }
+            //once we have our odd count we need to count the subarrays
+            if(oddCount == k) {
+                //each even number is an additional subarray
+                while(nums[winStart] % 2 == 0) {
+                    ++winStart;
+                    ++subCountSoFar;
+                }
+                totalSubarray += subCountSoFar;
+            } 
+        }
+        return totalSubarray;
+    }
+};
