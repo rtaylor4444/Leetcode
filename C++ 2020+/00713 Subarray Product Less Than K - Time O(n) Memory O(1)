@@ -1,0 +1,20 @@
+//Run Time: 73ms - 14.83%
+//Memory Usage: 61.5MB - 9.45%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+        //Sliding Window
+        int winStart = 0, curProduct = 1, numSubarrys = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            curProduct *= nums[i];
+            while(winStart <= i && curProduct >= k) {
+                curProduct /= nums[winStart++];
+            }
+            if(curProduct < k) numSubarrys += (i - winStart) + 1;
+        }
+        return numSubarrys;
+    }
+};
