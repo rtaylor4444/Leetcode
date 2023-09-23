@@ -1,0 +1,41 @@
+//Run Time: 27ms - 77.43%
+//Memory Usage: 8.4MB - 6.41%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    bool isBalanced(unordered_map<char, int>& charToCount, int balancedAmount) {
+        for(auto it = charToCount.begin(); it != charToCount.end(); ++it) {
+            if(it->second > balancedAmount) return false;
+        }
+        return true;
+    }
+
+    int balancedString(string s) {
+        //count chars
+        unordered_map<char, int> charToCount;
+        for(int i = 0; i < s.size(); ++i) {
+            if(charToCount.find(s[i]) == charToCount.end())
+                charToCount.emplace(s[i], 0);
+            charToCount[s[i]]++;
+        }
+
+        int balancedAmount = (int)s.size() / 4;
+        //exit if the string is already balanced
+        if(isBalanced(charToCount, balancedAmount)) return 0;
+
+        int minSubstring = INT_MAX, windowStart = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            //update our amount of chars to balance
+           --charToCount[s[i]];
+            //exit if we find a balanced string
+            while(isBalanced(charToCount, balancedAmount)) {
+                ++charToCount[s[windowStart]];
+                minSubstring = min(minSubstring, 1 + (i - windowStart));
+                ++windowStart;
+            }
+        }
+        return minSubstring;
+    }
+};
