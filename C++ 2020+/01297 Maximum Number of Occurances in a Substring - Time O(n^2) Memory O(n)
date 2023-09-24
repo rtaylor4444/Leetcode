@@ -1,0 +1,36 @@
+//Run Time: 41ms - 90.73%
+//Memory Usage: 13.8MB - 74.80%
+//Solved =)
+//Time O(n^2) Memory O(n)
+
+class Solution {
+public:
+    bool isValid(int windowSize, int numUnique, int maxLetters, int minSize, int maxSize) {
+        if(windowSize < minSize) return false;
+        if(windowSize > maxSize) return false;
+        if(numUnique > maxLetters) return false;
+        return true;
+    }
+    int maxFreq(string s, int maxLetters, int minSize, int maxSize) {
+        unordered_map<string, int> strToOccurance;
+        int maxOccurances = 0, winStart = 0, numUnique = 0;
+        vector<int> charCount(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            //Keep track of unique char count
+            if(charCount[s[i] - 'a']++ == 0) ++numUnique;
+            //just check minSize chars sicne that will always give optimal answer
+            int windowSize = 1+(i-winStart);
+            while(windowSize > minSize) {
+                if(--charCount[s[winStart++] - 'a'] == 0) --numUnique;
+                windowSize = 1+(i-winStart);
+            }
+            if(isValid(windowSize, numUnique, maxLetters, minSize, maxSize)) {
+                string substr = s.substr(winStart, windowSize);
+                if(strToOccurance.find(substr) == strToOccurance.end())
+                    strToOccurance.emplace(substr, 0);
+                maxOccurances = max(maxOccurances, ++strToOccurance[substr]);
+            }
+        }
+        return maxOccurances;
+    }
+};
