@@ -1,0 +1,36 @@
+//Run Time: 15ms - 89.09%
+//Memory Usage: 8.7MB - 37.24%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        //abcabc
+        //001234
+        //1 -> abc
+        //2 -> bca, abca
+        //3 -> cab, bcab, abcab
+        //4 -> abc, cabc, bcabc, abcabc
+        //aaacb
+        //00003
+        //3 -> acb, aacb, aaacb
+        //Sliding Window
+        int uniqueCharCount = 0, winStart = 0, subArraySoFar = 0, numSubarray = 0;
+        vector<int> charToCount(3, 0), charToPos(3, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            //count characters
+            if(charToCount[s[i]-'a']++ == 0) ++uniqueCharCount;
+            //reset our subarray chain when condition is no longer met
+            if(uniqueCharCount < 2) subArraySoFar = 0;
+            //count the subarrays we have so far
+            while(uniqueCharCount == 3) {
+                ++subArraySoFar;
+                if(--charToCount[s[winStart++]-'a'] == 0) --uniqueCharCount;
+            }
+            // cout << subArraySoFar << " ";
+            numSubarray += subArraySoFar;
+        }
+        return numSubarray;
+    }
+};
