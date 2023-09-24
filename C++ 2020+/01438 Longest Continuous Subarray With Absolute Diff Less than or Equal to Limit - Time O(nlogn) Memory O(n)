@@ -1,0 +1,33 @@
+//Run Time: 113ms - 63.16%
+//Memory Usage: 63.2MB - 43.42%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        //Sliding Window
+        map<int, int> numToFreq;
+        int longestSubarray = 0, winStart = 0, maxSoFar = INT_MIN, minSoFar = INT_MAX;
+        for(int i = 0; i < nums.size(); ++i) {
+            //keep track of variables
+            if(numToFreq.find(nums[i]) == numToFreq.end())
+                numToFreq.emplace(nums[i], 0);
+            numToFreq[nums[i]]++;
+
+            maxSoFar = numToFreq.rbegin()->first;
+            minSoFar = numToFreq.begin()->first;
+            // cout << maxSoFar << "  " << minSoFar << endl;
+            int absDiff = abs(maxSoFar - minSoFar);
+            //shink our window as we no longer meet condition
+            while(absDiff > limit) {
+                if(--numToFreq[nums[winStart]] == 0) numToFreq.erase(nums[winStart]);
+                maxSoFar = numToFreq.rbegin()->first;
+                minSoFar = numToFreq.begin()->first;
+                absDiff = abs(maxSoFar - minSoFar);
+                ++winStart;
+            }
+            longestSubarray = max(longestSubarray, 1+(i-winStart));
+        }
+        return longestSubarray;
+    }
+};
