@@ -1,0 +1,27 @@
+//Run Time: 136ms - 34.71%
+//Memory Usage: 99MB - 28.27%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int x) {
+        int curSum = 0, winStart = 0, targetSum = 0, maxSubarray = -1;
+        for(int i = 0; i < nums.size(); ++i) targetSum += nums[i];
+        targetSum -= x; 
+        if(targetSum == 0) return nums.size();
+
+        // cout << targetSum << endl;
+        for(int i = 0; i < nums.size(); ++i) {
+            curSum += nums[i];
+            while(curSum > targetSum) {
+                curSum -= nums[winStart++];
+                if(winStart > i) break;
+            }
+            if(curSum == targetSum) {
+                maxSubarray = max(maxSubarray, 1+(i-winStart));
+            }
+        }
+        return maxSubarray == -1 ? -1 : (int)nums.size() - maxSubarray;
+    }
+};
