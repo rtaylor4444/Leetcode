@@ -1,0 +1,24 @@
+//Run Time: 208ms - 69.91%
+//Memory Usage: 99MB - 71.52%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int maximumUniqueSubarray(vector<int>& nums) {
+        unordered_map<int, int> numToFreq;
+        int winStart = 0, maxScore = 0, scoreSoFar = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            scoreSoFar += nums[i];
+            if(!numToFreq.count(nums[i])) numToFreq[nums[i]] = 0;
+            numToFreq[nums[i]]++;
+            while(numToFreq[nums[i]] > 1) {
+                scoreSoFar -= nums[winStart];
+                --numToFreq[nums[winStart++]];
+                if(winStart > i) break;
+            }
+            maxScore = max(maxScore, scoreSoFar);
+        }
+        return maxScore;
+    }
+};
