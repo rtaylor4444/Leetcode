@@ -1,0 +1,22 @@
+//Run Time: 35ms - 72.71%
+//Memory Usage: 46MB - 17.03%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        int winStart = 0, elementsLeftToDelete = 1, maxSubarray = 0, subarraySizeSoFar = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == 1) ++subarraySizeSoFar;
+            else --elementsLeftToDelete;
+            //shrink window size if we use too many deletes
+            while(elementsLeftToDelete < 0) {
+                if(nums[winStart++] == 1) --subarraySizeSoFar;
+                else ++elementsLeftToDelete;
+            }
+            maxSubarray = max(maxSubarray, subarraySizeSoFar - elementsLeftToDelete);
+        }
+        return maxSubarray;
+    }
+};
