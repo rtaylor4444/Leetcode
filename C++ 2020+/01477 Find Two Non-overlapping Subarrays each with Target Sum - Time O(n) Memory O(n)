@@ -1,0 +1,52 @@
+//Run Time: 95ms - 76.85%
+//Memory Usage: 84.6MB - 74.78%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int minSumOfLengths(vector<int>& arr, int target) {
+        int winStart = 0, sum = 0, minSize = INT_MAX;
+        vector<int> indexToSubarraySize(arr.size(), 0);
+        vector<int> subarrayIndices;
+        //determine all the possible valid subarrays
+        for(int i = 0; i < arr.size(); ++i) {
+            sum += arr[i];
+            while(sum > target) {
+                sum -= arr[winStart++];
+            }
+            int windowSize = 1+(i-winStart);
+            if(sum == target) {
+                indexToSubarraySize[winStart] = windowSize;
+                //add this index to our efficent subarray list if its valid
+                if(subarrayIndices.empty()) subarrayIndices.push_back(winStart);
+                else {
+                    //add this to our list only if its smaller than the previous entry
+                    if(indexToSubarraySize[subarrayIndices.back()] > windowSize)
+                        subarrayIndices.push_back(winStart);
+                }
+            }
+        }
+        // for(int i = 0; i < arr.size(); ++i) cout << indexToSubarraySize[i] << " ";
+
+        int minSizeSoFar = INT_MAX;
+        for(int i = arr.size()-1; i >= 0; --i) {
+            if(indexToSubarraySize[i] == 0) continue;
+            //Keep track of the most efficent right-size subarrays to pick
+            minSizeSoFar = min(minSizeSoFar, indexToSubarraySize[i]);
+            
+            //check efficent left-side subarrays
+            while(!subarrayIndices.empty()) {
+                int subarraySize = indexToSubarraySize[subarrayIndices.back()];
+                int endIndex = subarrayIndices.back() + (subarraySize-1);
+                //check if we overlap with the current subarray - if so current option isnt possible
+                if(i > endIndex) {
+                    minSize = min(minSize, minSizeSoFar + subarraySize);
+                    break;
+                //otherwise pop it off since we finished processing
+                } else subarrayIndices.pop_back();
+            }
+        }
+        return minSize == INT_MAX ? -1 : minSize;
+    }
+};
