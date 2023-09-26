@@ -1,0 +1,34 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 6.5MB - 26.27%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    bool equalFrequency(string word) {
+        //Counting
+        vector<int> charCount(26, 0);
+        //O(n) loop to count characters
+        for(int i = 0; i < word.size(); ++i) {
+            charCount[word[i] - 'a']++;
+        }
+
+        //O(n)
+        for(int i = 0; i < word.size(); ++i) {
+            charCount[word[i] - 'a']--;
+            //O(26) loop
+            int prevCount = INT_MAX, c = 0;
+            for(; c < 26; ++c) {
+                if(charCount[c] == 0) continue;
+                if(prevCount == INT_MAX) prevCount = charCount[c];
+                if(prevCount != charCount[c]) break;
+                prevCount = charCount[c];
+            }
+            //Exit if loop completes successfully
+            if(c == 26) return true;
+            charCount[word[i] - 'a']++;
+        }
+        //O(n) * O(26) = O(n) * O(1) = O(n)
+        return false;
+    }
+};
