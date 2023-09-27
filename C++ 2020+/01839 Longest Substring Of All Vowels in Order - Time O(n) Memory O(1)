@@ -1,0 +1,33 @@
+//Run Time: 96ms - 44.32%
+//Memory Usage: 27MB - 42.76%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int longestBeautifulSubstring(string word) {
+        //Sliding Window
+        int maxSubarray = 0, start = 0, validIndex1 = 0, validIndex2 = 1;
+        string validChars = " aeiou ";
+        //                    12
+        for(int end = 0; end < word.size(); ++end) {
+            //reset the window if we dont match either valid char
+            if (word[end] != validChars[validIndex1] && word[end] != validChars[validIndex2]) {
+                start = end;
+                //a valid substring must start with a
+                if(word[end] != 'a') ++start;
+                validIndex1 = 0;
+                validIndex2 = 1;
+            }
+            //check if the current char is a future valid char
+            if(word[end] == validChars[validIndex2]) {
+                //update our valid char indices
+                validIndex2 = 1 + (++validIndex1);
+            }
+            //do nothing if current char is current valid char
+            // cout << end << " => " << validChars[validIndex1] << " " << validChars[validIndex2] << endl;
+            //Only update max array when we have a complete vowel substring
+            if(validChars[validIndex1] == 'u') maxSubarray = max(maxSubarray, 1+(end-start));
+        }
+        return maxSubarray;
+    }
+};
