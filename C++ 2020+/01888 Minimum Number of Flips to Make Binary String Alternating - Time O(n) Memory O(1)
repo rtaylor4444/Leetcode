@@ -1,0 +1,53 @@
+//Run Time: 30ms - 90.31%
+//Memory Usage: 11.6MB - 82.95%
+//Solved =)
+//Time O(n) Memory O(1)
+class Solution {
+public:
+    int minFlips(string s) {
+        //Sliding Window
+        //2 choices
+        //type 1 flips the 010 to 101
+        //type 2 just flips a simple character
+        //111000
+        //odd 1s: 1, even 0s: 1
+        //odd 0s: 2, even 1s: 2
+        //min of either option is the number of flips
+
+        //010
+        //odd 1s: 1, even 0s: 2
+        //odd 0s: 0, even 1s: 0
+
+        //111000111000
+        //iterate over array twice to simulate a circle
+        int size = (int)s.size(), minFlips = INT_MAX;;
+        int odd1s = 0, odd0s = 0, even1s = 0, even0s = 0;
+        for(int i = 0; i < size * 2; ++i) {
+            int winEnd = i - size;
+            if(s[i%size] == '0') {
+                //count 0s
+                if(i%2 == 0) even0s++;
+                else odd0s++;
+                //remove 0s outside of window
+                if(winEnd < 0) continue;
+                if(winEnd%2 == 0) even0s--;
+                else odd0s--;
+            }
+            else {
+                //count 1s
+                if(i%2 == 0) even1s++;
+                else odd1s++;
+                //remove 1s outside of window
+                if(winEnd < 0) continue;
+                if(winEnd%2 == 0) even1s--;
+                else odd1s--;
+            }
+            int flipOption1 = odd1s + even0s;
+            int flipOption2 = odd0s + even1s;
+            minFlips = min(minFlips, min(flipOption1, flipOption2));
+        }
+        // cout << "odd 1s: " << odd1s << " even 0s: " << even0s << endl;
+        // cout << "odd 0s: " << odd0s << " even 1s: " << even1s << endl;
+        return minFlips;
+    }
+};
