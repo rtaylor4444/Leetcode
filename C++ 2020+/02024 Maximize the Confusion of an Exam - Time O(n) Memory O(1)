@@ -1,0 +1,26 @@
+//Run Time: 21ms - 80.41%
+//Memory Usage: 10.33MB - 30.20%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int maxConsecutiveAnswers(string answerKey, int k) {
+        //Sliding Window
+        //count F's and T's
+        int start = 0, countF = 0, countT = 0, maxSubarray = 0;
+        for(int end = 0; end < answerKey.size(); ++end) {
+            if(answerKey[end] == 'T') ++countT;
+            else countF++;
+
+            int kUses = min(countT, countF);
+            while(kUses > k) {
+                if(answerKey[start++] == 'T') --countT;
+                else countF--;
+                kUses = min(countT, countF);
+            }
+            maxSubarray = max(maxSubarray, 1+(end-start));
+        }
+        return maxSubarray;
+    }
+};
