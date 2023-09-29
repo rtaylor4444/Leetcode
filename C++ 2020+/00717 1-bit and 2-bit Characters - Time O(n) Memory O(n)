@@ -1,0 +1,52 @@
+//Run Time: 3ms - 71.00%
+//Memory Usage: 10.2MB - 7.19%
+//Needs Optimized
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    bool canDecode(int i, int size, vector<int>& bits) {
+        //bounds check
+        if(i < 0 || i+size >= bits.size()) return false;
+        if(size == 0) return bits[i] == 0;
+        return bits[i] == 1;
+    }
+    bool topDown(int i, vector<int>& bits, vector<int>& memo) {
+        if(i < 0) return false;
+        if(memo[i] != 0) return memo[i] > 0;
+        bool is1BitPossible = false, is2BitPossible = false;
+        //check 1 bit
+        if(canDecode(i, 0, bits)) is1BitPossible = topDown(i-1, bits, memo);
+        //check 2 bit
+        if(canDecode(i-1, 1, bits)) is2BitPossible = topDown(i-2, bits, memo);
+        //store result
+        if(is1BitPossible || is2BitPossible) memo[i] = 1;
+        else memo[i] = -1;
+        return is1BitPossible || is2BitPossible;
+    }
+    bool isOneBitCharacter(vector<int>& bits) {
+        //Dynamic Programming
+        //Top Down
+        vector<int> newBits;
+        newBits.push_back(0);
+        for(int i = 0; i < bits.size(); ++i) newBits.push_back(bits[i]);
+
+        // vector<int> memo(newBits.size(), 0);
+        // //base case
+        // memo[0] = 1;
+        // return topDown(newBits.size()-2, newBits, memo);
+
+        vector<bool> dp(3, false);
+        //base case
+        dp[0] = true;
+        for(int i = 1; i < newBits.size(); ++i) {
+            bool is1BitPossible = false, is2BitPossible = false;
+            //check 1 bit
+            if(canDecode(i, 0, newBits)) is1BitPossible = dp[(i-1)%3];
+            //check 2 bit
+            if(i-2 >= 0 && canDecode(i-1, 1, newBits)) is2BitPossible = dp[(i-2)%3];
+            dp[i%3] = is1BitPossible || is2BitPossible;
+        }
+        return dp[(newBits.size()-2)%3];
+    }
+};
