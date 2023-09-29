@@ -1,0 +1,38 @@
+//Run Time: 23ms - 40.89%
+//Memory Usage: 5.9MB - 21.23%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        //"000111" => 3 "01", "0011", "000111"
+        //"11100" => 2 "1100"
+        //"00011100" 3+2  
+        // 00012312
+        //Sliding Window O(n)
+        //count number of consecutive 0s and 1s as we go
+        //reset consecutive count then add our current count
+        //count += min(consec0s, consec1s);
+        int count = 0, numConsec0s = 0, numConsec1s = 0;
+        char prevChar = s[0];
+        for(int i = 0; i < s.size(); ++i) {
+            bool isConsecMatch = prevChar == s[i];
+            if(isConsecMatch) {
+                //keep track on consecutive count
+                if(s[i] == '0') ++numConsec0s;
+                else ++numConsec1s;
+            } else {
+                //add the total subarrays from out subarray chain
+                // cout << i << " adding " << min(numConsec0s, numConsec1s) << " subarrays" << endl;
+                count += min(numConsec0s, numConsec1s);
+                //reset consecutive count
+                if(s[i] == '0') numConsec0s = 1;
+                else numConsec1s = 1;
+            }
+            prevChar = s[i];
+        }
+        count += min(numConsec0s, numConsec1s);
+        return count;
+    }
+};
