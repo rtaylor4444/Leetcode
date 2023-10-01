@@ -1,0 +1,23 @@
+//Run Time: 165ms - 46.73%
+//Memory Usage: 130.46MB - 59.64%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    vector<int> getAverages(vector<int>& nums, int k) {
+        //Sliding Window
+        int start = 0, kSize = 1+(k*2);
+        vector<int> ans(nums.size(), -1);
+        if(kSize > nums.size()) return ans;
+        long sumSoFar = 0;
+        for(int end = 0; end < nums.size(); ++end) {
+            sumSoFar += (long)nums[end]; 
+            int windowSize = 1+(end-start);
+            if(windowSize > kSize) sumSoFar -= (long)nums[start++];
+            windowSize = 1+(end-start);
+            if(windowSize == kSize) ans[end-k] = (int)(sumSoFar / kSize);
+        }
+        return ans;
+    }
+};
