@@ -1,0 +1,36 @@
+//Run Time: 73ms - 75.60%
+//Memory Usage: 80.6MB - 60.53%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minSwaps(vector<int>& nums) {
+        //Sliding Window 
+        //count the number of ones
+        //get all of the 1's in the window
+        //then take the minimum amount of zeros in our window
+        //min(window size - 1s count)
+        int max1Count = 0, zeroCount = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == 1) ++max1Count;
+            else zeroCount++;
+        }
+        if(max1Count == 0) return 0;
+        if(zeroCount == 0) return 0;
+        //circular iteration
+        int n = (int)nums.size();
+        zeroCount = 0;
+        int minFlips = INT_MAX, winStart = 0;
+        for(int i = 0; i < n*2; ++i) {
+            if(nums[i%n] == 0) ++zeroCount;
+            int windowSize = 1+(i-winStart);
+            if(windowSize > max1Count) {
+                if(nums[winStart++ % n] == 0) --zeroCount;
+                windowSize = 1+(i-winStart);
+            }
+            if(windowSize == max1Count) minFlips = min(minFlips, zeroCount);
+        }
+        return minFlips;
+    }
+};
