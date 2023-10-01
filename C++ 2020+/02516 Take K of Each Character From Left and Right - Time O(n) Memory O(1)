@@ -1,0 +1,50 @@
+//Run Time: 31ms - 73.02%
+//Memory Usage: 10.8MB - 30.63%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    bool hasTooManyChar(vector<int>& charCount) {
+        if(charCount[0] < 0) return true;
+        if(charCount[1] < 0) return true;
+        if(charCount[2] < 0) return true;
+        return false;
+    }
+    bool isCountValid(vector<int>& charCount) {
+        if(charCount[0] > 0) return false;
+        if(charCount[1] > 0) return false;
+        if(charCount[2] > 0) return false;
+        return true;
+    }
+    int takeCharacters(string s, int k) {
+        //Sliding Window
+        //get maximum subarray that has max number of chars - k
+        //ans is s.size() - maximum subarray that meets condition
+        int numNegCount = k == 0 ? 0 : 3;
+        vector<int> charCount(3, -k);
+        for(int i = 0; i < s.size(); ++i) {
+            if(++charCount[s[i] - 'a'] == 0) --numNegCount;
+        }
+        if(numNegCount > 0) return -1;
+
+        // cout << "we need a: " << charCount[0] << " b: " << charCount[1] << " c: " << charCount[2] << endl;
+        //a: 2 b: 0 c: 0
+        //aabaaaacaabc
+        //   s
+        //      e
+        int maxSubarray = 0, start = 0;
+        for(int end = 0; end < s.size(); ++end) {
+            --charCount[s[end] - 'a'];
+            //shrink window if we have too many of any character
+            while(hasTooManyChar(charCount)) {
+                ++charCount[s[start++] - 'a'];
+            }
+            // cout << "we have a: " << charCount[0] << " b: " << charCount[1] << " c: " << charCount[2] << endl;
+            int windowSize = 1+(end-start);
+            if(!hasTooManyChar(charCount)) maxSubarray = max(maxSubarray, windowSize);
+        }
+        // cout << maxSubarray << endl;
+        return (int)s.size() - maxSubarray;
+    }
+};
