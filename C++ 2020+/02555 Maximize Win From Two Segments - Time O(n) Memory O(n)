@@ -1,0 +1,49 @@
+//Run Time: 80ms - 68.18%
+//Memory Usage: 5.9MB - 59.63%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int maximizeWin(vector<int>& prizePositions, int k) {
+        //Sliding Window + DP O(n)
+        //do two iterations of n sliding window for each segment
+        //keep window of VALUES prizePositions[i] - k
+        //prizes is equal to window size
+
+        //1st Sliding Window + store DP array
+        vector<int> dp(prizePositions.size(), 0);
+        int maxSeg1Start = 0, start = 0, maxSeg1Prizes = 0;
+        for(int end = 0; end < prizePositions.size(); ++end) {
+            int valueWindow = prizePositions[end] - prizePositions[start]; 
+            while(valueWindow > k) {
+                valueWindow = prizePositions[end] - prizePositions[++start]; 
+            }
+            int windowSize = 1+(end-start);
+            if(windowSize > maxSeg1Prizes) {
+                maxSeg1Prizes = windowSize;
+                maxSeg1Start = start;
+            }
+            dp[end] = maxSeg1Prizes;
+            //cout << dp[end] << " ";
+        }
+
+        if(maxSeg1Prizes == (int)prizePositions.size()) return prizePositions.size();
+        
+        //2nd Sliding Window
+        start = 0;
+        int maxPrizes = maxSeg1Prizes;
+        for(int end = 0; end < prizePositions.size(); ++end) {
+            int valueWindow = prizePositions[end] - prizePositions[start]; 
+            while(valueWindow > k) {
+                valueWindow = prizePositions[end] - prizePositions[++start]; 
+            }
+
+            //get maximum prizes acounting for the previous max prizes 
+            int finalNumPrizes = 1+(end-start);
+            if(start-1 >= 0) finalNumPrizes += dp[start-1];
+            maxPrizes = max(maxPrizes, finalNumPrizes);
+        }
+        return maxPrizes;
+    }
+};
