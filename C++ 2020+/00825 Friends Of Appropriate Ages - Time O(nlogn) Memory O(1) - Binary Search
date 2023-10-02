@@ -1,0 +1,97 @@
+//Run Time: 75ms - 29.07%
+//Memory Usage: 37.84MB - 16.28%
+//Needs Optimized
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+public:
+    int binarySearchLowerBound(vector<int>& ages, int lower_bound) {
+        //find the first index greater or equal to lower bound
+        int l = 0, r = ages.size()-1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            
+            if(ages[m] >= lower_bound) {
+                ans = m;
+                r = m-1;
+            } else l = m+1;
+        }
+        return ans;
+    }
+    int binarySearchUpperBound(vector<int>& ages, int upper_bound) {
+        //find the first index lesser or equal to upper bound
+        int l = 0, r = ages.size()-1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+
+            if(ages[m] <= upper_bound) {
+                ans = m;
+                l = m+1;
+            } else r = m-1;
+        }
+        return ans;
+    }
+    int numFriendRequests(vector<int>& ages) {
+        //Sorting?
+        //person y -> person x
+        //person x -> person y
+
+        //person x -> y conditions
+        //y != x
+        //age[y] <= 0.5 * age[x] + 7
+        //age[y] > age[x] *person y cannot be older than person x
+        //age[y] > 100 && age[x] < 100
+
+        //O(n^2) Brute Force
+        //compare friends to friends and see what connections can be made
+        //if x sends a connection to y; doesnt mean y send a connection to x
+
+        //O(nlogn) Binary Search
+        //[20,30,100,110,120]
+        // x
+        //run binary search
+        //cond 1)
+        //age[y] <= 0.5 * 20 + 7
+        //age[y] <= 17 -> age[y] > 17
+        //lower bound is 18
+        //cond 2)
+        //age[y] > 20
+        //age[y] <= 20
+        //upper bound is 20
+        //cond 3)
+        //age[y] > 100 && age[x] < 100
+        //if x is less than 100 y cannot be greater than 100
+        //upper bound is 100
+        //[20,30,100,110,120]
+        // l      m       r
+        
+        sort(ages.begin(), ages.end());
+        int numRequests = 0;
+        for(int i = 0; i < ages.size(); ++i) {
+            int upper_bound = INT_MAX;
+            int lower_bound = INT_MIN;
+            //cond 3 - if we are under 100 person y cannot be over 100
+            //if(ages[i] < 100) upper_bound = 100;
+            //cond 2 - person y cannot be older than us
+            upper_bound = min(upper_bound, ages[i]);
+            //cond 1 - calc lower_bound
+            lower_bound = (ages[i] / 2) + 8;
+            //skip if bounds overlap
+            //cout << i << " -> bounds: " << lower_bound << " - " << upper_bound << endl;
+            if(lower_bound > upper_bound) continue;
+            int lowerBoundIndex = binarySearchLowerBound(ages, lower_bound); 
+            int upperBoundIndex = binarySearchUpperBound(ages, upper_bound);
+            //cout << "lower_bound: " << lowerBoundIndex << " upper_bound: ";
+            //cout << upperBoundIndex << endl;
+            if(lowerBoundIndex == -1 || upperBoundIndex == -1) continue;
+            if(lowerBoundIndex <= upperBoundIndex) {
+                int rangeSize = 1+(upperBoundIndex - lowerBoundIndex);
+                //if our index is within this range reduce by one since we cannot
+                //send to ourselves
+                if(lowerBoundIndex <= i && i <= upperBoundIndex) --rangeSize;
+                numRequests += rangeSize;
+            }
+        }
+        return numRequests;
+    }
+};
