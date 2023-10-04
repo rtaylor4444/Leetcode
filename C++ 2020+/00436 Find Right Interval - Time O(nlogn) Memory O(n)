@@ -1,0 +1,37 @@
+//Run Time: 73ms - 30.57%
+//Memory Usage: 30MB - 22.08%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    int binarySearch(vector<vector<int>>& intervals, int i) {
+        int l = 0, r = intervals.size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            //exit if our end matches thei r start (found answer)
+            if(intervals[i][1] == intervals[m][0]) return intervals[m][2];
+
+            if(intervals[i][1] < intervals[m][0]) {
+                ans = intervals[m][2];
+                r = m - 1;
+            } else l = m + 1;
+        }
+        return ans;
+    }
+
+    vector<int> findRightInterval(vector<vector<int>>& intervals) {
+        //Binary Search
+        //if(intervals.size() <= 1) return {-1};
+        vector<vector<int>> intervalInfo;
+        for(int i = 0; i < intervals.size(); ++i) intervalInfo.push_back({intervals[i][0] , intervals[i][1], i });
+
+        sort(intervalInfo.begin(), intervalInfo.end());
+        vector<int> ans(intervals.size(), -1);
+        for(int i = 0; i < intervals.size(); ++i) {
+            //cout << "[" << intervalInfo[i][0] << ", " << intervalInfo[i][1] << "]" << endl;
+            ans[intervalInfo[i][2]] = binarySearch(intervalInfo, i);
+        }
+        return ans;
+    }
+};
