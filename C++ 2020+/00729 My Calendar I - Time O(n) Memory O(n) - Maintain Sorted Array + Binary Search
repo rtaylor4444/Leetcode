@@ -1,0 +1,67 @@
+//Run Time: 147ms - 28.56%
+//Memory Usage: 5.9MB - 25.15%
+//Needs Optimized
+//Time O(n) Memory O(n)
+
+class MyCalendar {
+    vector<vector<int>> intervalList;
+
+    int findInsertionIndex(int start) {
+        int l = 0, r = intervalList.size() - 1, index = 0;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            //exit if we find a matching start
+            if(intervalList[m][0] == start) return -1;
+
+            if(intervalList[m][0] < start) {
+                index = m+1;
+                l = m + 1;
+            } else r = m - 1;
+        }
+        return index;
+    }
+
+    bool checkOverlap(int start, int end, int index) {
+        if(index < 0 || index >= intervalList.size()) return true;
+        int maxStart = max(start, intervalList[index][0]);
+        int minEnd = min(end, intervalList[index][1]);
+        //cout << "overlap: " << maxStart << " - " << minEnd << endl;
+        return minEnd - maxStart < 1;
+    }
+public:
+    MyCalendar() {
+        
+    }
+    
+    bool book(int start, int end) {
+        if(intervalList.empty()) {
+            intervalList.push_back({start, end});
+            return true;
+        }
+
+        int index = findInsertionIndex(start);
+        //exit on matching start
+        if(index == -1) return false;
+        //cout << "insertion index: " << index << endl;
+        //check and make sure there is no overlap for both start and end
+        if(!checkOverlap(start, end, index)) return false;
+        if(!checkOverlap(start, end, index-1)) return false;
+        
+        //maintain sorted list of intervals
+        intervalList.push_back({start, end});
+        for(int i = intervalList.size() - 1; i > index; --i) {
+            swap(intervalList[i], intervalList[i-1]);
+        }
+
+        // for(int i = 0; i < intervalList.size(); ++i) {
+        //     cout << "[" << intervalList[i][0] << ", " << intervalList[i][1] << "]" << endl;
+        // }
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar* obj = new MyCalendar();
+ * bool param_1 = obj->book(start,end);
+ */
