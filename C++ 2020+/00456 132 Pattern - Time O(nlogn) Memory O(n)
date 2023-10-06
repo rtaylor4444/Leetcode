@@ -1,0 +1,51 @@
+//Run Time: 137ms - 8.11%
+//Memory Usage: 68.7MB - 5.60%
+//Needs Optimize
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    bool find132pattern(vector<int>& nums) {
+        //Multiple Pass O(nlogn)
+        //just need to find one pattern
+        //nums[i] has to be positioned before nums[j] and nums[k]
+        //it also has to be less than both of them
+        //nums[j] has to be positioned before nums[k] but less than
+
+        //we can preprocess for nums[i] keep track of the smallest num so far
+        //[1,2,3,4] -> [1,1,1,1]
+        //[3,1,4,2] -> [3,1,1,1]
+        //[-1,3,2,0] -> [-1,-1,-1,-1]
+
+        //solve for j keep track of the possible ranges (max ranges)
+        //[1,2,3,4]
+        //[1,1,1,1]
+        //[u,2]
+
+        if(nums.size() < 3) return false;
+        //preprocess i and nums[i]
+        vector<int> prevI;
+        int minNum = INT_MAX;
+        for(int i = 0; i < nums.size(); ++i) {
+            minNum = min(minNum, nums[i]);
+            prevI.push_back(minNum);
+        }
+        // for(int i = 0; i < nums.size(); ++i) cout << prevI[i] << " ";
+        // cout << endl;
+
+        //solve for j and nums[j]
+        set<int> bst;
+        for(int j = nums.size()-2; j >= 1; --j) {
+            //add next num to our bst
+            bst.insert(nums[j+1]);
+            //skip if nums[i] is invalid - account for finding K as well
+            if(prevI[j-1] - nums[j] > 2) continue;
+            //we have to find a k that is between i-1 and j+1
+            auto upperIt = bst.upper_bound(prevI[j-1]);
+            if(upperIt == bst.end() || *upperIt >= nums[j] || *upperIt <= prevI[j-1]) continue;
+            cout << prevI[j-1] << " < " << *upperIt << " < " << nums[j] << endl;
+            return true;
+        }
+        return false;
+    }
+};
