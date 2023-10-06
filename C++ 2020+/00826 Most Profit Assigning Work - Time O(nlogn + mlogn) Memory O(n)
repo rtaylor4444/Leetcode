@@ -1,0 +1,50 @@
+//Run Time: 81ms - 30.69%
+//Memory Usage: 46.46MB - 8.05%
+//Solved =)
+//Time O(nlogn + mlogn) Memory O(n)
+
+class Solution {
+public:
+    int binarySearch(vector<vector<int>>& difficultyToMaxProfit, int ability) {
+        int l = 0, r = difficultyToMaxProfit.size() - 1, profit = 0;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(difficultyToMaxProfit[m][0] <= ability) {
+                profit = max(profit, difficultyToMaxProfit[m][1]);
+                l = m + 1;
+            } else r = m - 1;
+        }
+        return profit;
+    }
+    int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker) {
+        ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL);
+        //Brute Force O(n * m)
+        //Store maximum profit for each difficulty?
+        //Binary Search O(nlogn + mlogn)
+        //make difficulty + profit array
+        //sort difficulty + profit array
+        //do a pass through difficulty + profit array keep track of max profit for ability
+        //binary search the answer for each worker
+
+        vector<vector<int>> difficultyToMaxProfit;
+        for(int i = 0; i < profit.size(); ++i) {
+            difficultyToMaxProfit.push_back({difficulty[i], profit[i]});
+        }
+        sort(difficultyToMaxProfit.begin(), difficultyToMaxProfit.end());
+
+        int maxProfitSoFar = 0;
+        for(int i = 0; i < profit.size(); ++i) {
+            maxProfitSoFar = max(maxProfitSoFar, difficultyToMaxProfit[i][1]);
+            //cout << "difficulty: " << difficultyToMaxProfit[i][0] << " -> ";
+            //cout << "profit: " << difficultyToMaxProfit[i][1] << endl;
+            difficultyToMaxProfit[i][1] = maxProfitSoFar;
+            //cout << "profit: " << difficultyToMaxProfit[i][1] << endl;
+        }
+
+        maxProfitSoFar = 0;
+        for(int i = 0; i < worker.size(); ++i) {
+            maxProfitSoFar += binarySearch(difficultyToMaxProfit, worker[i]);
+        }
+        return maxProfitSoFar;
+    }
+};
