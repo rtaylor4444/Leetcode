@@ -1,0 +1,57 @@
+//Run Time: 425ms - 25.83%
+//Memory Usage: 116.7MB - 28.27%
+//Needs Optimization
+//Time O(n * mlogn) Memory O(n)
+
+class Solution {
+public:
+    vector<int> binarySearch(vector<int>& posList, int start, int curPos) {
+        int l = start, r = posList.size() - 1, pos = -1, index = -1; 
+        while(l <= r) {
+            int m = l +((r-l)/2);
+            if(posList[m] >= curPos) {
+                index = m;
+                pos = posList[m];
+                r = m - 1;
+            } else l = m + 1;
+        }
+        return {pos, index};
+    }
+    int numMatchingSubseq(string s, vector<string>& words) {
+        //n = size of s
+        //m = number of words
+        //Mutliple Pass + Binary Search O(n + mlog(n))
+        //preprocess string s map each char to all indices
+        vector<vector<int>> charToIndex(26, vector<int>());
+        for(int i = 0; i < s.size(); ++i) {
+            charToIndex[s[i] - 'a'].push_back(i);
+        }
+
+        int numMatches = 0;
+        for(int i = 0; i < words.size(); ++i) {
+            vector<int> charToPos(26, 0);
+            int j = 0, curPos = -1;
+            for(; j < words[i].size(); ++j) {
+                //exit if a characters does not exist in s
+                int index = words[i][j] - 'a';
+                if(charToIndex[index].empty()) break;
+                //exit if we used up all character positions
+                if(charToIndex[index].size() <= charToPos[index]) break;
+                
+                //find a letter past our position
+                vector<int> result = binarySearch(charToIndex[index], charToPos[index], curPos);
+                //exit if we fail to find a character after our current position
+                //cout << "pos: " << result[0] << " index: " << result[1] << endl;
+                if(curPos > result[0]) break;
+
+                curPos = result[0];
+                charToPos[index] = result[1]+1;
+            }
+            if(j == (int)words[i].size()) {
+                //cout << "added: " << words[i] << endl;
+                ++numMatches;
+            }
+        }
+        return numMatches;
+    }
+};
