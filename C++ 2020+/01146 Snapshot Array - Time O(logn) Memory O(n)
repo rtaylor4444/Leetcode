@@ -1,0 +1,58 @@
+//Run Time: 377ms - 79.83%
+//Memory Usage: 185.9MB - 39.77%
+//Solved =)
+//Time O(n) Memory O(n)
+
+struct SnapshotInfo {
+    int val;
+    int snap_id;
+    SnapshotInfo(int val, int snap_id) {
+        this->val = val;
+        this->snap_id = snap_id;
+    }
+};
+
+class SnapshotArray {
+    vector<vector<SnapshotInfo>> snapshotArrayInfo;
+    int curSnapshot;
+public:
+    SnapshotArray(int length) {
+        curSnapshot = 0;
+        for(int i = 0; i < length; ++i) {
+            snapshotArrayInfo.push_back(vector<SnapshotInfo>());
+            snapshotArrayInfo[i].push_back(SnapshotInfo(0, 0));
+        }
+    }
+    
+    void set(int index, int val) {
+        //if the snapshot info matches set val 
+        if(curSnapshot == snapshotArrayInfo[index].back().snap_id)
+            snapshotArrayInfo[index].back().val = val;
+        //otherwise add new snapshot
+        else snapshotArrayInfo[index].push_back(SnapshotInfo(val, curSnapshot));
+    }
+    
+    int snap() {
+        return curSnapshot++;
+    }
+    
+    int get(int index, int snap_id) {
+        int l = 0, r = snapshotArrayInfo[index].size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(snapshotArrayInfo[index][m].snap_id <= snap_id) {
+                ans = snapshotArrayInfo[index][m].val;
+                l = m + 1;
+            } else r = m - 1;
+        }
+        return ans;
+    }
+};
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray* obj = new SnapshotArray(length);
+ * obj->set(index,val);
+ * int param_2 = obj->snap();
+ * int param_3 = obj->get(index,snap_id);
+ */
