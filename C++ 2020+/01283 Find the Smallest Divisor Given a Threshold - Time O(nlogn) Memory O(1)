@@ -1,0 +1,35 @@
+//Run Time: 43ms - 20.00%
+//Memory Usage: 22.7MB - 15.31%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+public:
+    int getThreshold(vector<int>& nums, int divisor) {
+        int threshold = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            int num = nums[i] / divisor;
+            if(nums[i] % divisor != 0) ++num;
+            threshold += num;
+        }
+        return threshold;
+    }
+    int smallestDivisor(vector<int>& nums, int threshold) {
+        //Binary Search O(nlogn)
+        //binary search the possible divisors
+        int maxDivisor = *(max_element(nums.begin(), nums.end()));
+        //for(int i = 0; i < nums.size(); ++i) maxDivisor = max(maxDivisor, nums[i]);
+
+        int l = 1, r = maxDivisor, ans = INT_MAX;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            int result = getThreshold(nums, m);
+            //cout << m << " -> " << result << endl;
+            if(result <= threshold) {
+                ans = min(ans, m);
+                r = m - 1;
+            } else l = m + 1;
+        }
+        return ans;
+    }
+};
