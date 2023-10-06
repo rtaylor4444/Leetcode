@@ -1,0 +1,39 @@
+//Run Time: 226ms - 61.14%
+//Memory Usage: 111.47MB - 5.92%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class TopVotedCandidate {
+    vector<vector<int>> timeToTopPerson;
+public:
+    TopVotedCandidate(vector<int>& persons, vector<int>& times) {
+        //time -> max person
+        int maxVotesSoFar = 0, topPerson = -1;
+        vector<int> personToVotes(persons.size(), 0);
+        for(int i = 0; i < times.size(); ++i) {
+            if(++personToVotes[persons[i]] >= maxVotesSoFar) {
+                maxVotesSoFar = personToVotes[persons[i]];
+                topPerson = persons[i];
+            }
+            timeToTopPerson.push_back({times[i], topPerson});
+        }
+    }
+    
+    int q(int t) {
+        int l = 0, r = timeToTopPerson.size() - 1, topPerson = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(timeToTopPerson[m][0] <= t) {
+                topPerson = timeToTopPerson[m][1];
+                l = m + 1;
+            } else r = m - 1;
+        }
+        return topPerson;
+    }
+};
+
+/**
+ * Your TopVotedCandidate object will be instantiated and called as such:
+ * TopVotedCandidate* obj = new TopVotedCandidate(persons, times);
+ * int param_1 = obj->q(t);
+ */
