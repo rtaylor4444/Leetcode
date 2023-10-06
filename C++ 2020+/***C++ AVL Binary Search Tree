@@ -1,0 +1,119 @@
+struct AVLNode {
+    AVLNode* left;
+    AVLNode* right;
+    int start, end;
+    int height;
+
+    AVLNode(int start, int end) {
+        left = right = nullptr;
+        this->start = start;
+        this->end = end;
+        height = 1;
+    }
+    ~AVLNode() {
+
+    }
+};
+
+class AVLTree {
+    AVLNode* root;
+
+    //Helpers
+    void clearTree(AVLNode* node) {
+        if(node == nullptr) return;
+        clearTree(node->left);
+        clearTree(node->right);
+        delete node;
+    }
+    int getHeight(AVLNode* node) {
+        if(node == nullptr) return 0;
+        return node->height;
+    }
+    AVLNode* leftRotation(AVLNode* node) {
+        AVLNode* right = node->right;
+        //do rotation
+        node->right = right->left;
+        right->left = node;
+        //update the heights
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+        right->height = 1 + max(getHeight(right->left), getHeight(right->right));
+        //right becomes the new parent
+        return right;
+    }
+    AVLNode* rightRotation(AVLNode* node) {
+        AVLNode* left = node->left;
+        //do rotation
+        node->left = left->right;
+        left->right = node;
+        //update the heights
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+        left->height = 1 + max(getHeight(left->left), getHeight(left->right));
+        //left becomes the new parent
+        return left;
+    }
+    AVLNode* insertNode(AVLNode* node, int start, int end) {
+        if(node == nullptr) return new AVLNode(start, end);
+
+        if(start < node->start) 
+            node->left = insertNode(node->left, start, end);
+        else if(start > node->start)
+            node->right = insertNode(node->right, start, end);
+        else //don't insert duplicates
+            return node;
+
+        //update the heights
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+
+        //get balance 
+        int balance = getHeight(node->left) - getHeight(node->right);
+
+        //rotate based on balance
+        //right subtree needs more nodes
+        if(balance > 1) {
+            //if node was inserted right we must fix the tree so we can rotate
+            if(start > node->left->start) node->left = leftRotation(node->left);
+            return rightRotation(node);
+        }
+        //left subtree needs more nodes
+        else if(balance < -1) {
+            //if node was inserted left we must fix the tree so we can rotate
+            if(start < node->right->start) node->right = rightRotation(node->right);
+            return leftRotation(node);
+        }
+        return node;
+    }
+public:
+    AVLTree() {
+        root = nullptr;
+    }
+    ~AVLTree() {
+        clearTree(root);
+    }
+
+    bool empty() { return root == nullptr; }
+    void insert(int start, int end) {
+        root = insertNode(root, start, end);
+    }
+    const AVLNode* findFirstGreaterThan(int start) {
+        AVLNode* ans = nullptr, *curNode = root;
+        while(curNode) {
+            if(curNode->start >= start) {
+                ans = curNode;
+                curNode = curNode->left;
+            } 
+            else curNode = curNode->right;
+        }
+        return ans;
+    }
+    const AVLNode* findFirstLessThan(int start) {
+        AVLNode* ans = nullptr, *curNode = root;
+        while(curNode) {
+            if(curNode->start <= start) {
+                ans = curNode;
+                curNode = curNode->right;
+            } 
+            else curNode = curNode->left;
+        }
+        return ans;
+    }
+};
