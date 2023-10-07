@@ -1,0 +1,49 @@
+//Run Time: 79ms - 58.20%
+//Memory Usage: 41.9MB - 22.95%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class TweetCounts {
+    unordered_map<string, int> unitToChunkSize;
+    unordered_map<string, map<int,int>> tweetNameToTimes;
+public:
+    TweetCounts() {
+        unitToChunkSize.emplace("minute", 60);
+        unitToChunkSize.emplace("hour", 3600);
+        unitToChunkSize.emplace("day", 86400);
+    }
+    
+    void recordTweet(string tweetName, int time) {
+        tweetNameToTimes[tweetName][time]++;
+    }
+    
+    vector<int> getTweetCountsPerFrequency(string freq, string tweetName, int startTime, int endTime) {
+        int chunkSize = unitToChunkSize[freq];
+        map<int,int>& timeBST = tweetNameToTimes[tweetName];
+        int start = startTime, end = startTime-1;
+        auto it = timeBST.lower_bound(startTime);
+        vector<int> tweetCounts;
+        //process the tree chunk by chunk
+        while(start <= endTime) {
+            int curCount = 0;
+            //get the current chunk we are iterating through
+            end = min(start + (chunkSize-1), endTime);
+            while(it != timeBST.end()) {
+                //check if this time is within our bounds
+                if(it->first > end) break;
+                if(it->first >= start) curCount += it->second;
+                ++it;
+            }
+            tweetCounts.push_back(curCount);
+            start = end+1;
+        }
+        return tweetCounts;
+    }
+};
+
+/**
+ * Your TweetCounts object will be instantiated and called as such:
+ * TweetCounts* obj = new TweetCounts();
+ * obj->recordTweet(tweetName,time);
+ * vector<int> param_2 = obj->getTweetCountsPerFrequency(freq,tweetName,startTime,endTime);
+ */
