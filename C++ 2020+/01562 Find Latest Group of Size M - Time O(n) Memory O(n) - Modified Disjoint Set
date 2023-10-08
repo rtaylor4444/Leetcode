@@ -1,0 +1,123 @@
+//Run Time: 285ms - 41.01%
+//Memory Usage: 111.6MB - 41.01%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class DisjointSet {
+    unordered_map<int, int> groupSizeToCount;
+    vector<int> nodes, groupSize;
+public:
+    DisjointSet(int numNodes) {
+        for(int i = 0; i <= numNodes; ++i) {
+            nodes.push_back(0);
+            groupSize.push_back(1);
+        }
+    }
+    int getRoot(int node) {
+        int root = nodes[node];
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        int curNode = node;
+        while(curNode != root) {
+            int prevNode = curNode;
+            curNode = nodes[curNode];
+            nodes[prevNode] = root;
+            groupSize[prevNode] = groupSize[root];
+        }
+        return root;
+    }
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        //root of 0 edge case(s)
+        if(root1 == 0 && root2 == 0) {
+            //if the node is the same unite with itself
+            if(node1 == node2) {
+                nodes[node1] = node1;
+                groupSizeToCount[1]++;
+                return;
+            }
+        } 
+        //get rid of 0 roots; unite the same node with itself
+        if(root1 == 0) {
+            unite(node1, node1);
+            root1 = getRoot(node1);
+        }
+        if(root2 == 0) {
+            unite(node2, node2);
+            root2 = getRoot(node2);
+        }
+
+        //otherwise if two non 0 roots are the same exit 
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        groupSizeToCount[groupSize[root1]]--;
+        groupSizeToCount[groupSize[root2]]--;
+
+        groupSize[root1] += groupSize[root2];
+        groupSizeToCount[groupSize[root1]]++;
+        groupSize[root2] = groupSize[root1];
+    }
+    bool doesGroupSizeExist(int groupSize) {
+        if (!groupSizeToCount.count(groupSize)) return false;
+        return groupSizeToCount[groupSize] > 0;
+    }
+
+    void printGroupSizes() {
+        for(auto it = groupSizeToCount.begin(); it != groupSizeToCount.end(); ++it) {
+            cout << "group size: " << it->first << " -> count: " << it->second << endl;
+        }
+    }
+    void printNodeRoots() {
+        for(int i = 0; i < nodes.size(); ++i) {
+            cout << "node: " << i << " -> " << getRoot(i) << endl;
+        }
+    }
+};
+
+class Solution {
+public:
+    int findLatestStep(vector<int>& arr, int m) {
+        //1-indexed array
+        //arr[i] represents the bit that gets set to 1
+        //Brute Force O(n^2)
+        //iterate through the bit sets 
+        //for each set check consec 1s specifically keep track of group size m
+
+        //Union Find/Disjoint Set O(n)
+        //iterate through bit sets / group them as we go
+        //-keep track of hashmap group size -> roots
+        //check if we have a group size of m
+        //keep track of the largest step we have such size
+
+        int maxStep = -1, n = arr.size();
+        DisjointSet disjointSet(n);
+        string binaryString(n, '0');
+        for(int i = 0; i < n; ++i) {
+            int curIndex = arr[i] - 1;
+            //skip if bit was alreay turned on
+            //if(binaryString[curIndex] == '1') continue;
+            binaryString[curIndex] = '1';
+
+            //cout << "Step " << i+1 << ": " << binaryString << endl;
+            //unite with self
+            disjointSet.unite(arr[i], arr[i]);
+            //unite with left
+            if(curIndex-1 >= 0 && binaryString[curIndex-1] == '1') {
+                disjointSet.unite(arr[i]-1, arr[i]);
+                //cout << "united with left" << endl;
+            }
+            //unite with right
+            if(curIndex+1 < arr.size() && binaryString[curIndex+1] == '1') {
+                disjointSet.unite(arr[i]+1, arr[i]);
+                //cout << "united with right" << endl;
+            }
+
+            //disjointSet.printNodeRoots();
+            //disjointSet.printGroupSizes();
+
+            if(disjointSet.doesGroupSizeExist(m)) maxStep = max(maxStep, i+1);
+        }
+        return maxStep;
+    }
+};
