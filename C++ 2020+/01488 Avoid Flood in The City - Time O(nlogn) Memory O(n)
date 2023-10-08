@@ -1,0 +1,56 @@
+//Run Time: 364ms - 15.15%
+//Memory Usage: 142.2MB - 6.31%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+struct SortLakes {
+    bool operator()(vector<int>& a, vector<int>& b) {
+        return a[1] > b[1];
+    }
+};
+
+class Solution {
+public:
+    vector<int> avoidFlood(vector<int>& rains) {
+        //dry the lakes that can possibly flood
+        //dry the lakes based on which ever has the closest index
+        //Priority Queue - use this
+        //first pass store incides of the lakes
+        unordered_map<int, vector<int>> lakeToIndices;
+        for(int i = rains.size()-1; i >= 0; --i) {
+            if(!lakeToIndices.count(rains[i])) lakeToIndices.emplace(rains[i], vector<int>());
+            lakeToIndices[rains[i]].push_back(i);
+        }
+
+        priority_queue<vector<int>, vector<vector<int>>, SortLakes> pq;
+        unordered_set<int> seenLakes;
+        vector<int> ans(rains.size(), 1);
+        for(int i = 0; i < rains.size(); ++i) {
+            //if it doesnt rain we can pick a lake to dry to avoid a flood
+            if(rains[i] == 0) {
+                if(pq.empty()) continue;
+                //we must pick a lake to dry
+                vector<int> chosenLake = pq.top();
+                pq.pop();
+                ans[i] = chosenLake[0];
+                seenLakes.erase(chosenLake[0]);
+                continue;
+            }
+
+            //if it rains in a lake we havent seen keep track of it
+            if(!seenLakes.count(rains[i])) {
+                ans[i] = -1;
+                vector<int>& indexList = lakeToIndices[rains[i]];
+                int index = indexList.back();
+                indexList.pop_back();
+                //only keep track if we see this lake more than once
+                if(indexList.empty()) continue;
+                pq.push({rains[i], lakeToIndices[rains[i]].back()});
+                seenLakes.emplace(rains[i]);
+                
+            } //otherwise exit since it has now flooded
+            else return {};
+        }
+        return ans;
+    }
+};
