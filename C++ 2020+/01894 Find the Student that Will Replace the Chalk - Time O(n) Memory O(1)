@@ -1,0 +1,28 @@
+//Run Time: 83ms - 99.33%
+//Memory Usage: 74MB - 36.70%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int chalkReplacer(vector<int>& chalk, int k) {
+        //O(n)
+        //Get initial sum of the chalk
+        //do k % sum of chalk
+        //then interate through chalk to find the replacement index
+        long totalSum = 0;
+        for(int i = 0; i < chalk.size(); ++i) {
+            totalSum += chalk[i];
+            if(totalSum > k) return i;
+        }
+
+        k %= totalSum;
+        int replacementIndex = 0;
+        for(int i = 0; i < chalk.size(); ++i) {
+            replacementIndex = i;
+            if(k < chalk[i]) break;
+            k -= chalk[i];
+        }
+        return replacementIndex;
+    }
+};
