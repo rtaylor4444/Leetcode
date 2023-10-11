@@ -1,0 +1,74 @@
+//Run Time: 198ms - 31.21%
+//Memory Usage: 5.9MB - 74.11%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+public:
+    int binarySearchLower(vector<int>& sortedNums, int numToMatch) {
+        int l = 0, r = sortedNums.size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(sortedNums[m] == numToMatch) return sortedNums[m];
+
+            if(sortedNums[m] < numToMatch) {
+                ans = sortedNums[m];
+                l = m + 1;
+            }
+            else r = m - 1;
+        }
+        return ans;
+    }
+    int binarySearchUpper(vector<int>& sortedNums, int numToMatch) {
+        int l = 0, r = sortedNums.size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(sortedNums[m] == numToMatch) return sortedNums[m];
+
+            if(sortedNums[m] > numToMatch) {
+                ans = sortedNums[m];
+                r = m - 1;
+            }
+            else l = m + 1;
+        }
+        return ans;
+    }
+    int minAbsoluteSumDiff(vector<int>& nums1, vector<int>& nums2) {
+        //Binary Search O(nlogn)
+        long absSum = 0;
+        for(int i = 0; i < nums1.size(); ++i) {
+            absSum += abs(nums1[i] - nums2[i]);
+        }
+        //exit if its impossible to make our sum smaller
+        if(absSum == 0) return absSum;
+        vector<int> sortedNums(nums1.begin(), nums1.end());
+        sort(sortedNums.begin(), sortedNums.end());
+
+        //for each index see if we can replace it with a better one
+        long minabsSum = absSum;
+        for(int i = 0; i < nums1.size(); ++i) {
+            long diff = abs(nums1[i] - nums2[i]);
+            if(diff == 0) continue;
+            long lower_bound = binarySearchLower(sortedNums, nums2[i]);
+            long upper_bound = binarySearchUpper(sortedNums, nums2[i]);
+            bool isLowerValid = (lower_bound != -1 && abs(lower_bound - nums2[i]) < diff);
+            bool isUpperValid = (upper_bound != -1 && abs(upper_bound - nums2[i]) < diff);
+            int replacementNum;
+            if(!isLowerValid && !isUpperValid) continue;
+            else if(!isLowerValid) replacementNum = upper_bound;
+            else if(!isUpperValid) replacementNum = lower_bound;
+            else {
+                //determine which number is the best to pick
+                long lowerDiff = abs(lower_bound - nums2[i]);
+                long upperDiff = abs(upper_bound - nums2[i]);
+                if(lowerDiff == upperDiff) replacementNum = lower_bound;
+                else if(lowerDiff < upperDiff) replacementNum = lower_bound;
+                else replacementNum = upper_bound;
+            }
+            //update difference
+            long replacementDiff = abs(replacementNum - nums2[i]);
+            minabsSum = min(minabsSum, (absSum - diff) + replacementDiff);
+        }
+        return minabsSum % 1000000007;
+    }
+};
