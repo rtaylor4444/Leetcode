@@ -1,0 +1,113 @@
+//Run Time: 669ms - 31.19%
+//Memory Usage: 5.9MB - 31.70%
+//Solved =)
+//Time O(qlogn) Memory O(n)
+
+struct SortValues {
+    bool operator()(vector<int>& a, vector<int>& b) {
+        if(a[0] < b[0]) return true;
+        else if(a[0] > b[0]) return false;
+        //values must be equal
+        return a[1] < b[1];
+    }
+};
+
+class RangeFreqQuery {
+    vector<vector<int>> valuesInfo;
+
+    int findLeftmostValueIndex(int value, int minLeftIndex, int maxRightIndex) {
+        int l = 0, r = valuesInfo.size() - 1, index = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            //cout << l << " - " << r << endl;
+            //value search
+            if(valuesInfo[m][0] > value) {
+                r = m-1;
+                continue;
+            }
+            else if(valuesInfo[m][0] < value) {
+                l = m+1;
+                continue;
+            }
+
+            //index search - values are equal at this point
+            if(valuesInfo[m][1] < minLeftIndex) {
+                l = m+1;
+                continue;
+            }
+            if(valuesInfo[m][1] > maxRightIndex) {
+                r = m-1;
+                continue;
+            }
+
+            //values and indices are in valid range - go left for smaller valid indices
+            index = m;
+            r = m-1;
+        }
+        return index;
+    }
+
+    int findRightmostValueIndex(int value, int minLeftIndex, int maxRightIndex) {
+        int l = 0, r = valuesInfo.size() - 1, index = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            //cout << l << " - " << r << endl;
+            //value search
+            if(valuesInfo[m][0] > value) {
+                r = m-1;
+                continue;
+            }
+            else if(valuesInfo[m][0] < value) {
+                l = m+1;
+                continue;
+            }
+
+            //index search - values are equal at this point
+            if(valuesInfo[m][1] < minLeftIndex) {
+                l = m+1;
+                continue;
+            }
+            if(valuesInfo[m][1] > maxRightIndex) {
+                r = m-1;
+                continue;
+            }
+
+            //values and indices are in valid range - go right for larger valid indices
+            index = m;
+            l = m+1;
+        }
+        return index;
+    }
+public:
+    RangeFreqQuery(vector<int>& arr) {
+        for(int i = 0; i < arr.size(); ++i) {
+            valuesInfo.push_back({arr[i], i});
+        }
+        sort(valuesInfo.begin(), valuesInfo.end(), SortValues());
+        // for(int i = 0; i < valuesInfo.size(); ++i) {
+        //     cout << valuesInfo[i][0] << ", " << valuesInfo[i][1] << "  ";
+        // }
+        // cout << endl;
+    }
+    
+    int query(int left, int right, int value) {
+        //O(n) Linear Scan -> Time Limit
+        //O(logn) Binary Search
+        //sort the array based on values then indices
+        //run binary search to find leftmost then rightmost index within the bounds
+        //O(1) Pre Calc the counts -> Memory Limit
+        int leftValueIndex = findLeftmostValueIndex(value, left, right);
+        if(leftValueIndex == -1) return 0;
+        //cout << valuesInfo[leftValueIndex][0] << ", " << valuesInfo[leftValueIndex][1] << endl;
+        int rightValueIndex = findRightmostValueIndex(value, left, right);
+        if(rightValueIndex == -1) return 0;
+        //cout << valuesInfo[rightValueIndex][0] << ", " << valuesInfo[rightValueIndex][1] << endl;
+        return 1+(rightValueIndex - leftValueIndex);
+    }
+};
+
+/**
+ * Your RangeFreqQuery object will be instantiated and called as such:
+ * RangeFreqQuery* obj = new RangeFreqQuery(arr);
+ * int param_1 = obj->query(left,right,value);
+ */
