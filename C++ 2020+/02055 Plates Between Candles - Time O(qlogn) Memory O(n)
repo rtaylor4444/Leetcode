@@ -1,0 +1,65 @@
+//Run Time: 387ms - 46.83%
+//Memory Usage: 140.7MB - 83.27%
+//Solved =)
+//Time O(qlogn) Memory O(n)
+
+class Solution {
+public:
+    int binarySearchLeftmost(vector<int>& candleIndexList, int queryNum) {
+        int l = 0, r = candleIndexList.size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(candleIndexList[m] == queryNum) return m;
+
+            if(candleIndexList[m] > queryNum) {
+                ans = m;
+                r = m - 1;
+            } else l = m + 1;
+        }
+        return ans;
+    }
+    int binarySearchRightmost(vector<int>& candleIndexList, int queryNum) {
+        int l = 0, r = candleIndexList.size() - 1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(candleIndexList[m] == queryNum) return m;
+
+            if(candleIndexList[m] < queryNum) {
+                ans = m;
+                l = m + 1;
+            } else r = m - 1;
+        }
+        return ans;
+    }
+    vector<int> platesBetweenCandles(string s, vector<vector<int>>& queries) {
+        //Brute Force - Linear Scan for each query
+        //Binary Search 
+        //store a list of indices of the bars
+        //then use binary search to find the closest left and right bar index
+        //we can calculate the plates accordingly
+        //2,5,9
+        //
+        vector<int> candleIndexList;
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '*') continue;
+            candleIndexList.push_back(i);
+        }
+
+        vector<int> queryResults;
+        for(int i = 0; i < queries.size(); ++i) {
+            int leftIndex = binarySearchLeftmost(candleIndexList, queries[i][0]);
+            int rightIndex = binarySearchRightmost(candleIndexList, queries[i][1]);
+            //cout << leftIndex << " - " << rightIndex << endl;
+            int numPlates = 0;
+            if(leftIndex >= 0 && rightIndex >= 0) {
+                numPlates = (candleIndexList[rightIndex] - candleIndexList[leftIndex]);
+                //remove number of candles in the window
+                numPlates -= (rightIndex - leftIndex);
+                //handle negative overlap case
+                numPlates = max(numPlates, 0);
+            }
+            queryResults.push_back(numPlates);
+        }
+        return queryResults;
+    }
+};
