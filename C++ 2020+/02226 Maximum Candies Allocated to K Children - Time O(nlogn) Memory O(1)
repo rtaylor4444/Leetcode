@@ -1,0 +1,36 @@
+//Run Time: 163ms - 41.30%
+//Memory Usage: 84.6MB - 34.36%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+public:
+    bool canMakeCandies(vector<int>& candies, int testAmount, long long k) {
+        long long pilesMade = 0;
+        for(int i = 0; i < candies.size(); ++i) {
+            pilesMade += candies[i] / testAmount;
+        }
+        return pilesMade >= k;
+    }
+    int maximumCandies(vector<int>& candies, long long k) {
+        //Binary Search - try each maximum number of candies
+        //do a linear scan and see if we can make the candies
+        int maxAmount = 0;
+        long long sum = 0;
+        for(int i = 0; i < candies.size(); ++i) {
+            maxAmount = max(maxAmount, candies[i]);
+            sum += candies[i];
+        }
+        if(sum < k) return 0;
+
+        int l = 1, r = maxAmount, maxCandies = 0;
+        while(l <= r) {
+            int m = l + ((r-l)/2);
+            if(canMakeCandies(candies, m, k)) {
+                maxCandies = m;
+                l = m+1;
+            } else r = m-1;
+        }
+        return maxCandies;
+    }
+};
