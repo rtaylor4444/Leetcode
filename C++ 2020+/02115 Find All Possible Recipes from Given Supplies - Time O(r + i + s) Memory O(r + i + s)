@@ -1,0 +1,58 @@
+//Run Time: 330ms - 54.34%
+//Memory Usage: 161MB - 28.27%
+//Solved =)
+//r = recipe list
+//i = ingredient list
+//s = supplies list
+//Time O(r + i + s) Memory O(r + i + s)
+
+class Solution {
+    unordered_set<string> memo;
+public:
+    bool canMakeRecipe(unordered_map<string, vector<string>>& adjList, unordered_set<string>& ownedSupplies,
+    unordered_set<string>& seenNodes, string curNode) {
+        bool isRecipe = adjList.count(curNode);
+        bool isIngredient = ownedSupplies.count(curNode);
+
+        //Is our current node a recipe?
+        if(isRecipe) {
+            //BUG - must store full recipes we can make
+            if(memo.count(curNode)) return true;
+            if(seenNodes.count(curNode)) return false;
+            seenNodes.emplace(curNode);
+            vector<string>& neighborNodes = adjList[curNode];
+            for(int i = 0; i < neighborNodes.size(); ++i) {
+                if(!canMakeRecipe(adjList, ownedSupplies, seenNodes, neighborNodes[i])) return false;
+            }
+            memo.emplace(curNode);
+            return true;
+        }
+        //Otherwise is our current node an ingredient?
+        else if(isIngredient) return true;
+        //current node must be a supply that we do not have
+        return false;
+    }
+    vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) {
+        //Topological Sort
+        //since values are unique and no duplicates we can assume no cycles
+        //Create AdjList 
+        memo.clear();
+        unordered_map<string, vector<string>> adjList;
+        for(int i = 0; i < recipes.size(); ++i) {
+            if(adjList.count(recipes[i])) adjList[recipes[i]] = vector<string>();
+            for(int j = 0; j < ingredients[i].size(); ++j) {
+                adjList[recipes[i]].push_back(ingredients[i][j]);
+            }
+        }
+        unordered_set<string> ownedSupplies(supplies.begin(), supplies.end());
+
+        //Do DFS Topological Sort
+        vector<string> ans;
+        for(int i = 0; i < recipes.size(); ++i) {
+            unordered_set<string> seenNodes;
+            if(canMakeRecipe(adjList, ownedSupplies, seenNodes, recipes[i]))
+                ans.push_back(recipes[i]);
+        }
+        return ans;
+    }
+};
