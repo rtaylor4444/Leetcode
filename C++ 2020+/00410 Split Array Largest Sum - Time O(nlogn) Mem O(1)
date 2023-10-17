@@ -1,0 +1,70 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.7MB - 30.63%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+    vector<int> suffixSum;
+public:
+    // bool topDown(vector<vector<int>>& memo, vector<int>& nums, int sum, int k, int i) {
+    //     if(i > suffixSum.size()) return false;
+    //     if(k == 1) return suffixSum[i] <= sum;
+    //     if(memo[k][i] != 0) return memo[k][i] == 1;
+    
+    //     int curSum = 0, start = i;
+    //     for(; i < nums.size(); ++i) {
+    //         if(curSum + nums[i] > sum) {
+    //             bool result = topDown(memo, nums, sum, k-1, i);
+    //             memo[k][start] = result ? 1 : -1;
+    //             return result;
+    //         } else {
+    //             curSum += nums[i];
+    //             if(topDown(memo, nums, sum, k-1, i+1)) {
+    //                 memo[k][start] = 1;
+    //                 return true;
+    //             }
+    //         }
+    //     }
+    //     memo[k][start] = -1;
+    //     return false;
+    // }
+    int isSumValid(vector<int>& nums, int sum, int k) {
+        //vector<vector<int>> memo(k+1, vector<int>(nums.size(), 0));
+        //return topDown(memo, nums, sum, k, 0);
+
+        int numPartitions = 0, curSum = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(curSum + nums[i] > sum) {
+                curSum = nums[i];
+                ++numPartitions;
+            } else curSum += nums[i];
+        }
+        ++numPartitions;
+        return numPartitions <= k;
+    }
+    int splitArray(vector<int>& nums, int k) {
+        //Binary Search on the answer
+        //Use Dynamic Programming to calculate the answer
+        //suffixSum = vector<int>(nums.size()+1, 0);
+        int sum = 0, maxNum = 0;
+        for(int i = nums.size() - 1; i >= 0; --i) {
+            sum += nums[i];
+            maxNum = max(maxNum, nums[i]);
+            //suffixSum[i] = sum;
+        }
+
+        int l = maxNum, r = sum, ans = -1;
+        while(l <= r) {
+            int m = l + ((r - l)/2);
+            //cout << l << " - " << m << " - " << r << endl;
+            //can we make k splits with this sum?
+            bool result = isSumValid(nums, m, k);
+            //cout << m << " -> " << result << endl;
+            if(result) {
+                ans = m;
+                r = m-1;
+            } else l = m+1;
+        }
+        return ans;
+    }
+};
