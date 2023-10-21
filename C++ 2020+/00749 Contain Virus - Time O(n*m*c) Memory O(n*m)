@@ -1,0 +1,128 @@
+//Run Time: 81ms - 5.22%
+//Memory Usage: 30MB - 35.07%
+//Solved =)
+//c = number of clusters
+//Time O(n*m*c) Memory O(n*m)
+
+struct VirusCluster {
+    int wallsToBuild;
+    vector<vector<int>> virusPositions, zerosAffected;
+    VirusCluster() {
+        wallsToBuild = 0;
+    }
+    void print() {
+        cout << "walls: " << wallsToBuild << endl;
+        cout << "positions: " << endl;
+        for(int i = 0; i < virusPositions.size(); ++i) {
+            cout << virusPositions[i][0] << ", " << virusPositions[i][1] << endl;
+        }
+    }
+};
+
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir.push_back({-1, 0});
+        dir.push_back({1, 0});
+        dir.push_back({0, -1});
+        dir.push_back({0, 1});
+    }
+    bool isinBounds(vector<vector<int>>& isInfected, int i, int j) {
+        if(i < 0 || j < 0) return false;
+        if(i >= isInfected.size() || j >= isInfected[i].size()) return false;
+        return isInfected[i][j] != 2;
+    }
+    void printBoard(vector<vector<int>>& isInfected) {
+        for(int i = 0; i < isInfected.size(); ++i) {
+            for(int j = 0; j < isInfected[i].size(); ++j) {
+                cout << isInfected[i][j] << ", ";
+            }
+            cout << endl;
+        }
+    }
+    VirusCluster* getVirusInfo(vector<vector<int>>& isInfected, vector<vector<bool>>& visited, int i, int j) {
+        VirusCluster* virusCluster = new VirusCluster();
+        unordered_set<int> zerosAffected;
+        queue<vector<int>> bfs;
+        bfs.push({i, j});
+        while(!bfs.empty()) {
+            vector<int> pos = bfs.front();
+            bfs.pop();
+
+            if(isInfected[pos[0]][pos[1]] == 0) {
+                virusCluster->wallsToBuild++;
+                int posCode = pos[0] | (pos[1] << 8);
+                if(zerosAffected.count(posCode)) continue;
+
+                zerosAffected.emplace(posCode);
+                virusCluster->zerosAffected.push_back({pos[0], pos[1]});
+                continue;
+            }
+            if(visited[pos[0]][pos[1]]) continue;
+            visited[pos[0]][pos[1]] = true;
+            virusCluster->virusPositions.push_back({pos[0], pos[1]});
+
+            for(int d = 0; d < dir.size(); ++d) {
+                if(!isinBounds(isInfected, pos[0]+dir[d][0], pos[1]+dir[d][1])) continue;
+                bfs.push({pos[0]+dir[d][0], pos[1]+dir[d][1]});
+            }
+        }
+        return virusCluster;
+    }
+    void spreadVirus(vector<vector<int>>& isInfected, VirusCluster* cluster) {
+        vector<vector<int>>& pos = cluster->zerosAffected;
+        for(int i = 0; i < pos.size(); ++i) {
+            isInfected[pos[i][0]][pos[i][1]] = 1;
+        }
+    }
+    int containVirus(vector<vector<int>>& isInfected) {
+        //First step determine virus clusters + number of req walls
+        //pick to build walls around the cluster that will infect
+        //most cells or one we have to make most walls for
+        //flip blocked clusters to 0s can keep going until no more clusters remain
+
+        //BUG - In order to optimize further we must account for merging clusters
+        //and avoid reprocessing the board everytime
+        //we will iterate as long as we have clusters to process
+        int totalWallsReq = 0;
+        while(true) {
+            //printBoard(isInfected);
+            //Get all of our cluster info
+            vector<vector<bool>> visited(isInfected.size(), vector<bool>(isInfected[0].size(), false));
+            vector<VirusCluster*> curClusters;
+            VirusCluster* maxCluster = nullptr;
+            int maxAffectedArea = 0, maxIndex = -1;
+            for(int i = 0; i < isInfected.size(); ++i) {
+                for(int j = 0; j < isInfected[i].size(); ++j) {
+                    if(isInfected[i][j] != 1) continue;
+                    if(visited[i][j]) continue;
+                    VirusCluster* cluster = getVirusInfo(isInfected, visited, i, j);
+                    if((int)cluster->zerosAffected.size() > maxAffectedArea) {
+                        maxAffectedArea = (int)cluster->zerosAffected.size();
+                        maxIndex = (int)curClusters.size();
+                        maxCluster = cluster;
+                    }
+                    curClusters.push_back(cluster);
+                }
+            }
+            //exit this loop when we no longer have clusters to process
+            if(maxCluster == nullptr) break;
+            //update our result and update the picked cluster on the board
+            totalWallsReq += maxCluster->wallsToBuild;
+            //cout << totalWallsReq << endl;
+            vector<vector<int>>& pos = maxCluster->virusPositions;
+            for(int i = 0; i < pos.size(); ++i) {
+                //mark as quarentined
+                isInfected[pos[i][0]][pos[i][1]] = 2;
+            }
+            //Do a virus spread step and infect the board one step
+            for(int i = 0; i < curClusters.size(); ++i) {
+                if(curClusters[i] == maxCluster) continue;
+                spreadVirus(isInfected, curClusters[i]);
+                delete curClusters[i];
+            }
+        }
+        return totalWallsReq;
+    }
+};
