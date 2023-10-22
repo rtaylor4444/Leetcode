@@ -1,0 +1,114 @@
+//Run Time: 578ms - 23.84%
+//Memory Usage: 164.3MB - 26.31%
+//Solved =)
+//Time O(n*n) Memory O(n*n)
+
+class DisjointSet {
+    int n, maxGroupSoFar;
+    vector<vector<int>> dir;
+    vector<int> nodes, groupSize;
+public:
+    DisjointSet(vector<vector<int>>& grid) {
+        dir.push_back({1, 0});
+        dir.push_back({-1, 0});
+        dir.push_back({0, 1});
+        dir.push_back({0, -1});
+
+        n = grid.size();
+        maxGroupSoFar = 1;
+        nodes = vector<int>(n * n, 0);
+        groupSize = vector<int>(n * n, 0);
+        //Set initial groups
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                int index = (i * n) + j;
+                nodes[index] = index;
+                if(grid[i][j] == 0) continue;
+                groupSize[index] = 1;
+            }
+        }
+        //Merge groups into islands
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                int curIndex = (i * n) + j;
+                for(int d = 0; d < dir.size(); ++d) {
+                    if(!isValid(grid, i+dir[d][0], j+dir[d][1])) continue;
+                    int nextIndex = ((i+dir[d][0]) * n) + (j+dir[d][1]);
+                    unite(curIndex, nextIndex);
+                }
+            }
+        }
+    }
+
+    bool isValid(vector<vector<int>>& grid, int i, int j) {
+        if(i < 0 || j < 0) return false;
+        if(i >= grid.size() || j >= grid[i].size()) return false;
+        return grid[i][j] == 1;
+    }
+
+    int getRoot(int node) {
+        int root = nodes[node];
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int prevNode = node;
+            node = nodes[node];
+            nodes[prevNode] = root;
+            groupSize[prevNode] = groupSize[root];
+        }
+        return root;
+    }
+
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        groupSize[root1] += groupSize[root2];
+        groupSize[root2] = groupSize[root1];
+        maxGroupSoFar = max(maxGroupSoFar, groupSize[root1]);
+    }
+
+    int getPredictedSize(vector<vector<int>>& grid, int i, int j) {
+        int curIndex = (i * n) + j;
+        unordered_set<int> uniqueRoots;
+        for(int d = 0; d < dir.size(); ++d) {
+            if(!isValid(grid, i+dir[d][0], j+dir[d][1])) continue;
+            int nextIndex = ((i+dir[d][0]) * n) + (j+dir[d][1]);
+            uniqueRoots.emplace(getRoot(nextIndex));
+        }
+        int predictedSize = 1;
+        for(auto it = uniqueRoots.begin(); it != uniqueRoots.end(); ++it) {
+            predictedSize += groupSize[*it];
+        }
+        return predictedSize;
+    }
+
+    int getMaxGroupSize() { return maxGroupSoFar; }
+
+    void print() {
+        for(int i = 0; i < groupSize.size(); ++i) {
+            cout << groupSize[i] << " ";
+        }
+    }
+};
+
+class Solution {
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+        //Union Find/Disjoint Set
+        //Build initial disjoint set with existing grid
+        //then finally only test each connection once, don't actually unite
+        DisjointSet disjointSet(grid);
+        //disjointSet.print();
+        int maxIsland = disjointSet.getMaxGroupSize();
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 1) continue;
+                maxIsland = max(maxIsland, disjointSet.getPredictedSize(grid, i, j));
+            }
+        }
+        return maxIsland;
+    }
+};
