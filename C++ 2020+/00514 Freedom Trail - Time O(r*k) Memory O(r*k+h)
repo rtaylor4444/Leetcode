@@ -1,0 +1,49 @@
+//Run Time: 15ms - 71.25%
+//Memory Usage: 12.24MB - 66.67%
+//Solved =)
+//Time O(r*k) Memory O(r*k+h)
+
+class Solution {
+public:
+    int topDown(vector<vector<int>>& memo, string& ring, int ringPos, string& key, int keyPos) {
+        if(keyPos >= key.size()) return 0;
+        if(memo[ringPos][keyPos] != -1) return memo[ringPos][keyPos];
+
+        int minSteps = INT_MAX;
+
+        //move anti-clockwise
+        int left = ringPos, right = ringPos, movesMade = 1;
+        while(true) {
+            if(ring[left] == key[keyPos]) {
+                minSteps = min(minSteps, movesMade + topDown(memo, ring, left, key, keyPos+1));
+                break;
+            }
+            if(--left < 0) left += (int)ring.size();
+            ++movesMade;
+        }
+
+        //move clockwise
+        movesMade = 1;
+        while(true) {
+            if(ring[right] == key[keyPos]) {
+                minSteps = min(minSteps, movesMade + topDown(memo, ring, right, key, keyPos+1));
+                break;
+            }
+            if(++right >= (int)ring.size()) right = 0;
+            ++movesMade;
+        }
+        memo[ringPos][keyPos] = minSteps;
+        return minSteps;
+    }
+    int findRotateSteps(string ring, string key) {
+        //Hashmap character -> positions
+        //Then Binary Search for the closest position?
+        //n -> 0 edge case
+        //*iterate over the array twice and store positions past N
+        //"godding"
+        // 1222222 -> 13
+        // DFS + Dynamic Programming
+        vector<vector<int>> memo(ring.size(), vector<int>(key.size(), -1));
+        return topDown(memo, ring, 0, key, 0);
+    }
+};
