@@ -1,0 +1,60 @@
+//Run Time: 31ms - 75.93%
+//Memory Usage: 10.5MB - 67.07%
+//Solved =)
+//Time O(n^3) Memory O(n)
+
+class DisjointSet {
+    int numGroups;
+    vector<int> nodes;
+public:
+    DisjointSet(int size) {
+        numGroups = size;
+        nodes = vector<int>(size, 0);
+        for(int i = 0; i < size; ++i) nodes[i] = i;
+    }
+
+    int getRoot(int node) {
+        int root = node;
+        while(nodes[root] != root) root = nodes[root];
+        //path compression
+        while(nodes[node] != node) {
+            int prevNode = node;
+            node = nodes[node];
+            nodes[prevNode] = root;
+        }
+        return root;
+    }
+
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        --numGroups;
+    }
+
+    int getNumGroups() { return numGroups; }
+};
+
+class Solution {
+public:
+    int numSimilarGroups(vector<string>& strs) {
+        //O(n^3) Brute Force + Disjoint Set - TLE
+        //Compare strings brute force then use Union Find to map them
+        //There has to be exactly two mismatches when we compare
+        DisjointSet disjointSet(strs.size());
+        for(int i = 0; i < strs.size(); ++i) {
+            for(int j = i+1; j < strs.size(); ++j) {
+                int mismatchingIndices = 0;
+                for(int k = 0; k < strs[i].size(); ++k) {
+                    if(strs[i][k] != strs[j][k]) ++mismatchingIndices;
+                    if(mismatchingIndices > 2) break;
+                }
+                if(mismatchingIndices == 0 || mismatchingIndices == 2) {
+                    disjointSet.unite(i, j);
+                }
+            }
+        }
+        return disjointSet.getNumGroups();
+    }
+};
