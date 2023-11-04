@@ -1,0 +1,54 @@
+//Run Time: 401ms - 56.23%
+//Memory Usage: 186.49MB - 45.78%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class CountIntervals {
+    int intCount;
+    map<int,int> intervalBST;
+
+    bool isOverlap(int left, int right, int left2, int right2) {
+        if(left > right2 || right < left2) return false;
+        return true;
+    }
+
+public:
+    CountIntervals() {
+        intCount = 0;
+    }
+    
+    void add(int left, int right) {
+        //Binary Search Tree - Only Option
+        //BUG - Dealing with overlaps and removing nodes in the tree is problematic
+        //Insertion Sort + Binary Search - TLE
+        //Linked List - TLE
+
+        //find first end that is greater or equal to left
+        auto it = intervalBST.lower_bound(left);
+        //remove overlaps from the tree
+        while(it != intervalBST.end()) {
+            int nextLeft = it->second;
+            int nextRight = it->first;
+            if(!isOverlap(left, right, nextLeft, nextRight)) break;
+            left = min(left, nextLeft);
+            right = max(right, nextRight);
+            intCount -= (nextRight - nextLeft)+1;
+            intervalBST.erase(it++);
+        }
+        //update our count + the tree
+        intCount += (right-left)+1;
+        intervalBST[right] = left;
+        //cout << intCount << endl;
+    }
+    
+    int count() {
+        return intCount;
+    }
+};
+
+/**
+ * Your CountIntervals object will be instantiated and called as such:
+ * CountIntervals* obj = new CountIntervals();
+ * obj->add(left,right);
+ * int param_2 = obj->count();
+ */
