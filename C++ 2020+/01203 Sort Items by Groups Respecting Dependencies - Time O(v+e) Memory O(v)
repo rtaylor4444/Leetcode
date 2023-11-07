@@ -1,0 +1,74 @@
+//Run Time: 116ms - 40.44%
+//Memory Usage: 376MB - 5.12%
+//Solved =)
+//Time O(v+e) Memory O(v)
+
+class Solution {
+public:
+    bool isCycle(vector<bool>& visited, vector<bool>& processing, vector<vector<int>>& beforeItems, int curNode,
+    vector<int>& ordering) {
+        if(visited[curNode]) return false;
+        if(processing[curNode]) return true;
+        processing[curNode] = true;
+        for(int i = 0; i < beforeItems[curNode].size(); ++i) {
+            int nextNode = beforeItems[curNode][i];
+            if(visited[nextNode]) continue;
+            if(isCycle(visited, processing, beforeItems, nextNode, ordering))
+                return true;
+        }
+        visited[curNode] = true;
+        ordering.push_back(curNode);
+        return false;
+    }
+    vector<int> sortItems(int n, int m, vector<int>& group, vector<vector<int>>& beforeItems) {
+        //Topological Sort
+        //What order do the groups need to be in?
+        //items in no group can go in any order - even between group clusters
+        //Get a topological ordering of the groups
+        //cannot add a group until all of the nodes are visited in that group
+        //From there we can get specific orderings of numbers
+
+        //make the -1's into new groups
+        for(int i = 0; i < group.size(); ++i) {
+            if(group[i] == -1) group[i] = m++;
+        }
+
+        //check for cycles in group chunks graph
+        //Set up groups adjList
+        vector<vector<int>> groupAdjList(m, vector<int>());
+        for(int i = 0; i < n; ++i) {
+            int curGroup = group[i];
+            for(int j = 0; j < beforeItems[i].size(); ++j) {
+                int nextGroup = group[beforeItems[i][j]];
+                if(curGroup == nextGroup) continue;
+                groupAdjList[curGroup].push_back(nextGroup); 
+            }
+        }
+        //Check for cycles
+        vector<int> groupOrdering;
+        vector<bool> visited(n, false);
+        for(int i = 0; i < m; ++i) {
+            vector<bool> processing(m, false);
+            if(isCycle(visited, processing, groupAdjList, i, groupOrdering)) return {};
+        }
+
+        //Setup info for group topo sort
+        vector<vector<int>> groupToNodes(m+1, vector<int>());
+        for(int i = 0; i < group.size(); ++i) {
+            groupToNodes[group[i]].push_back(i);
+        }
+        //return groupOrdering;
+
+        //Do topological sorting for the items based on group ordering
+        visited = vector<bool>(n, false);
+        vector<int> itemOrder;
+        for(int i = 0; i < groupOrdering.size(); ++i) {
+            for(int j = 0; j < groupToNodes[groupOrdering[i]].size(); ++j) {
+                vector<bool> processing(n, false);
+                if(isCycle(visited, processing, beforeItems, groupToNodes[groupOrdering[i]][j], itemOrder)) 
+                    return {};
+            }
+        }
+        return itemOrder;
+    }
+};
