@@ -1,0 +1,96 @@
+//Run Time: 3ms - 99.20%
+//Memory Usage: 10MB - 88.00%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+
+class Solution {
+    int curTime;
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir.push_back({0, 1});
+        dir.push_back({0, -1});
+        dir.push_back({1, 0});
+        dir.push_back({-1, 0});
+    }
+    bool isValid(vector<vector<int>>& grid, int i, int j) {
+        if(i < 0 || j < 0) return false;
+        if(i >= grid.size() || j >= grid[i].size()) return false;
+        return grid[i][j] == 1;
+    }
+    int apDFS(vector<vector<int>>& grid, vector<vector<int>>& time, vector<vector<int>>& low, 
+    vector<int>& parent, int i, int j) {
+        int numChildren = 0, numValidEdges = 0;
+        int APInf = 0;
+        low[i][j] = time[i][j] = curTime++;
+        for(int d = 0; d < dir.size(); ++d) {
+            int iNext = i + dir[d][0];
+            int jNext = j + dir[d][1];
+            if(!isValid(grid, iNext, jNext)) continue;
+            ++numValidEdges;
+
+            //skip if we are heading to a parent node
+            int childIndex = (iNext * grid[0].size()) + jNext;
+            int curIndex = (i * grid[0].size()) + j;
+            if(parent[curIndex] == childIndex) continue;
+            
+            //update low since we found a previous visited node
+            if(time[iNext][jNext] >= 0) {
+                low[i][j] = min(low[i][j], time[iNext][jNext]);
+                continue;
+            }
+
+            //Set ourselves as the parent for the next node
+            parent[childIndex] = curIndex;
+            ++numChildren;
+            if(apDFS(grid, time, low, parent, iNext, jNext) == 1) APInf = 1;
+            //update low to match the child
+            low[i][j] = min(low[i][j], low[iNext][jNext]);
+
+            //Condition 1 - If we are a root with two children we are an AP
+            if(parent[curIndex] == -1) {
+                if(numChildren > 1) APInf = 1;
+            }
+            //Condition 2 - We are not a root and there must be no back edges; all nodes in the future
+            else {
+                if(time[i][j] <= low[iNext][jNext]) APInf = 1;
+            }
+        }
+        //Edge case - removing this node will decrease the island count!
+        if(numValidEdges == 0) APInf = -1;
+        return APInf;
+    }
+    int minDays(vector<vector<int>>& grid) {
+        //Tarjans Articulation Point Algo
+        //Can check the islands using DFS
+        //we can always make 2 islands with a maximum of 2 days
+        //max days = 2
+        
+        curTime = 0;
+        int APInf = 0;
+        int numIslands = 0;
+        vector<vector<int>> time(grid.size(), vector<int>(grid[0].size(), -1));
+        vector<vector<int>> low(grid.size(), vector<int>(grid[0].size(), -1));
+        vector<int> parent((grid.size() * grid[0].size()), -1);
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                if(low[i][j] != -1) continue;
+                APInf = apDFS(grid, time, low, parent, i, j);
+                ++numIslands;
+            }
+        }
+
+        /*for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[i].size(); ++j) {
+                if(grid[i][j] == 0) continue;
+                int k = (i * grid.size()) + j;
+                cout << "time: " << time[i][j] << " low: " << low[i][j] << " parent: " << parent[k] << endl;
+            }
+        }*/
+
+        if(numIslands != 1) return 0;
+        if(numIslands + APInf != 1) return 1;
+        return 2;
+    }
+};
