@@ -1,0 +1,81 @@
+//Run Time: 272ms - 90.95%
+//Memory Usage: 109.97MB - 93.97%
+//Solved =)
+//Time O(c) Memory O(c)
+
+class DisjointSet {
+    vector<int> nodes;
+public:
+    DisjointSet(int size) {
+        nodes = vector<int>(size, 0);
+        for(int i = 0; i < size; ++i)
+            nodes[i] = i;
+    }
+
+    int getRoot(int node) {
+        int root = node;
+        while(nodes[root] != root) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int prevNode = node;
+            node = nodes[node];
+            nodes[prevNode] = root;
+        }
+        return root;
+    }
+
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+    }
+};
+
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir.push_back({1, 0});
+        dir.push_back({-1, 0});
+        dir.push_back({0, 1});
+        dir.push_back({0, -1});
+    }
+    bool isValid(vector<vector<int>>& grid, int i, int j) {
+        if(i < 0 || j < 0) return false;
+        if(i >= grid.size() || j >= grid[i].size()) return false;
+        return grid[i][j] == 0;
+    }
+    int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
+        //Union Find
+        //Create the ending grid
+        vector<vector<int>> grid(row, vector<int>(col, 1));
+
+        //Make disjoint set
+        int topGroup = (row * col), bottomGroup = topGroup+1;
+        //cout << topGroup << " " << bottomGroup << endl;
+        DisjointSet disjointSet(bottomGroup+1);
+        int latestDay = cells.size();
+        for(int i = cells.size() - 1; i >= 0; --i) {
+            //fix the grid
+            int iCur = cells[i][0]-1;
+            int jCur = cells[i][1]-1;
+            grid[iCur][jCur] = 0;
+            //unite with dummy nodes if applicable
+            int curNode = (iCur * col) + jCur;
+            if(iCur == 0) disjointSet.unite(topGroup, curNode);
+            if(iCur == row-1) disjointSet.unite(bottomGroup, curNode);
+            for(int d = 0; d < dir.size(); ++d) {
+                int iNext = iCur + dir[d][0];
+                int jNext = jCur + dir[d][1];
+                if(!isValid(grid, iNext, jNext)) continue;
+                int nextNode = (iNext * col) + jNext;
+                disjointSet.unite(curNode, nextNode);
+            }
+            //check if we can walk from top to bottom
+            latestDay = i;
+            if(disjointSet.getRoot(topGroup) == disjointSet.getRoot(bottomGroup)) break;
+        }
+        return latestDay;
+    }
+};
