@@ -1,0 +1,36 @@
+//Run Time: 49ms - 96.53%
+//Memory Usage: 44.9MB - 64.13%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    vector<string> findHighAccessEmployees(vector<vector<string>>& access_times) {
+        unordered_map<string, vector<int>> nameToTimes;
+        for(int i = 0; i < access_times.size(); ++i) {
+            if(!nameToTimes.count(access_times[i][0])) 
+                nameToTimes.emplace(access_times[i][0], vector<int>());
+            nameToTimes[access_times[i][0]].push_back(atoi(access_times[i][1].c_str()));
+        }
+        vector<string> highAccess;
+        for(auto it = nameToTimes.begin(); it != nameToTimes.end(); ++it) {
+            vector<int> times = it->second;
+            //skip if impossible to be a high access
+            if(times.size() < 3) continue;
+            sort(times.begin(), times.end());
+            int startingTime = times[0], startingIndex = 0;
+            for(int i = 1; i < times.size(); ++i) {
+                //reset starting time
+                while(times[i] - startingTime >= 100) {
+                    startingTime = times[++startingIndex];
+                }
+                //Check of 3 times within 1 hour
+                if(i - startingIndex >= 2) {
+                    highAccess.push_back(it->first);
+                    break;
+                }
+            }
+        }
+        return highAccess;
+    }
+};
