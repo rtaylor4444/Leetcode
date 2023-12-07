@@ -1,0 +1,52 @@
+//Run Time: 85ms - 77.56%
+//Memory Usage: 24.87MB - 84.94%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    string repeatLimitedString(string s, int repeatLimit) {
+        vector<int> charCount(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            charCount[s[i] - 'a']++;
+        }
+        string charOrder;
+        for(int i = charCount.size()-1; i >= 0; --i) {
+            if(charCount[i] > 0) charOrder.push_back('a' + i);
+        }
+        //cout << charOrder << endl;
+
+        int index = 0;
+        string ans;
+        while(index < charOrder.size()) {
+            //get the prev greater char index if possible
+            int prevIndex = index-1;
+            while(prevIndex >= 0) {
+                char greaterChar = charOrder[prevIndex];
+                if(charCount[greaterChar - 'a'] > 0) break;
+                --prevIndex;
+            }
+
+            //add repeat limit or max count to our ans
+            char curChar = charOrder[index];
+            int curCount = charCount[curChar - 'a'];
+            for(int i = 0; i < min(repeatLimit, curCount); ++i) {
+                ans += curChar;
+                --charCount[curChar - 'a'];
+                if(prevIndex >= 0) break;
+            }
+            //cout << ans << endl;
+            //go to the greater char if it exists
+            if(prevIndex >= 0) {
+                index = prevIndex;
+                continue;
+            }
+            //Otherwise go to the smaller char if it exists
+            while(++index < charOrder.size()) {
+              char lesserChar = charOrder[index];
+              if(charCount[lesserChar - 'a'] > 0) break;
+            }
+        }
+        return ans;
+    }
+};
