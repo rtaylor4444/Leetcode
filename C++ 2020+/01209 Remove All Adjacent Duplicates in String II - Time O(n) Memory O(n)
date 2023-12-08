@@ -1,0 +1,41 @@
+//Run Time: 27ms - 45.17%
+//Memory Usage: 14.09MB - 17.45%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    string removeDuplicates(string s, int k) {
+        //O(n^2) Repeatedly remove the chains of 3
+        //O(n) Stack
+        //delete as we go so we only have to delete each letter once
+        char prevChar = '*';
+        string ans;
+        vector<int> stk, charToConsec(26, 0), posToConsec(s.size(), 0);
+        for(int i = 0; i < s.size(); ++i) {
+            //count consec
+            if(prevChar != s[i]) charToConsec[s[i] - 'a'] = 1;
+            else ++charToConsec[s[i] - 'a'];
+            posToConsec[i] = charToConsec[s[i] - 'a'];
+            prevChar = s[i];
+
+            //add to stack
+            stk.push_back(i);
+            ans.push_back(s[i]);
+            if(charToConsec[s[i] - 'a'] == k) {
+                while(!stk.empty() and s[stk.back()] == s[i]) {
+                    stk.pop_back();
+                    ans.pop_back();
+                }
+                //reset consec since we deleted those chars
+                charToConsec[s[i] - 'a'] = 0;
+                if(stk.empty()) prevChar = '*';
+                else {
+                    prevChar = s[stk.back()];
+                    charToConsec[s[stk.back()] - 'a'] = posToConsec[stk.back()];
+                }
+            }
+        }
+        return ans;
+    }
+};
