@@ -1,0 +1,39 @@
+//Run Time: 510ms - 22.87%
+//Memory Usage: 158MB - 20.83%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    void dfs(vector<int>& ans, int curNode, unordered_map<int, vector<int>>& numToAdj, unordered_set<int>& visited) {
+        ans.push_back(curNode);
+        visited.emplace(curNode);
+        vector<int>& adj = numToAdj[curNode];
+        for(int i = 0; i < adj.size(); ++i) {
+            if(visited.count(adj[i])) continue;
+            dfs(ans, adj[i], numToAdj, visited);
+        }
+    }
+    vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        //find the root which is either the last element or the first one
+        //This element will only appear once
+        unordered_set<int> roots, visited;
+        unordered_map<int, vector<int>> numToAdj;
+        for(int i = 0; i < adjacentPairs.size(); ++i) {
+            for(int j = 0; j < adjacentPairs[i].size(); ++j) {
+                if(!numToAdj.count(adjacentPairs[i][j]))
+                    numToAdj.emplace(adjacentPairs[i][j], vector<int>());
+
+                if(roots.count(adjacentPairs[i][j])) 
+                    roots.erase(adjacentPairs[i][j]);
+                else
+                    roots.emplace(adjacentPairs[i][j]);
+            }
+            numToAdj[adjacentPairs[i][0]].push_back(adjacentPairs[i][1]);
+            numToAdj[adjacentPairs[i][1]].push_back(adjacentPairs[i][0]);
+        }
+        vector<int> ans;
+        dfs(ans, *roots.begin(), numToAdj, visited);
+        return ans;
+    }
+};
