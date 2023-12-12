@@ -1,0 +1,66 @@
+//Run Time: 277ms - 31.33%
+//Memory Usage: 90MB - 10.66%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+struct SortTimes {
+    bool operator()(vector<int>& a, vector<int>& b) {
+        //First sort by times
+        if(a[0] < b[0]) return true;
+        else if(a[0] > b[0]) return false;
+        //Then sort by arrival
+        return a[2] < b[2];
+    }
+};
+
+class Solution {
+public:
+    int smallestChair(vector<vector<int>>& times, int targetFriend) {
+        //Make seperate array one leaving one arriving
+        //[time, friend, isArrival]
+        //Sort those arrays
+        //Use priority_queue to keep track of the available chairs
+        //Keep track of the highest available chair
+        vector<vector<int>> timeEvents;
+        for(int i = 0; i < times.size(); ++i) {
+            timeEvents.push_back({times[i][0], i, 1});
+            timeEvents.push_back({times[i][1], i, -1});
+        }
+        //Events need to be sorted properly leaving events take priority
+        sort(timeEvents.begin(), timeEvents.end(), SortTimes());
+
+        int highestChair = 0, ans = 0;
+        unordered_map<int, int> friendToChair;
+        priority_queue<int, vector<int>, greater<int>> pq;
+        pq.push(highestChair);
+        for(int i = 0; i < timeEvents.size(); ++i) {
+            bool isArrival = timeEvents[i][2] > 0;
+            int curFriend = timeEvents[i][1];
+            int curTime = timeEvents[i][0];
+            //cout << "time: " << curTime << " event: " << timeEvents[i][2] << endl;
+            //check arrival time
+            if(isArrival) {
+                int lowestChair = pq.top();
+                pq.pop();
+                //cout << "arrived: " << curTime << " chair: " << lowestChair << endl;
+                //Exit when we know what chair our target will sit on
+                if(curFriend == targetFriend) {
+                    ans = lowestChair;
+                    break;
+                }
+                friendToChair.emplace(curFriend, lowestChair);
+                if(highestChair == lowestChair) {
+                    pq.push(++highestChair);
+                }
+            }
+            //check departure time
+            else  {
+                //cout << "leaving: " << curTime; 
+                //cout << " chair: " << friendToChair[curFriend] << endl;
+                pq.push(friendToChair[curFriend]);
+                friendToChair.erase(curFriend);
+            }
+        }
+        return ans;
+    }
+};
