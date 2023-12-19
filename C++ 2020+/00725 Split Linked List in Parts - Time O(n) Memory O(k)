@@ -1,0 +1,46 @@
+//Run Time: 8ms - 27.90%
+//Memory Usage: 9.1MB - 64.68%
+//Solved =)
+//Time O(n) Memory O(k)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    vector<ListNode*> splitListToParts(ListNode* head, int k) {
+        int listSize = 0;
+        ListNode* curNode = head, *newListStart = nullptr;
+        while(curNode) {
+            curNode = curNode->next;
+            ++listSize;
+        }
+        int partSize = listSize / k, extraNodeCount = listSize % k;
+        int curListSize = 0, curListIndex = 0;
+        curNode = head;
+        vector<ListNode*> ans(k, nullptr);
+        while(curNode) {
+            ListNode* nextNode = curNode->next;
+            if(curListSize == 0) newListStart = curNode;
+            //get the size for this current chunk
+            int idealSize = extraNodeCount > 0 ? partSize+1 : partSize;
+            //Once we reach our ideal size add this node to the list
+            if(++curListSize == idealSize) {
+                if(idealSize > partSize) --extraNodeCount;
+                ans[curListIndex++] = newListStart;
+                //reset for the next list
+                curNode->next = nullptr;
+                curListSize = 0;
+            }
+            curNode = nextNode;
+        }
+        return ans;
+    }
+};
