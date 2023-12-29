@@ -1,0 +1,63 @@
+//Run Time: 2795ms - 5.07%
+//Memory Usage: 5.9MB - 28.45%
+//Needs Optimizing
+//Time O(nm*nm) Memory O(nm)
+
+class Solution {
+public:
+    int numSubmat(vector<vector<int>>& mat) {
+        //Dynamic Programming - Matrix Prefix Sum
+        //Horzontal Rect
+        //Vertical Rect
+        //Square
+        vector<vector<int>> matrixSum(mat.size(), vector<int>(mat[0].size(), 0));
+        for(int i = 0; i < mat.size(); ++i) {
+            int curSum = 0;
+            for(int j = 0; j < mat[i].size(); ++j) {
+                int topSum = i-1 >= 0 ? matrixSum[i-1][j] : 0;
+                curSum += mat[i][j];
+                matrixSum[i][j] = curSum + topSum;
+                //cout << matrixSum[i][j] << " ";
+            }
+            //cout << endl;
+        }
+        int numMatrices = 0;
+        for(int i = 0; i < mat.size(); ++i) {
+            for(int j = 0; j < mat[i].size(); ++j) {
+                if(mat[i][j] == 0) continue;
+                //Count 1x1
+                ++numMatrices;
+                //Count horz
+                int h = j+1;
+                for(; h < mat[i].size(); ++h) {
+                    if(mat[i][h] == 0) break;
+                    ++numMatrices;
+                }
+                //Count vert
+                int v = i+1;
+                for(; v < mat.size(); ++v) {
+                    if(mat[v][j] == 0) break;
+                    ++numMatrices;
+                }
+                //Count Square - use bounds from counting above
+                for(int v2 = i+1; v2 < v; ++v2) {
+                    for(int h2 = j+1; h2 < h; ++h2) {
+                        int expectedSum = (1+v2-i) * (1+h2-j);
+                        int totalSum = matrixSum[v2][h2];
+                        //remove top row
+                        if(i-1 >= 0) totalSum -= matrixSum[i-1][h2];
+                        //remove left col
+                        if(j-1 >= 0) totalSum -= matrixSum[v2][j-1];
+                        //add diag sq since it would be removed twice
+                        if(i-1 >= 0 and j-1 >= 0) totalSum += matrixSum[i-1][j-1];
+                        //cout << expectedSum << " vs " << totalSum << endl;
+                        if(totalSum == expectedSum) {
+                            ++numMatrices;
+                        }
+                    }
+                }
+            }
+        }
+        return numMatrices;
+    }
+};
