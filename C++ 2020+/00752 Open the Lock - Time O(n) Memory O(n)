@@ -1,0 +1,59 @@
+//Run Time: 100ms - 88.20%
+//Memory Usage: 5.9MB - 92.87%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+    unordered_set<string> blocks;
+public:
+    bool isPosValid(string& pos, unordered_set<string>& visited) {
+        if(blocks.count(pos)) return false;
+        if(visited.count(pos)) return false;
+        visited.emplace(pos);
+        return true;
+    }
+    int openLock(vector<string>& deadends, string target) {
+        //Bi-directional BFS
+        blocks = unordered_set<string>(deadends.begin(), deadends.end());
+        if(blocks.count("0000")) return -1;
+
+        int numIterations = 0;
+        unordered_set<string> forwardSeen, backwardSeen;
+        queue<string> bfsForward, bfsBackward;
+        bfsForward.push("0000");
+        forwardSeen.emplace("0000");
+        bfsBackward.push(target);
+        backwardSeen.emplace(target);
+        while(!bfsForward.empty() and !bfsBackward.empty()) {
+            //select the bfs to continue based on the size
+            queue<string>& bfs = bfsBackward.size() > bfsForward.size() ? bfsForward : bfsBackward;
+            unordered_set<string>& ourVisited = bfs == bfsForward ? forwardSeen : backwardSeen; 
+            unordered_set<string>& otherVisited = bfs == bfsForward ? backwardSeen : forwardSeen; 
+
+            for(int i = bfs.size()-1; i >= 0; --i) {
+                string pos = bfs.front();
+                bfs.pop();
+                //Exit if we traversed this node from the other side
+                if(otherVisited.count(pos)) return numIterations;
+
+                //check all four choices
+                for(int j = 0; j < pos.size(); ++j) {
+                    //move forward
+                    char startChar = pos[j];
+                    if(pos[j] == '9') pos[j] = '0';
+                    else ++pos[j];
+                    if(isPosValid(pos, ourVisited)) bfs.push(pos);
+                    pos[j] = startChar;
+
+                    //move backward
+                    if(pos[j] == '0') pos[j] = '9';
+                    else --pos[j];
+                    if(isPosValid(pos, ourVisited)) bfs.push(pos);
+                    pos[j] = startChar;
+                }
+            }
+            ++numIterations;
+        }
+        return -1;
+    }
+};
