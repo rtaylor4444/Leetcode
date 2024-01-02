@@ -1,0 +1,38 @@
+//Run Time: 66ms - 6.57%
+//Memory Usage: 25.13MB - 31.46%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+
+    int maximumSum(vector<int>& arr) {
+        //Dynamic Programming
+        int maxSum = INT_MIN, curSum = 0;
+        vector<int> maxPrefixSum(arr.size(), 0), maxSuffixSum(arr.size(), 0);
+        for(int i = 0; i < arr.size(); ++i) {
+            if(curSum < 0) curSum = max(curSum, arr[i]);
+            else curSum += arr[i];
+            maxPrefixSum[i] = curSum;
+            maxSum = max(maxSum, curSum);
+        }
+        curSum = 0;
+        for(int i = arr.size()-1; i >= 0; --i) {
+            if(curSum < 0) curSum = max(curSum, arr[i]);
+            else curSum += arr[i];
+            maxSuffixSum[i] = curSum;
+        }
+
+        //Check for deletion
+        if(arr.size() <= 1) return maxSum;
+        for(int i = 0; i < arr.size(); ++i) {
+            //Dont delete if its not negative
+            if(arr[i] >= 0) continue;
+            int leftSum = i-1 >= 0 ? maxPrefixSum[i-1] : 0;
+            int rightSum = i+1 < arr.size() ? maxSuffixSum[i+1] : 0;
+            //cout << leftSum << " - " << rightSum << endl;
+            maxSum = max(maxSum, leftSum + rightSum);
+        }
+        return maxSum;
+    }
+};
