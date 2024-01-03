@@ -1,0 +1,18 @@
+//Run Time: 179ms - 38.89%
+//Memory Usage: 5.9MB - 39.68%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    double averageWaitingTime(vector<vector<int>>& customers) {
+        double totalWaitingTime = 0.0, curTime = 0.0;
+        for(int i = 0; i < customers.size(); ++i) {
+            if(curTime < customers[i][0]) curTime = (double)customers[i][0];
+            curTime += (double)customers[i][1];
+            totalWaitingTime += (curTime - (double)customers[i][0]);
+        }
+        //cout << totalWaitingTime << endl;
+        return totalWaitingTime / (double)customers.size();
+    }
+};
