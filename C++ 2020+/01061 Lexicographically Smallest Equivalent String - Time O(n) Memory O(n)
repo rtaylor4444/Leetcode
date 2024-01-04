@@ -1,0 +1,65 @@
+//Run Time: 7ms - 25.68%
+//Memory Usage: 7.6MB - 23.50%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class DisjointSet {
+    vector<int> nodes;
+    unordered_map<int, vector<int>> groupToNodes;
+public:
+    DisjointSet(string& s1, string&s2) {
+        nodes = vector<int>(26, 0);
+        for(int i = 0; i < 26; ++i) {
+            nodes[i] = i;
+            groupToNodes.emplace(i, vector<int>());
+            groupToNodes[i].push_back(i);
+        }
+        for(int i = 0; i < s1.size(); ++i) {
+            unite(s1[i] - 'a', s2[i] - 'a');
+        }
+        sortGroupNodes();
+    }
+    int getRoot(int node) {
+        int root = nodes[node];
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int nextNode = nodes[node];
+            nodes[node] = root;
+            node = nextNode;
+        }
+        return root;
+    }
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        //fix lists
+        vector<int>& root2ToNodes = groupToNodes[root2];
+        vector<int>& root1ToNodes = groupToNodes[root1];
+        for(int i = 0; i < root2ToNodes.size(); ++i) root1ToNodes.push_back(root2ToNodes[i]);
+        root2ToNodes.clear();
+    }
+    void sortGroupNodes() {
+        for(auto it = groupToNodes.begin(); it != groupToNodes.end(); ++it) {
+            vector<int>& groupList = it->second;
+            sort(groupList.begin(), groupList.end());
+        }
+    }
+    char getSmallestLetter(int node) {
+        int root = getRoot(node - 'a');
+        return 'a' + groupToNodes[root][0];
+    }
+};
+
+class Solution {
+public:
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        //Union Find
+        DisjointSet disjointSet(s1, s2);
+        string ans(baseStr.size(), ' ');
+        for(int i = 0; i < baseStr.size(); ++i) ans[i] = disjointSet.getSmallestLetter(baseStr[i]);
+        return ans;
+    }
+};
