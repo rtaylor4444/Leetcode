@@ -1,0 +1,33 @@
+
+//Run Time: 182ms - 53.83%
+//Memory Usage: 97.5MB - 76.27%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    int getFirstSuccessfulIndex(long long spell, vector<int>& potions, 
+    long long success) {
+        int l = 0, r = potions.size()-1, ans = -1;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            long long result = potions[m] * spell;
+            if(result >= success) {
+                r = m-1;
+                ans = m;
+            } else l = m+1;
+        }
+        return ans;
+    }
+    vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
+        //Binary Search - nlogn
+        sort(potions.begin(), potions.end());
+        vector<int> ans(spells.size(), 0);
+        for(int i = 0; i < spells.size(); ++i) {
+            int index = getFirstSuccessfulIndex(spells[i], potions, success);
+            if(index < 0) continue;
+            ans[i] = (int)potions.size() - index;
+        }
+        return ans;
+    }
+};
