@@ -1,0 +1,80 @@
+//Run Time: 273ms - 14.35%
+//Memory Usage: 5.9MB - 19.73%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+
+class DisjointSet {
+    vector<int> nodes, groupToMinNode, groupToMaxNode;
+    unordered_set<int> roots;
+public:
+    DisjointSet(int size) {
+        nodes = vector<int>(size, 0);
+        groupToMinNode = vector<int>(size, 0);
+        groupToMaxNode = vector<int>(size, 0);
+        for(int i = 0; i < size; ++i) {
+            nodes[i] = i;
+            groupToMinNode[i] = i;
+            groupToMaxNode[i] = i;
+            roots.emplace(i);
+        }
+    }
+    int getRoot(int node) {
+        int root = nodes[node];
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int nextNode = nodes[node];
+            nodes[node] = root;
+            node = nextNode; 
+        }
+        return root;
+    }
+    void merge(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        groupToMinNode[root1] = min(groupToMinNode[root1], groupToMinNode[root2]);
+        groupToMaxNode[root1] = max(groupToMaxNode[root1], groupToMinNode[root2]);
+        roots.erase(root2);
+    }
+    vector<vector<int>> getAnswer(vector<vector<int>>& land) {
+        vector<vector<int>> ans;
+        for(auto it = roots.begin(); it != roots.end(); ++it) {
+            int node = *it;
+            //skip if this root isnt a valid farmland
+            int i = node / land[0].size(), j = node % land[0].size();
+            //cout << "pos: " << i << " " << j << endl;
+            if(land[i][j] == 0) continue;
+            
+            ans.push_back({0, 0, 0, 0});
+            int minNode = groupToMinNode[node];
+            int maxNode = groupToMaxNode[node];
+            //cout << "min: " << minNode << " max: " << maxNode << endl;
+            ans.back()[0] = minNode / land[0].size();
+            ans.back()[1] = minNode % land[0].size();
+            ans.back()[2] = maxNode / land[0].size();
+            ans.back()[3] = maxNode % land[0].size();
+        }
+        return ans;
+    }
+};
+class Solution {
+public:
+    vector<vector<int>> findFarmland(vector<vector<int>>& land) {
+        //Union Find/Disjoint Set
+        DisjointSet disjointSet((land.size() * land[0].size()));
+        for(int i = 0; i < land.size(); ++i) {
+            for(int j = 0; j < land[i].size(); ++j) {
+                if(land[i][j] == 0) continue;
+                int curNode = (i * land[i].size()) + (j % land[i].size());
+                int upNode = ((i-1) * land[i].size()) + (j % land[i].size());
+                int leftNode = (i * land[i].size()) + ((j-1) % land[i].size());
+                if(i-1 >= 0 and land[i-1][j] == 1) disjointSet.merge(curNode, upNode);
+                if(j-1 >= 0 and land[i][j-1] == 1) disjointSet.merge(curNode, leftNode);
+            }
+        }
+        return disjointSet.getAnswer(land);
+        //return {};
+    }
+};
