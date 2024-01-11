@@ -1,0 +1,26 @@
+//Run Time: 134ms - 48.36%
+//Memory Usage: 40.4MB - 71.31%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    string decodeCiphertext(string encodedText, int rows) {
+        if(encodedText.empty()) return encodedText;
+        if(rows == 1) return encodedText;
+        string originalText;
+        int startPos = 0, curNode = 0, rowSize = encodedText.size() / rows;
+        while(startPos < rowSize) {
+            originalText += encodedText[curNode];
+            //pointer movement
+            curNode += (rowSize+1);
+            if(curNode >= encodedText.size()) {
+                curNode = ++startPos;
+            }
+        }
+        //remove trailing spaces
+        while (!originalText.empty() && isspace(originalText.back()))
+            originalText.pop_back();
+        return originalText;
+    }
+};
