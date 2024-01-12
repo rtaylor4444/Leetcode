@@ -1,0 +1,40 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.7MB - 39.29%
+//Solved =)
+//Time O(1) Memory O(1)
+
+class Solution {
+public:
+    vector<double> sampleStats(vector<int>& count) {
+        vector<double> ans(5, 0.0f);
+        ans[0] = DBL_MAX;
+        vector<int> medianArray;
+        long long sum = 0, totalCount = 0;
+        for(long long i = 0; i < count.size(); ++i) {
+            if(count[i] == 0) continue;
+            //get minimum
+            ans[0] = min(ans[0], (double)i);
+            //get maximum
+            ans[1] = max(ans[1], (double)i);
+            //keep track of sum
+            sum += (i * count[i]);
+            totalCount += count[i];
+            //keep track of the largest count
+            if(count[(int)ans[4]] < count[i]) ans[4] = (double)i;
+            medianArray.push_back(i);
+        }
+        ans[2] = (double)sum / (double)totalCount;
+        //get median
+        int midIndex = totalCount / 2, countIndex = 0;
+        while(midIndex > 0)  midIndex -= count[medianArray[countIndex++]];
+        if(midIndex < 0) midIndex += count[medianArray[--countIndex]];
+        //if odd answer is a single index
+        ans[3] = (double)medianArray[countIndex];
+        //if even and count reaches an even 0 the answer is the avg of two counts
+        if(totalCount % 2 == 0 and midIndex == 0) {
+            ans[3] += (double)medianArray[countIndex-1];
+            ans[3] /= 2;
+        }
+        return ans;
+    }
+};
