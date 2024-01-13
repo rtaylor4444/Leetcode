@@ -1,0 +1,42 @@
+//Run Time: 351ms - 29.15%
+//Memory Usage: 103.59MB - 36.74%
+//Solved =)
+//Time O(nm) Memory O(nm)
+
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() {
+        dir = {{1,0}, {-1,0}, {0,1}, {0,-1}};
+    }
+    bool isValid(vector<vector<int>>& grid2, vector<vector<bool>>& visited, int i, int j) {
+        if(i < 0 or i >= grid2.size()) return false;
+        if(j < 0 or j >= grid2[i].size()) return false;
+        if(visited[i][j]) return false;
+        return grid2[i][j] == 1;
+    }
+    bool dfs(vector<vector<int>>& grid1, vector<vector<int>>& grid2, vector<vector<bool>>& visited,int i, int j) {
+        visited[i][j] = true;
+        bool isSub = (grid2[i][j] == grid1[i][j]);
+        for(int d = 0; d < dir.size(); ++d) {
+            int iNext = i + dir[d][0];
+            int jNext = j + dir[d][1];
+            if(!isValid(grid2, visited, iNext, jNext)) continue;
+            if(!dfs(grid1, grid2, visited, iNext, jNext)) isSub = false;
+        }
+        return isSub;
+    }
+    int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+        //DFS starting from grid 2 as normal
+        //check same index in grid1 if we hit a 0 answer idoesnt count
+        int numSubIslands = 0;
+        vector<vector<bool>> visited(grid1.size(), vector<bool>(grid1[0].size(), false));
+        for(int i = 0; i < grid2.size(); ++i) {
+            for(int j = 0; j < grid2[i].size(); ++j) {
+                if(!isValid(grid2, visited, i, j)) continue;
+                if(dfs(grid1, grid2, visited, i, j)) ++numSubIslands;
+            }
+        }
+        return numSubIslands;
+    }
+};
