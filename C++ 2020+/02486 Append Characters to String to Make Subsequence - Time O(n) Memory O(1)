@@ -1,0 +1,17 @@
+//Run Time: 18ms - 73.76%
+//Memory Usage: 5.9MB - 57.85%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int appendCharacters(string s, string t) {
+        int numChars = t.size(), tIndex = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] != t[tIndex]) continue;
+            ++tIndex;
+            --numChars;
+        }
+        return numChars;
+    }
+};
