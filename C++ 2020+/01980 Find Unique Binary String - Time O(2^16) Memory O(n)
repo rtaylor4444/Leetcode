@@ -1,0 +1,30 @@
+//Run Time: 8ms - 17.46%
+//Memory Usage: 12.82MB - 12.99%
+//Solved =)
+//Time O(2^16) Memory O(n)
+
+class Solution {
+public:
+    string findMissingNum(string& startingStr, unordered_set<string>& seenNums, int pos) {
+        if(!seenNums.count(startingStr)) return startingStr;
+        if(pos == startingStr.size()) return "";
+        //leave bit on
+        string result = findMissingNum(startingStr, seenNums, pos+1);
+        if(!result.empty()) return result;
+        //turn bit off
+        startingStr[pos] = '0';
+        result = findMissingNum(startingStr, seenNums, pos+1);
+        if(!result.empty()) return result;
+        //exit if no answer
+        startingStr[pos] = '1';
+        return "";
+    }
+    string findDifferentBinaryString(vector<string>& nums) {
+        //Linear time check all possible combos
+        //2^16 = 65535
+        int numDigits = nums[0].size();
+        string startingStr(numDigits, '1');
+        unordered_set<string> seenNums(nums.begin(), nums.end());
+        return findMissingNum(startingStr, seenNums, 0);
+    }
+};
