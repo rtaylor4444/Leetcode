@@ -1,0 +1,36 @@
+//Run Time: 101ms - 82.96%
+//Memory Usage: 5.9MB - 8.52%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    vector<int> goodIndices(vector<int>& nums, int k) {
+        //Brute Force - O(n^2)
+        //just simulate the problem
+
+        //Dynamic Programming - O(n)
+        //keep track of num consecutive non-increasing and non-decreasing
+        int n = nums.size(), numConsec = 1;
+        vector<int> beforeConsec(n, 1), afterConsec(n, 1);
+        for(int i = 1; i < n; ++i) {
+            if(nums[i] <= nums[i-1]) ++numConsec;
+            else numConsec = 1;
+            beforeConsec[i] = numConsec;
+        }
+        numConsec = 1;
+        for(int i = n-2; i >= 0; --i) {
+            if(nums[i] <= nums[i+1]) ++numConsec;
+            else numConsec = 1;
+            afterConsec[i] = numConsec;
+        }
+        
+        vector<int> ans;
+        for(int i = k; i < n-k; ++i) {
+            if(beforeConsec[i-1] < k) continue;
+            if(afterConsec[i+1] < k) continue;
+            ans.push_back(i);
+        }
+        return ans;
+    }
+};
