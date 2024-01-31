@@ -1,0 +1,98 @@
+//Run Time: 550ms - 14.38%
+//Memory Usage: 229.85MB - 8.75%
+//Needs Optimization
+//Time O(n) Memory O(n)
+
+class DisjointSet {
+    vector<int> nodes;
+    vector<vector<int>> groupToNodes;
+    vector<unordered_map<int, int>> groupToNumsCount;
+public:
+    DisjointSet(int size, vector<int>& source, vector<vector<int>>& allowedSwaps) {
+        nodes = vector<int>(size, 0);
+        groupToNodes = vector<vector<int>>(size, vector<int>());
+        groupToNumsCount = vector<unordered_map<int, int>>(size, unordered_map<int, int>());
+        for(int i = 0; i < size; ++i) {
+            nodes[i] = i;
+            groupToNodes[i].push_back(i);
+            groupToNumsCount[i].emplace(sourceNums[i], 1);
+        }
+        
+        for(int i = 0; i < allowedSwaps.size(); ++i) {
+            merge(allowedSwaps[i][0], allowedSwaps[i][1]);
+        }
+    }
+    int getRoot(int node) {
+        int root = nodes[node];
+        while(root != nodes[root]) root = nodes[root];
+        //path compression
+        while(node != nodes[node]) {
+            int next = nodes[node];
+            nodes[node] = root;
+            node = next;
+        }
+        return root;
+    }
+    void merge(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        //merge based on group size
+        if(groupToNodes[root2].size() > groupToNodes[root1].size()) {
+            nodes[root1] = root2;
+            for(int i = 0; i < groupToNodes[root1].size(); ++i) {
+                int index = groupToNodes[root1][i];
+                groupToNodes[root2].push_back(index);
+                if(!groupToNumsCount[root2].count(sourceNums[index]))
+                    groupToNumsCount[root2].emplace(sourceNums[index], 0);
+                groupToNumsCount[root2][sourceNums[index]]++;
+            }
+        } else {
+            nodes[root2] = root1;
+            for(int i = 0; i < groupToNodes[root2].size(); ++i) {
+                int index = groupToNodes[root2][i];
+                groupToNodes[root1].push_back(index);
+                if(!groupToNumsCount[root1].count(sourceNums[index]))
+                    groupToNumsCount[root1].emplace(sourceNums[index], 0);
+                groupToNumsCount[root1][sourceNums[index]]++;
+            }
+        }
+    }
+    bool isTargetInSwapGroup(int index, int targetNum) {
+        int swapGroupIndex = getRoot(index);
+        if(!groupToNumsCount[swapGroupIndex].count(targetNum)) return false;
+        //remove target number incase of duplicates
+        if(--groupToNumsCount[swapGroupIndex][targetNum] == 0) 
+            groupToNumsCount[swapGroupIndex].erase(targetNum);
+        return true;
+    }
+    void print() {
+        for(int i = 0; i < groupToNumsCount.size(); ++i) {
+            if(groupToNumsCount[i].empty()) continue;
+            for(auto it = groupToNumsCount[i].begin(); it != groupToNumsCount[i].end(); ++it) {
+                cout << it->first << ": " << it->second << "  ";
+            }
+            cout << endl;
+        }
+    }
+};
+class Solution {
+public:
+    int minimumHammingDistance(vector<int>& source, vector<int>& target, vector<vector<int>>& allowedSwaps) {
+        //Union Find
+        //Each swap can be counted as a single group since numbers within
+        //that group can be placed anywhere
+        unordered_map<int, int> numToIndex;
+        for(int i = 0; i < source)
+        DisjointSet disjointSet((int)source.size(), source, allowedSwaps);
+
+        int hammingDist = 0;
+        for(int i = 0; i < source.size(); ++i) {
+            if(disjointSet.isTargetInSwapGroup(i, target[i])) continue;
+            ++hammingDist;
+            //cout << target[i] << " -> " << hammingDist << endl;
+            //disjointSet.print();
+        }
+        return hammingDist;
+    }
+};
