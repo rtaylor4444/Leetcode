@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> minOperations(string boxes) {
+        //O(n) Two Pass
+        //Two iterations one forward one backward
+        //Keep track of the number of 1's seen
+        //ans = forward[i] + backward[i]
+        int ballsSeen = boxes[0] - '0';
+        vector<int> forward(boxes.size(), 0), backward(boxes.size(), 0);
+        for(int i = 1; i < boxes.size(); ++i) {
+            forward[i] = forward[i-1] + ballsSeen;
+            if(boxes[i] == '1') ++ballsSeen;
+        }
+        ballsSeen = boxes.back() - '0';
+        for(int i = boxes.size()-2; i >= 0; --i) {
+            backward[i] = backward[i+1] + ballsSeen;
+            if(boxes[i] == '1') ++ballsSeen;
+        }
+
+        vector<int> ans(boxes.size(), 0);
+        for(int i = 0; i < boxes.size(); ++i) {
+            ans[i] = forward[i] + backward[i];
+        }
+        return ans;
+    }
+};
