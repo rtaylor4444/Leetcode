@@ -1,0 +1,58 @@
+//Run Time: 89ms - 62.96%
+//Memory Usage: 34.32MB - 30.16%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Allocator {
+    set<int> freeSlots;
+    unordered_map<int, vector<int>> idToSlots;
+public:
+    Allocator(int n) {
+        for(int i = 0; i < n; ++i) freeSlots.emplace(i);
+    }
+    
+    int allocate(int size, int mID) {
+        //O(n)
+        if(freeSlots.empty()) return -1;
+        //Find the first available slot
+        auto it = freeSlots.begin();
+        int numConsecFree = 0, prevIndex = (*it)-1, startingIndex = *it;
+        for(; it != freeSlots.end(); ++it) {
+            int curIndex = *it;
+            if(prevIndex == -1 or curIndex-1 == prevIndex) {
+                ++numConsecFree; 
+            }
+            else {
+                numConsecFree = 1;
+                startingIndex = *it;
+            }
+            prevIndex = curIndex;
+            if(numConsecFree == size) break;
+        }
+        //exit if we dont have free slots available
+        if(numConsecFree < size) return -1;
+
+        if(!idToSlots.count(mID)) idToSlots.emplace(mID, vector<int>());
+        for(int i = 0; i < size; ++i) {
+            int takenSlot = *it;
+            //cout << takenSlot << " ";
+            idToSlots[mID].push_back(takenSlot);
+            --it;
+            freeSlots.erase(takenSlot);
+        }
+        //cout << endl;
+        return startingIndex;
+    }
+    
+    int free(int mID) {
+        if(!idToSlots.count(mID)) return 0;
+        //O(size log n)
+        vector<int>& idsToFree = idToSlots[mID];
+        int numBlocksFreed = idsToFree.size();
+        for(int i = 0; i < idsToFree.size(); ++i) {
+            freeSlots.emplace(idsToFree[i]);
+        }
+        idsToFree.clear();
+        return numBlocksFreed;
+    }
+};
