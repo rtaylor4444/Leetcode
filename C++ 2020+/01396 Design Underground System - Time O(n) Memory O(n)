@@ -1,0 +1,55 @@
+//Run Time: 128ms - 77.24%
+//Memory Usage: 5.9MB - 6.61%
+//Solved =)
+//n = size of the strings
+//Time O(n) Memory O(n)
+
+class UndergroundSystem {
+    struct StationInfo {
+        string stationName;
+        int checkInTime;
+        StationInfo() {
+
+        }
+        StationInfo(string& name, int time) {
+            stationName = name;
+            checkInTime = time;
+        }
+    };
+
+    unordered_map<int, StationInfo> idToCheckIn;
+    unordered_map<string, int> stationTotalTime, stationNumTravels;
+public:
+    UndergroundSystem() {
+        
+    }
+    
+    void checkIn(int id, string stationName, int t) {
+        if(idToCheckIn.count(id)) return;
+        idToCheckIn.emplace(id, StationInfo(stationName, t));
+    }
+    
+    void checkOut(int id, string stationName, int t) {
+        if(!idToCheckIn.count(id)) return;
+        StationInfo& info = idToCheckIn[id];
+        string routeName = info.stationName + "-" + stationName;
+        stationTotalTime[routeName] += t - info.checkInTime;
+        ++stationNumTravels[routeName];
+        idToCheckIn.erase(id);
+    }
+    
+    double getAverageTime(string startStation, string endStation) {
+        string routeName = startStation + "-" + endStation;
+        double totalTime = stationTotalTime[routeName];
+        double numTravels = stationNumTravels[routeName];
+        return totalTime / numTravels;
+    }
+};
+
+/**
+ * Your UndergroundSystem object will be instantiated and called as such:
+ * UndergroundSystem* obj = new UndergroundSystem();
+ * obj->checkIn(id,stationName,t);
+ * obj->checkOut(id,stationName,t);
+ * double param_3 = obj->getAverageTime(startStation,endStation);
+ */
