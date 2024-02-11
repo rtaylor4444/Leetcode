@@ -1,0 +1,49 @@
+//Run Time: 257ms - 69.41%
+//Memory Usage: 144MB - 55.88%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int getHighestCountNum(unordered_map<int, int>& numToCount) {
+        int num = INT_MIN, maxCount = 0;
+        for(auto it = numToCount.begin(); it != numToCount.end(); ++it) {
+            if(it->second <= maxCount) continue;
+            num = it->first;
+            maxCount = it->second;
+        }
+        return num;
+    }
+    int minimumOperations(vector<int>& nums) {
+        unordered_map<int, int> evenNumToCount, oddNumToCount;
+        for(int i = 0; i < nums.size(); ++i) {
+            //select the correct even/odd mapping
+            unordered_map<int, int>& numToCount = (i % 2) ? oddNumToCount : evenNumToCount;
+            if(!numToCount.count(nums[i])) numToCount.emplace(nums[i], 0);
+            numToCount[nums[i]]++;
+        }
+        int numOdds = nums.size() / 2, numEvens = numOdds;
+        if(nums.size() % 2) ++numEvens;
+        int highestEvenNum = getHighestCountNum(evenNumToCount);
+        int highestOddNum = getHighestCountNum(oddNumToCount);
+        if(highestEvenNum != highestOddNum) {
+            //Calculate the number of changes needed
+            numOdds -= oddNumToCount[highestOddNum];
+            numEvens -= evenNumToCount[highestEvenNum];
+            return numOdds + numEvens;
+        }
+        //Highest odd and even number are the same we must pick one
+        int highestOddCount = oddNumToCount[highestOddNum];
+        oddNumToCount.erase(highestOddNum);
+        int highestEvenCount = evenNumToCount[highestEvenNum];
+        evenNumToCount.erase(highestEvenNum);
+
+        //Determine which of the above maxes should we leave
+        int minOperationsOdd = numOdds - highestOddCount;
+        int minOperationsEven = numEvens - highestEvenCount;
+        highestEvenNum = getHighestCountNum(evenNumToCount);
+        highestOddNum = getHighestCountNum(oddNumToCount);
+        return min(minOperationsOdd + (numEvens - evenNumToCount[highestEvenNum]),
+        minOperationsEven + (numOdds - oddNumToCount[highestOddNum]));
+    }
+};
