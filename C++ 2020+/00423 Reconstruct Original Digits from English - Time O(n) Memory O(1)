@@ -1,0 +1,64 @@
+//Run Time: 14ms - 59.60%
+//Memory Usage: 5.9MB - 33.67%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+    vector<string> numToLetters;
+public:
+    Solution() {
+        numToLetters = {"zero", "one", "two", "three", "four",
+        "five", "six", "seven", "eight", "nine"};
+    }
+    void filterCharFreq(vector<int>& charToFreq, vector<int>& seenDigits, string uncommonLetters, 
+    vector<int> letterToNum) {
+        for(int i = 0; i < uncommonLetters.size(); ++i) {
+            int numCount = charToFreq[uncommonLetters[i] - 'a'];
+            if(numCount <= 0) continue;
+
+            seenDigits[letterToNum[i]] += numCount;
+            string& numLetters = numToLetters[letterToNum[i]];
+            for(int j = 0; j < numLetters.size(); ++j) {
+                charToFreq[numLetters[j] - 'a'] -= numCount;
+            }
+        }
+    }
+    string originalDigits(string s) {
+        //Count the character frequency in the string then filter the count in O(1)
+        vector<int> seenDigits(10, 0), charToFreq(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            charToFreq[s[i] - 'a']++;
+        }
+
+        //zero one two three four five six seven eight nine
+        //can easily filter these out
+        //zero has z as an uncommon letter between numbers
+        //two has w as an uncommon letter between numbers
+        //four has u as an uncommon letter between numbers
+        //six has x as an uncommon letter between numbers
+        //eight has g as an uncommon letter between numbers
+        filterCharFreq(charToFreq, seenDigits, "zwuxg", {0,2,4,6,8});
+
+        //after 1st pass filter
+        //one three five seven nine
+        //one has o as an uncommon letter between numbers
+        //three has h as an uncommon letter between numbers
+        //five has f as an uncommon letter between numbers
+        filterCharFreq(charToFreq, seenDigits, "ohf", {1,3,5});
+
+        //after 2nd pass filter
+        //seven nine
+        //seven has v as an uncommon letter between numbers
+        //nine has i as an uncommon letter between numbers
+        filterCharFreq(charToFreq, seenDigits, "vi", {7,9});
+
+        //Construct the final answer based on seen digits
+        string ans;
+        for(int i = 0; i < seenDigits.size(); ++i) {
+            for(int j = 0; j < seenDigits[i]; ++j) {
+                ans += ('0'+i);
+            }
+        }
+        return ans;
+    }
+};
