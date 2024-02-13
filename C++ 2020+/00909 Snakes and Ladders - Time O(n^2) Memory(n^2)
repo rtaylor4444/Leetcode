@@ -1,0 +1,55 @@
+//Run Time: 9ms - 91.47%
+//Memory Usage: 17MB - 21.61%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+
+class Solution {
+public:
+    int snakesAndLadders(vector<vector<int>>& board) {
+        //BFS - use this for min steps
+        //Gotta figure out how to traverse the board
+        //Simplest way is to map each number to board pos
+        //More efficent is keep track of the pos to snake/ladder mapping
+        int numIterations = 0, n = board.size(), curr = 1;
+        unordered_map<int, int> posToMove;
+        while(curr <= n*n) {
+            int curRow = (n-1) - (curr-1) / n;
+            //check between forward and backward movement
+            if((curRow % 2) == ((n-1) % 2)) {
+                //forward loop
+                for(int i = 0; i < n; ++i) {
+                    if(board[curRow][i] != -1) posToMove.emplace(curr, board[curRow][i]);
+                    ++curr;
+                }
+            } else {
+                //backward loop
+                for(int i = n-1; i >= 0; --i) {
+                    if(board[curRow][i] != -1) posToMove.emplace(curr, board[curRow][i]);
+                    ++curr;
+                }
+            }
+        }
+
+        vector<bool> visited((n*n)+1, false);
+        visited[1] = true;
+        queue<int> bfs;
+        bfs.push(1);
+        while(!bfs.empty()) {
+            for(int i = bfs.size()-1; i >=0; --i) {
+                int pos = bfs.front();
+                bfs.pop();
+                if(pos == n*n) return numIterations;
+
+                for(int m = 1; m <= 6; ++m) {
+                    int nextPos = min(n*n, pos + m);
+                    if(visited[nextPos]) continue;
+                    visited[nextPos] = true;
+                    if(posToMove.count(nextPos)) nextPos = posToMove[nextPos];
+                    bfs.push(nextPos);
+                }
+            }
+            ++numIterations;
+        }
+        return -1;
+    }
+};
