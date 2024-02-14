@@ -1,0 +1,46 @@
+//Run Time: 64ms - 93.68%
+//Memory Usage: 55MB - 5.24%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int maximumElementAfterDecrementingAndRearranging(vector<int>& arr) {
+        //absoulte diff between adj elements must be less than or equal to one
+        //can decrease values or move them around
+        //must be in a chain like this 1 -> 2 -> 3 -> etc..
+        //Can just sort the array
+        int n = arr.size();
+        vector<int> numToFreq(n+2, 0);
+        for(int i = 0; i < n; ++i) {
+            int index = arr[i] < n ? arr[i] : n; 
+            ++numToFreq[index];
+        }
+
+        int maxNum = 0, curNum = 1, numElementsCleared = 0, numElementsDecreased = 0;
+        while(numElementsCleared <= n) {
+            if(!numToFreq[curNum]) {
+                //if we dont find our number assume we decreased a future one
+                ++numElementsCleared;
+                ++numElementsDecreased;
+                maxNum = curNum++;
+            }
+            else {
+                //Decrease this element if we have spares
+                if(numElementsDecreased) {
+                    numToFreq[curNum] -= numElementsDecreased;
+                    numElementsDecreased = 0;
+                    if(numToFreq[curNum] < 1) {
+                        int diff = 1 - numToFreq[curNum];
+                        numElementsDecreased += diff;
+                        numToFreq[curNum] += diff;
+                    }
+                }
+                //then update our elements processed as normal
+                numElementsCleared += numToFreq[curNum];
+                maxNum = curNum++;
+            }
+        }
+        return maxNum-1;
+    }
+};
