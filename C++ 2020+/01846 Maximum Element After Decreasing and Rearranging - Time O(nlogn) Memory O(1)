@@ -1,0 +1,23 @@
+//Run Time: 84ms - 30.91%
+//Memory Usage: 55MB - 14.11%
+//Solved =)
+//Time O(nlogn) Memory O(1)
+
+class Solution {
+public:
+    int maximumElementAfterDecrementingAndRearranging(vector<int>& arr) {
+        //absoulte diff between adj elements must be less than or equal to one
+        //can decrease values or move them around
+        //must be in a chain like this 1 -> 2 -> 3 -> etc..
+        //Can just sort the array
+        int maxNum = 1;
+        sort(arr.begin(), arr.end());
+        arr[0] = 1;
+        for(int i = 1; i < arr.size(); ++i) {
+            int diff = arr[i] - arr[i-1];
+            if(diff > 1) arr[i] = arr[i-1]+1;
+            maxNum = max(maxNum, arr[i]);
+        }
+        return maxNum;
+    }
+};
