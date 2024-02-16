@@ -1,0 +1,42 @@
+//Run Time: 146ms - 67.43%
+//Memory Usage: 151.9MB - 5.60%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int minIncrements(int n, vector<int>& cost) {
+        //Reverse BFS
+        //Start from the bottom leaf layer calculate the max costs
+        //bfs upward the tree while keeping track of the difference
+        //of the two child paths to get to the parent for the minCost
+        int lastLayerSize = (n+1)/2, minInc = 0;
+        vector<int> nodeToTotalCost(n, 0);
+        queue<int> bfs;
+        for(int i = 0; i < lastLayerSize; ++i) {
+            int index = n-1;
+            nodeToTotalCost[index-i] = cost[index-i];
+            bfs.push(index-i);
+        }
+        while(!bfs.empty()) {
+            //process nodes two at a time size is alwasy divisable by two
+            //until we get to the root layer
+            for(int i = bfs.size()-1; i >= 0; i-=2) {
+                int child1Index = bfs.front();
+                bfs.pop();
+                //exit once we hit the root layer
+                if(bfs.empty()) break;
+                int child2Index = bfs.front();
+                bfs.pop();
+
+                int parentIndex = child2Index / 2;
+                //cout << child1Index << "-" << child2Index << endl;
+                minInc += abs(nodeToTotalCost[child1Index] - nodeToTotalCost[child2Index]);
+                int maxChildCost = max(nodeToTotalCost[child1Index], nodeToTotalCost[child2Index]);
+                nodeToTotalCost[parentIndex] = cost[parentIndex] + maxChildCost;
+                bfs.push(parentIndex);
+            }
+        }
+        return minInc;
+    }
+};
