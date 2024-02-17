@@ -1,0 +1,33 @@
+//Run Time: 300ms - 72.28%
+//Memory Usage: 163.64MB - 65.61%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class LUPrefix {
+    int startingPrefix;
+    vector<bool> uploadedVideos;
+public:
+    LUPrefix(int n) {
+        startingPrefix = 1;
+        uploadedVideos.resize(n+1);
+    }
+    
+    void upload(int video) {
+        if(uploadedVideos[video]) return;
+        uploadedVideos[video] = true;
+        while(uploadedVideos[startingPrefix]) {
+            if(++startingPrefix == uploadedVideos.size()) break;
+        }
+    }
+    
+    int longest() {
+        return startingPrefix-1;
+    }
+};
+
+/**
+ * Your LUPrefix object will be instantiated and called as such:
+ * LUPrefix* obj = new LUPrefix(n);
+ * obj->upload(video);
+ * int param_2 = obj->longest();
+ */
