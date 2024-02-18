@@ -1,0 +1,28 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 7.9MB - 43.42%
+//Solved =)
+//Time O(s*p) Memory O(s)
+
+class Solution {
+public:
+    bool substrEqualsPart(string& s, int i, string& part) {
+        if(i < 0) return false;
+        for(int j = 0; j < part.size(); ++j) {
+            if(i+j >= s.size()) return false;
+            if(s[i+j] != part[j]) return false;
+        }
+        return true;
+    }
+    string removeOccurrences(string s, string part) {
+        //While we have an occurance remove the occurance we found
+        string removeResult = "";
+        for(int i = 0; i < s.size(); ++i) {
+            removeResult += s[i];
+            if(substrEqualsPart(removeResult, removeResult.size()-part.size(), part)) {
+                //remove the matching characters
+                for(int j = 0; j < part.size(); ++j) removeResult.pop_back();
+            }
+        }
+        return removeResult;
+    }
+};
