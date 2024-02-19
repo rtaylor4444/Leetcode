@@ -1,0 +1,32 @@
+//Run Time: 44ms - 65.57%
+//Memory Usage: 32.9MB - 8.79%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    string getSmallestString(int n, int k) {
+        //Start by filling the string with Zs or one largest letter that can fit
+        //then fit the remainder into the remaining characters
+        //prioritizing placing as many A's as possible
+
+        //Pad z's - will allow the number to fit in smallest string possible
+        //keep doing this until we dont have enough chars to fill the string
+        string end = "";
+        int remainingSizeReq = n;
+        while(k > remainingSizeReq) {
+            end += 'z';
+            k -= 26;
+            --remainingSizeReq;
+        }
+
+        //if we have too few letters left we must edit one z
+        if(k < remainingSizeReq) {
+            end[0] -= (remainingSizeReq - k);
+            k = remainingSizeReq;
+        }
+        //Once even just pad remaining a's
+        string start(k, 'a');
+        return start + end;
+    }
+};
