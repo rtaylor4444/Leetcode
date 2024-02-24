@@ -1,0 +1,38 @@
+//Run Time: 284ms - 9.62%
+//Memory Usage: 138.3MB - 5.54%
+//Needs Optimization
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    long long minimumRemoval(vector<int>& beans) {
+        //O(nlogn) Sort + Math
+        long long totalSum = 0, maxNum = 0;
+        unordered_map<int, long long> numToCount;
+        sort(beans.begin(), beans.end());
+        for(int i = 0; i < beans.size(); ++i) {
+            totalSum += beans[i];
+            maxNum = max(maxNum, (long long)beans[i]);
+            if(!numToCount.count(beans[i])) numToCount.emplace(beans[i], 0);
+            ++numToCount[beans[i]];
+        }
+        long long minRemove = totalSum - maxNum, bagsLeft = beans.size(), numBeansEmptied = 0;
+        int i = 0;
+        while(i < beans.size()-1) {
+            //Set all remaining bags to this number
+            totalSum -= (long long)(beans[i] * numToCount[beans[i]]);
+            bagsLeft -= numToCount[beans[i]];
+
+            //calculcate the moves used
+            long long excessBeans = totalSum - (bagsLeft * beans[i]);
+            long long curMove = numBeansEmptied + excessBeans;
+            //cout << beans[i] << " -> bagsLeft: " << bagsLeft << " sumSoFar " << totalSum;
+            //cout << " excess: " << excessBeans << " curMove: " << curMove << endl;
+            minRemove = min(minRemove, curMove);
+
+            numBeansEmptied += beans[i] * numToCount[beans[i]];
+            i += numToCount[beans[i]];
+        }
+        return minRemove;
+    }
+};
