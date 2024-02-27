@@ -1,0 +1,62 @@
+//Run Time: 161ms - 82.76%
+//Memory Usage: 5.9MB - 45.81%
+//Solved =)
+//Time O(n*m) Memory O(n*m)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void setMatrixValue(vector<vector<int>>& mat, int i, int j, int& size, ListNode*& head) {
+        --size;
+        //cout << i << " " << j << endl;
+        if(head == nullptr) {
+            mat[i][j] = -1;
+            return;
+        }
+        mat[i][j] = head->val;
+        head = head->next;
+    } 
+    vector<vector<int>> spiralMatrix(int m, int n, ListNode* head) {
+        vector<vector<int>> ans(m, vector<int>(n, 0));
+        int matrixSize = m*n, left = 0, right = n-1, up = 0, down = m-1;
+        while(matrixSize) {
+            //left to right 
+            for(int i = left; i <= right; ++i) {
+                setMatrixValue(ans, up, i, matrixSize, head);
+            }
+            //recent top row is completed
+            if(++up > down) break;
+
+            //up to down
+            for(int i = up; i <= down; ++i) {
+                setMatrixValue(ans, i, right, matrixSize, head);
+            }
+            //recent right row is finished
+            if(--right < left) break;
+
+            //right to left
+            for(int i = right; i >= left; --i) {
+                setMatrixValue(ans, down, i, matrixSize, head);
+            }
+            //recent down row is finished
+            if(--down < up) break;
+
+            //down to up
+            for(int i = down; i >= up; --i) {
+                setMatrixValue(ans, i, left, matrixSize, head);
+            }
+            //recent left row is finished
+            if(++left > right) break;
+        }
+        return ans;
+    }
+};
