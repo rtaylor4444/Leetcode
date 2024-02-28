@@ -1,0 +1,22 @@
+//Run Time: 81ms - 66.10%
+//Memory Usage: 59.7MB - 39.88%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    vector<long long> findPrefixScore(vector<int>& nums) {
+        int maxSoFar = 0;
+        long long sumSoFar = 0;
+        vector<int> conver(nums.size(), 0);
+        vector<long long> sumArr(nums.size(), 0);
+        for(int i = 0; i < nums.size(); ++i) {
+            maxSoFar = max(maxSoFar, nums[i]);
+            conver[i] = nums[i] + maxSoFar;
+            sumSoFar += conver[i];
+            sumArr[i] = sumSoFar;
+            //cout << conver[i] << " ";
+        }
+        return sumArr;
+    }
+};
