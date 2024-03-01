@@ -1,0 +1,41 @@
+//Run Time: 316ms - 26.83%
+//Memory Usage: 100MB - 23.27%
+//Solved =)
+//Time O(nlogn + qlogn) Memory O(n)
+
+class Solution {
+public:
+    int findMostBeautiful(vector<vector<int>>& items, unordered_map<int, int>& priceToMaxBeauty,
+     int price) {
+         int l = 0, r = items.size()-1, maxBeautySoFar = 0;
+         while(l <= r) {
+             int m = l + ((r - l) / 2);
+             if(items[m][0] <= price) {
+                 maxBeautySoFar = max(maxBeautySoFar, priceToMaxBeauty[items[m][0]]);
+                 l = m+1;
+             } else r = m-1;
+         } 
+         return maxBeautySoFar;
+    }
+    vector<int> maximumBeauty(vector<vector<int>>& items, vector<int>& queries) {
+        //sort items by price
+        sort(items.begin(), items.end());
+        //make price -> max beauty mapping
+        int maxBeautySoFar = 0;
+        unordered_map<int, int> priceToMaxBeauty;
+        for(int i = 0; i < items.size(); ++i) {
+            maxBeautySoFar = max(maxBeautySoFar, items[i][1]);
+            //cout << items[i][0] << " ";
+            if(!priceToMaxBeauty.count(items[i][0])) 
+                priceToMaxBeauty.emplace(items[i][0], maxBeautySoFar);
+            else
+                priceToMaxBeauty[items[i][0]] = maxBeautySoFar;
+        }
+        //use binary search for each query
+        vector<int> ans;
+        for(int i = 0; i < queries.size(); ++i) {
+            ans.push_back(findMostBeautiful(items, priceToMaxBeauty, queries[i]));
+        }
+        return ans;
+    }
+};
