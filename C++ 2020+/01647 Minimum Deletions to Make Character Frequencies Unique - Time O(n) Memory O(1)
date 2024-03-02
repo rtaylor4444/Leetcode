@@ -1,0 +1,40 @@
+//Run Time: 51ms - 72.35%
+//Memory Usage: 19.17MB - 37.23%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minDeletions(string s) {
+        int maxFreq = 0;
+        vector<int> charToFreq(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            maxFreq = max(maxFreq, ++charToFreq[s[i] - 'a']);
+        }
+        map<int, vector<char>> freqToChar;
+        for(int i = 0; i < charToFreq.size(); ++i) {
+            if(!charToFreq[i]) continue;
+            if(!freqToChar.count(charToFreq[i])) freqToChar.emplace(charToFreq[i], vector<char>());
+            freqToChar[charToFreq[i]].push_back('a'+i);
+        }
+        int minDel = 0;
+        for(auto it = freqToChar.rbegin(); it != freqToChar.rend(); ++it) {
+            //cout << it->first << endl;
+            maxFreq = min(maxFreq, it->first);
+            while(it->second.size() > 1) {
+                //find first available frequency - freq cannot become negative
+                maxFreq = max(0, maxFreq-1);
+                if(freqToChar.count(maxFreq)) continue;
+                //Update deletions used + frequency lists
+                char toMove = it->second.back();
+                it->second.pop_back();
+                minDel += (it->first - maxFreq);
+                //skip if character would no longer exist if the string
+                if(maxFreq == 0) continue;
+                freqToChar.emplace(maxFreq, vector<char>());
+                freqToChar[maxFreq].push_back(toMove);
+            }
+        }
+        return minDel;
+    }
+};
