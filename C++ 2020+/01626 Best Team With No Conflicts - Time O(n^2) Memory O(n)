@@ -1,0 +1,50 @@
+//Run Time: 67ms - 60.21%
+//Memory Usage: 28.26MB - 35.16%
+//Solved =)
+//n = size of both ages and scores
+//Time O(n^2) Memory O(n)
+
+class Solution {
+public:
+    int bestTeamScore(vector<int>& scores, vector<int>& ages) {
+        //No limit on players needed to be on a team
+        //Team cannot have conflicts meaning any younger players
+        //with higher scores cannot be picked
+
+        //Sort both scores and ages array
+        vector<vector<int>> ageToScore(1001, vector<int>());
+        for(int i = 0; i < ages.size(); ++i) {
+            ageToScore[ages[i]].push_back(scores[i]);
+        }
+        for(int i = 0; i < ageToScore.size(); ++i) {
+            sort(ageToScore[i].begin(), ageToScore[i].end());
+        }
+        int ageIndex = 0, scoreIndex = 0;
+        for(int i = 0; i < ageToScore.size(); ++i) {
+            for(int j = 0; j < ageToScore[i].size(); ++j) {
+                ages[ageIndex++] = i;
+                scores[scoreIndex++] = ageToScore[i][j];
+            }
+        }
+
+        //for(int i = 0; i < ages.size(); ++i) cout << ages[i] << " ";
+        //cout << endl;
+        //for(int i = 0; i < scores.size(); ++i) cout << scores[i] << " ";
+
+        //Do Dynamic Programming LIS
+        int maxScore = 0;
+        vector<int> dp(ages.size(), 0);
+        for(int i = 0; i < ages.size(); ++i) {
+            dp[i] = scores[i];
+            //check matches with every previous score
+            for(int j = i-1; j >= 0; --j) {
+                //if they are younger and have a greater score than us skip it
+                if(ages[j] < ages[i] and scores[j] > scores[i]) continue;
+                //otherwise we can inherit thier scores
+                dp[i] = max(dp[i], dp[j] + scores[i]);
+            }
+            maxScore = max(dp[i], maxScore);
+        }
+        return maxScore;
+    }
+};
