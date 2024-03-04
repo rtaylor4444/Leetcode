@@ -1,0 +1,24 @@
+//Run Time: 556ms - 41.18%
+//Memory Usage: 166MB - 61.51%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    vector<vector<int>> findWinners(vector<vector<int>>& matches) {
+        map<int, int> lossCount;
+        for(int i = 0; i < matches.size(); ++i) {
+            if(!lossCount.count(matches[i][0])) lossCount.emplace(matches[i][0], 0);
+            if(!lossCount.count(matches[i][1])) lossCount.emplace(matches[i][1], 0);
+            lossCount[matches[i][1]]++;
+        }
+        vector<vector<int>> ans(2, vector<int>());
+        //get no and one loss list
+        for(auto it = lossCount.begin(); it != lossCount.end(); ++it) {
+            if(it->second > 1) continue;
+            if(it->second == 0) ans[0].push_back(it->first);
+            else ans[1].push_back(it->first);
+        }
+        return ans;
+    }
+};
