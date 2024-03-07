@@ -1,0 +1,71 @@
+//Run Time: 629ms - 36.96%
+//Memory Usage: 205MB - 69.57%
+//Solved =)
+//Time O(nmlog(k)) Memory O(nm)
+
+struct SortRanks {
+  bool operator()(vector<int>& a, vector<int>& b) {
+      //Smaller Distance wins
+      if(a[0] != b[0]) return a[0] < b[0];
+      //Lower price wins
+      if(a[1] != b[1]) return a[1] < b[1];
+      //Lower row number wins
+      if(a[2] != b[2]) return a[2] < b[2];
+      //Lower column number wins
+      return a[3] < b[3];
+    }
+};
+class Solution {
+    vector<vector<int>> dir;
+public:
+    Solution() : dir({{1,0}, {-1,0}, {0,1}, {0,-1}}) {
+
+    }
+    vector<vector<int>> highestRankedKItems(vector<vector<int>>& grid, vector<int>& pricing, vector<int>& start, int k) {
+        //BFS - until we get to the step that surpasses k
+        //Distance to the item matters the most when ranking
+        int distSoFar = 0;
+        priority_queue<vector<int>, vector<vector<int>>, SortRanks> pq;
+        vector<vector<bool>> visited(grid.size(), vector<bool>(grid[0].size(), false));
+        queue<pair<int, int>> bfs;
+        bfs.push(make_pair(start[0], start[1]));
+        visited[start[0]][start[1]] = true;
+        while(!bfs.empty()) {
+            for(int i = bfs.size()-1; i >= 0; --i) {
+                pair<int, int> pos = bfs.front();
+                bfs.pop();
+
+                for(int j = 0; j < dir.size(); ++j) {
+                    int nextRow = pos.first + dir[j][0];
+                    int nextCol = pos.second + dir[j][1];
+
+                    //Validate if we can traverse to this cell
+                    if(nextRow >= grid.size()) continue;
+                    if(nextCol >= grid[0].size()) continue;
+                    if(visited[nextRow][nextCol]) continue;
+                    if(grid[nextRow][nextCol] == 0) continue;
+                    visited[nextRow][nextCol] = true;
+                    bfs.push(make_pair(nextRow, nextCol));
+                }
+
+                //Validate price range
+                int price = grid[pos.first][pos.second];
+                if(price < pricing[0] or price > pricing[1]) continue;
+                pq.push({distSoFar, price, pos.first, pos.second});
+            }
+            if(pq.size() > k) break;
+            ++distSoFar;
+        }
+        while(pq.size() > k) pq.pop();
+
+        int index = pq.size();
+        vector<vector<int>> ans(index);
+        while(!pq.empty()) {
+            vector<int> info = pq.top();
+            pq.pop();
+            //cout << info[0] << " " << info[1] << endl;
+            ans[--index] = {info[2], info[3]};
+        }
+        return ans;
+    }
+};
