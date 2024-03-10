@@ -1,0 +1,43 @@
+//Run Time: 4ms - 86.76%
+//Memory Usage: 19.67MB - 32.43%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+    int low, high, zero, one;
+public:
+    long long countWays(vector<long long>& memo, int sizeSoFar) {
+        if(sizeSoFar > high) return 0;
+        if(memo[sizeSoFar] != -1) return memo[sizeSoFar];
+        long long numWays = 0;
+        if(sizeSoFar >= low) numWays++;
+        //append '0' zero times
+        numWays += countWays(memo, sizeSoFar+zero);
+        //append '1' one times
+        numWays += countWays(memo, sizeSoFar+one);
+        memo[sizeSoFar] = numWays % 1000000007;
+        return memo[sizeSoFar];
+    }
+    int countGoodStrings(int low, int high, int zero, int one) {
+        this->low = low;
+        this->high = high;
+        this->zero = zero;
+        this->one = one;
+        //Dynamic Programming - top down
+        //vector<long long> memo(high+1, -1);
+        //return countWays(memo, 0) % 1000000007;
+
+        //Dynamic Programming - bottom up
+        vector<long long> memo(high+1 + max(zero, one), 0);
+        for(int i = high; i >= 0; --i) {
+            long long numWays = 0;
+            if(i >= low) numWays++;
+            //append '0' zero times
+            numWays += memo[i+zero];
+            //append '1' one times
+            numWays += memo[i+one];
+            memo[i] = numWays % 1000000007;
+        }
+        return memo[0];
+    }
+};
