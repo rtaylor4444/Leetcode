@@ -1,0 +1,53 @@
+//Run Time: 318ms - 92.26%
+//Memory Usage: 143.62MB - 91.52%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class DisjointSet {
+    vector<int> nodes, size;
+public:
+    DisjointSet(int n) {
+        for(int i = 0; i < n; ++i) {
+            nodes.push_back(i);
+            size.push_back(1);
+        }
+    }
+    int getRoot(int node) {
+        int root = node;
+        while(nodes[root] != root) root = nodes[root];
+        while(nodes[node] != root) {
+            int next = nodes[node];
+            size[node] = size[root];
+            nodes[node] = root;
+            node = next;
+        }
+        return root;
+    }
+    void merge(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = nodes[root1];
+        size[root1] += size[root2];
+    }
+    int getGroupSize(int node) { return size[node]; }
+    void deductGroupSize(int node) { --size[node]; }
+};
+class Solution {
+public:
+    long long countPairs(int n, vector<vector<int>>& edges) {
+        DisjointSet disjointSet(n);
+        for(int i = 0; i < edges.size(); ++i) {
+            disjointSet.merge(edges[i][0], edges[i][1]);
+        }
+        long long numUnreachable = 0;
+        for(int i = 0; i < n; ++i) {
+            int root = disjointSet.getRoot(i);
+            int groupSize = disjointSet.getGroupSize(root);
+            //cout << i << " -> " << groupSize << endl;
+            numUnreachable += (n-i) - groupSize;
+            disjointSet.deductGroupSize(root);
+        }
+        return numUnreachable;
+    }
+};
