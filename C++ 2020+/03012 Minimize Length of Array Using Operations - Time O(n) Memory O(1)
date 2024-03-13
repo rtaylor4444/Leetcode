@@ -1,0 +1,34 @@
+//Run Time: 115ms - 65.50%
+//Memory Usage: 92.5MB - 71.27%
+//Solved =)
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minimumArrayLength(vector<int>& nums) {
+        //Observations
+        //1) avoid making 0's by same number if possible
+        //but will still shrink the array
+        //2) 1's can clear an entire array leaving behind 1 element
+        //3) when we pick two indics we can basically just delete the larger one
+        //and keep the smaller one
+        //4) we will end up either making 1 or 0 eventually
+
+        //Get minimum element and frequency of elements
+        int minElement = nums[0], minFreq = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            minElement = min(minElement, nums[i]);
+        }
+        //determine if we can make an element smaller than minElement
+        //if so answer is 1
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] == minElement) ++minFreq;
+            if(minElement == 1) continue;
+            int newRemainder = nums[i] % minElement;
+            //avoid making 0's
+            if(newRemainder == 0) continue;
+            if(nums[i] % minElement < minElement) return 1;
+        }
+        return (minFreq/2) + (minFreq % 2);
+    }
+};
