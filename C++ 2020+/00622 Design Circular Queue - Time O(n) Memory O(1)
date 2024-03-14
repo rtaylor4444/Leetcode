@@ -1,0 +1,66 @@
+//Run Time: 15ms - 85.47%
+//Memory Usage: 20MB - 8.18%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class MyCircularQueue {
+    struct ListNode {
+        ListNode *next, *prev;
+        int value;
+        ListNode(int v) {
+            value = v;
+            next = prev = nullptr;
+        }
+    };
+    int capacity, size;
+    ListNode* front, *tail;
+public:
+    MyCircularQueue(int k) {
+        capacity = k;
+        size = 0;
+        front = nullptr;
+    }
+    
+    bool enQueue(int value) {
+        if(isFull()) return false;
+        ListNode* newNode = new ListNode(value);
+        if(isEmpty()) {
+            tail = front = newNode;
+        }
+        else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+        ++size;
+        return true;
+    }
+    
+    bool deQueue() {
+        if(isEmpty()) return false;
+        ListNode* toDelete = front;
+        if(front == tail) front = tail = nullptr;
+        else front = front->next;
+        delete toDelete;
+        --size;
+        return true;
+    }
+    
+    int Front() {
+        if(isEmpty()) return -1;
+        return front->value;
+    }
+    
+    int Rear() {
+        if(isEmpty()) return -1;
+        return tail->value;
+    }
+    
+    bool isEmpty() {
+        return size == 0;
+    }
+    
+    bool isFull() {
+        return size >= capacity;
+    }
+};
