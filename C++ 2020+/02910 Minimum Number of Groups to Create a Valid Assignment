@@ -1,0 +1,44 @@
+//Run Time: 4ms - 51.83%
+//Memory Usage: 5.9MB - 28.27%
+//Needs Optimization
+//Time O(n) Memory O(1)
+
+class Solution {
+public:
+    int minGroupsForValidAssignment(vector<int>& balls) {
+        //Get frequency
+        unordered_map<int, int> numToFreq;
+        for(int i = 0; i < balls.size(); ++i) {
+            if(!numToFreq.count(balls[i])) numToFreq.emplace(balls[i], 0);
+            numToFreq[balls[i]]++;
+        }
+        //get min-max allowed frequency for boxes
+        int minFreq = INT_MAX;
+        for(auto it = numToFreq.begin(); it != numToFreq.end(); ++it) {
+            minFreq = min(minFreq, it->second);
+        }
+        //count groups
+        int minGroups = INT_MAX;
+        for(int i = 1; i <= minFreq; ++i) {
+            int numGroups = 0;
+            for(auto it = numToFreq.begin(); it != numToFreq.end(); ++it) {
+                //figure out what combination of the two freq we can build
+                //groups out of
+                int max1 = it->second / i, minSize = INT_MAX;
+                for(int size1 = 0; size1 <= max1; ++size1) {
+                    int rem = it->second - (i * size1);
+                    if(rem % (i+1) == 0) minSize = min(minSize, size1 + (rem / (i+1)));
+                }
+                //Exit if impossible to make even groups exit
+                if(minSize == INT_MAX) {
+                    numGroups = INT_MAX;
+                    break;
+                }
+                numGroups += minSize;
+            }
+            //cout << "[ " << i << ", " << i+1 << " ] -> " << numGroups << endl;
+            minGroups = min(minGroups, numGroups);
+        }
+        return minGroups;
+    }
+};
