@@ -1,0 +1,36 @@
+//Run Time: 264ms - 34.41%
+//Memory Usage: 80.8MB - 88.89%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+class Solution {
+public:
+    bool isSubseq(string& s, string& p, vector<int>& removable, int numRemove) {
+        vector<bool> validChars(s.size(), true);
+        for(int i = 0; i < numRemove; ++i) validChars[removable[i]] = false;
+        //Check for subseq
+        int pIndex = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            if(!validChars[i]) continue;
+            if(s[i] == p[pIndex]) ++pIndex;
+            if(pIndex == p.size()) return true;
+        }
+        return false;
+    }
+    int maximumRemovals(string s, string p, vector<int>& removable) {
+        //Brute Force
+        //Check each removeable and confirm if p is a subseq of s
+        //if(!isSubseq(s, p, removable, removable.size())) return 0;
+        //Binary Search by trying a certain number of removals
+        int l = 0, r = removable.size(), ans = 0;
+        while(l <= r) {
+            int m = l + ((r - l) / 2);
+            //cout << l << " - " << m << " - " << r << endl;
+            if(isSubseq(s, p, removable, m)) {
+                ans = m;
+                l = m+1;
+            } else r = m-1;
+        }
+        return ans;
+    }
+};
