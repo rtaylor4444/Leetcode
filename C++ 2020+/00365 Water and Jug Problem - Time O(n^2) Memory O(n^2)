@@ -1,0 +1,42 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 9.02MB - 23.09%
+//Solved =)
+//Time O(n^2) Memory O(n^2)
+
+class Solution {
+    int capacityX, capacityY;
+public:
+    void dfs(vector<vector<bool>>& visited, int curX, int curY) {
+        if(visited[curX][curY]) return;
+        visited[curX][curY] = true;
+        //1) Fill either jug with water
+        dfs(visited, capacityX, curY);
+        dfs(visited, curX, capacityY);
+        //2) Empty either jug
+        dfs(visited, 0, curY);
+        dfs(visited, curX, 0);
+        //3) pour water from 1 jug to another until reciving jug is full
+        int xDiff = min(capacityX - curX, curY);
+        dfs(visited, curX + xDiff, curY - xDiff);
+        int yDiff = min(capacityY - curY, curX);
+        dfs(visited, curX - yDiff, curY + yDiff);
+        //4) pour water from 1 jug to another until transferring jug is empty
+        dfs(visited, 0, min(curY + curX, capacityY));
+        dfs(visited, min(curY + curX, capacityX), 0);
+    }
+    bool canMeasureWater(int x, int y, int target) {
+        //DFS
+        if(target > x + y) return false;
+        capacityX = x;
+        capacityY = y;
+        vector<vector<bool>> visited(x+1, vector<bool>(y+1, false));
+        dfs(visited, 0, 0);
+        for(int i = 0; i <= x; ++i) {
+            for(int j = 0; j <= y; ++j) {
+                if(!visited[i][j]) continue;
+                if(i+j == target) return true;
+            }
+        }
+        return false;
+    }
+};
