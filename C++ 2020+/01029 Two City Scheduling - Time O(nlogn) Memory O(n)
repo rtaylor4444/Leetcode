@@ -1,0 +1,51 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 5.9MB - 10.88%
+//Solved =)
+//Time O(nlogn) Memory O(n)
+
+struct CompCost {
+    bool operator()(vector<int>& a, vector<int>& b) {
+        return a[0] > b[0];
+    }
+};
+
+class Solution {
+public:
+    int twoCitySchedCost(vector<vector<int>>& costs) {
+        //Priority queue by minimum distance
+        CompCost sortCost;
+        priority_queue<vector<int>, vector<vector<int>>, decltype(sortCost)> pq(sortCost);
+        //[distance between A and B, index]
+        int numPickA = 0, numPickB = 0, minValue = 0;
+        vector<bool> isPickA(costs.size(), false);
+        for(int i = 0; i < costs.size(); ++i) {
+            int diff = abs(costs[i][0] - costs[i][1]);
+            isPickA[i] = (costs[i][0] <= costs[i][1]); 
+            if(isPickA[i]) { 
+                ++numPickA;
+                minValue += costs[i][0];
+            }
+            else {
+                ++numPickB;
+                minValue += costs[i][1];
+            }
+            pq.push({diff, i});
+        }
+        while(numPickA != numPickB) {
+            vector<int> costInfo = pq.top();
+            pq.pop();
+            if(numPickA > numPickB) {
+                if(!isPickA[costInfo[1]]) continue;
+                --numPickA;
+                ++numPickB;
+            } else {
+                if(isPickA[costInfo[1]]) continue;
+                ++numPickA;
+                --numPickB;
+            }
+            minValue += costInfo[0];
+        }
+        
+        return minValue;
+    }
+};
