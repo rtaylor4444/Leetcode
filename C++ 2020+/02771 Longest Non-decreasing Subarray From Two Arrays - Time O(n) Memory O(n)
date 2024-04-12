@@ -1,0 +1,38 @@
+//Run Time: 147ms - 56.76%
+//Memory Usage: 162.72MB - 78.27%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int numChainProcess(vector<array<int, 2>>& dp, int i, int curNum, int num1, int num2) {
+        //if we are greater than both numbers reset our chain
+        if(curNum > num1 && curNum > num2)
+            return 1;
+        //if we are greater than just num1 we must pick num2
+        if(curNum > num1) return dp[i][1] + 1;
+        //if we are greater then just num2 we must pick num1
+        if(curNum > num2) return dp[i][0] + 1;
+        //we must be less than both so pick the maximum one
+        else return max(dp[i][0], dp[i][1]) + 1; 
+    } 
+    int maxNonDecreasingLength(vector<int>& nums1, vector<int>& nums2) {
+        //Dynamic Programming - Longest Increasing Subarray
+        int maxSoFar = 1;
+        vector<array<int, 2>> dp(2, {1, 1});
+        for(int i = nums1.size()-2; i >= 0; --i) {
+            int curIndex = i%2, nextIndex = (i+1)%2;
+            //nums1 chain processing
+            dp[curIndex][0] = numChainProcess(dp, nextIndex, nums1[i], nums1[i+1], nums2[i+1]);
+            //nums2 chain processing
+            dp[curIndex][1] = numChainProcess(dp, nextIndex, nums2[i], nums1[i+1], nums2[i+1]);
+
+            maxSoFar = max(maxSoFar, dp[curIndex][0]);
+            maxSoFar = max(maxSoFar, dp[curIndex][1]);
+        }
+        //for(int i = 0; i < dp.size(); ++i) cout << dp[i][0] << " ";
+        //cout << endl;
+        //for(int i = 0; i < dp.size(); ++i) cout << dp[i][1] << " ";
+        return maxSoFar;
+    }
+};
