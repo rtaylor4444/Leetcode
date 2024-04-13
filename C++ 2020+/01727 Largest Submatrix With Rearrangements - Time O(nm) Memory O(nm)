@@ -1,0 +1,38 @@
+//Run Time: 197ms - 13.98%
+//Memory Usage: 101MB - 17.10%
+//Needs Optimzation
+//Time O(nm) Memory O(nm)
+
+class Solution {
+public:
+    int largestSubmatrix(vector<vector<int>>& matrix) {
+        //Count num consec 1s downward
+        vector<vector<int>> consec1Count(matrix.size(), vector<int>(matrix[0].size(), 0));
+        for(int j = 0; j < matrix[0].size(); ++j) {
+            int consec1 = 0;
+            for(int i = matrix.size()-1; i >= 0; --i) {
+                if(matrix[i][j] == 1) ++consec1;
+                else consec1 = 0;
+                consec1Count[i][j] = consec1;
+            }
+        }
+
+        //go row by row and determine the optimal matrix size;
+        int maxMatrixSize = 0;
+        for(int i = 0; i < matrix.size(); ++i) {
+            vector<int> rowConsec1s(matrix[0].size(), 0);
+            for(int j = 0; j < matrix[0].size(); ++j) {
+                rowConsec1s[j] = consec1Count[i][j];
+                //cout << consec1Count[i][j] << " ";
+            }
+            //cout << endl;
+            sort(rowConsec1s.begin(), rowConsec1s.end());
+            int numRows = 0;
+            for(int j = rowConsec1s.size()-1; j >= 0; --j) {
+                if(rowConsec1s[j] == 0) break;
+                maxMatrixSize = max(maxMatrixSize, rowConsec1s[j] * ++numRows);
+            }
+        }
+        return maxMatrixSize;
+    }
+};
