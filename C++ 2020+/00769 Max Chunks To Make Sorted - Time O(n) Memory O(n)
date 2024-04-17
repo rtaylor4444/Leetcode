@@ -1,0 +1,38 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 8.5MB - 30.78%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int maxChunksToSorted(vector<int>& arr) {
+        //Simulation
+        //0 has to always be in the front 
+        //first chunk must contain nums 0 - (chunk size-1)
+        //next chunk will be (prev chunk size) - (current chunk size)
+        //...
+        int seenCount = 0, chunksMade = 0, numToFind = 0, curChunkSize = 0, chunkStart = 0;
+        vector<bool> seen(arr.size(), false);
+        while(seenCount < arr.size()) {
+            //find the number that must go in the front of our chunk
+            for(; seenCount < arr.size(); ++seenCount ) {
+                if(seen[numToFind]) break;
+                ++curChunkSize;
+                seen[arr[seenCount]] = true;
+            }
+            //all numbers between numToFind and curChunkSize must 
+            //have been seen
+            int end = curChunkSize + numToFind;
+            for(; chunkStart < curChunkSize; ++chunkStart) {
+                if(!seen[numToFind]) break;
+                ++numToFind;
+            }
+            if(chunkStart == curChunkSize) {
+                ++chunksMade;
+                chunkStart = curChunkSize = 0;
+            }
+            //cout << "find: " << numToFind << " seen: " << seenCount << endl;
+        }
+        return chunksMade;
+    }
+};
