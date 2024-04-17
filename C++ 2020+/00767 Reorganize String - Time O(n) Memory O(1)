@@ -1,0 +1,52 @@
+//Run Time: 7ms - 9.55%
+//Memory Usage: 9.9MB - 5.06%
+//Solved =)
+//Time O(n) Memory O(1)
+
+struct SortFreq {
+    bool operator()(vector<int>& a, vector<int>& b){
+        return a[0] < b[0];
+    }
+};
+
+class Solution {
+public:
+    string reorganizeString(string s) {
+        //Check frequencies and see if its possible
+        int maxFreq = 0;
+        vector<int> charFreq(26, 0);
+        for(int i = 0; i < s.size(); ++i) {
+            maxFreq = max(maxFreq, ++charFreq[s[i] - 'a']);
+        }
+        if(maxFreq > (s.size()/2) + (s.size() % 2)) return "";
+        //[freq, char]
+        SortFreq sortFreq;
+        priority_queue<vector<int>, vector<vector<int>>, decltype(sortFreq)> pq(sortFreq);
+        for(int i = 0; i < charFreq.size(); ++i) {
+            if(charFreq[i]) pq.push({charFreq[i], 'a'+i});
+        }
+
+        string ans;
+        int i = -1;
+        while(!pq.empty()) {
+            vector<int> freqInfo = pq.top();
+            pq.pop();
+
+            char curChar = (char)freqInfo[1];
+            char prevChar = ans.empty() ? ' ' : ans.back();
+            if(curChar == prevChar) {
+                if(pq.empty()) return "";
+                vector<int> temp = pq.top();
+                pq.pop();
+                ans += temp[1];
+                if(--temp[0]) pq.push(temp);
+                pq.push(freqInfo);
+            }
+            else {
+                ans += curChar;
+                if(--freqInfo[0]) pq.push(freqInfo);
+            }
+        }
+        return ans;
+    }
+};
