@@ -1,0 +1,39 @@
+//Run Time: 0ms - 100.00%
+//Memory Usage: 11.8MB - 96.12%
+//Solved =)
+//Time O(n^3) Memory O(n)
+
+class Solution {
+public:
+    vector<string> ambiguousCoordinates(string s) {
+        string num = s.substr(1, s.size()-2);
+        vector<string> ans;
+        for(int i = 0; i < num.size()-1; ++i) {
+            //place '.' possible left num
+            string parsedNum = num.substr(0, i+1);
+            string remainingNum = num.substr(i+1, num.size()-i+1);
+            for(int l = 0; l < parsedNum.size(); ++l) {
+                //skip leading zeros
+                string leftParsed = parsedNum.substr(0, l+1);
+                if(leftParsed.size() > 1 and leftParsed[0] == '0') continue;
+                //skip trailing zeros
+                string rightParsed = parsedNum.substr(l+1, parsedNum.size()-(l+1));
+                if(!rightParsed.empty() and rightParsed.back() == '0') continue;
+                string finalParsed = rightParsed.empty() ? leftParsed : leftParsed + "." + rightParsed;
+                
+                //place '.' possible right num
+                for(int r = 0; r < remainingNum.size(); ++r) {
+                    //skip leading zeros
+                    string leftRemain = remainingNum.substr(0, r+1);
+                    if(leftRemain.size() > 1 and leftRemain[0] == '0') continue;
+                    //skip trailing zeros
+                    string rightRemain = remainingNum.substr(r+1, remainingNum.size()-(r+1));
+                    if(!rightRemain.empty() and rightRemain.back() == '0') continue;
+                    string finalRemain = rightRemain.empty() ? leftRemain : leftRemain + "." + rightRemain;
+                    ans.push_back("(" + finalParsed + ", " + finalRemain + ")");
+                }
+            }
+        }
+        return ans;
+    }
+};
