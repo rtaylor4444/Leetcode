@@ -1,0 +1,62 @@
+//Run Time: 79ms - 70.97%
+//Memory Usage: 76.6MB - 49.08%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Trie {
+    struct TrieNode {
+        array<TrieNode*, 26> children;
+        bool isRoot;
+        TrieNode() {
+            isRoot = false;
+            for(int i = 0; i < 26; ++i)
+                children[i] = nullptr;
+        }
+    };
+    TrieNode* root, *curNode;
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+    void addRoot(string& curRoot) {
+        curNode = root;
+        for(int i = 0; i < curRoot.size(); ++i) {
+            int index = curRoot[i]-'a';
+            if(curNode->children[index] == nullptr)
+                curNode->children[index] = new TrieNode();
+            curNode = curNode->children[index];
+        }
+        curNode->isRoot = true;
+    }
+    string getRoot(string& word) {
+        string curRoot;
+        curNode = root;
+        for(int i = 0; i < word.size(); ++i) {
+            int index = word[i]-'a';
+            if(curNode->children[index] == nullptr) return "";
+            curRoot += word[i];
+            if(curNode->children[index]->isRoot) return curRoot;
+            curNode = curNode->children[index];
+        }
+        return curNode->isRoot ? curRoot : "";
+    }
+};
+
+class Solution {
+public:
+    string replaceWords(vector<string>& dictionary, string sentence) {
+        Trie roots;
+        for(int i = 0; i < dictionary.size(); ++i)
+            roots.addRoot(dictionary[i]);
+
+        istringstream iss(sentence);
+        string replace, word;
+        while(iss >> word) {
+            string root = roots.getRoot(word);
+            if(root.empty()) replace += word + " ";
+            else replace += root + " ";
+        }
+        if(!replace.empty()) replace.pop_back();
+        return replace;
+    }
+};
