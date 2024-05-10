@@ -1,0 +1,43 @@
+//Run Time: 3ms - 74.34%
+//Memory Usage: 11.86MB - 72.20%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class RLEIterator {
+    int pos;
+    vector<int> code;
+public:
+    RLEIterator(vector<int>& encoding) {
+        code = encoding;
+        pos = 0;
+    }
+    
+    int next(int n) {
+        int value = -1;
+        //cout << "next(" << n << ")" << endl;
+        while(n) {
+            if(pos >= code.size()) break;
+            int curCount = code[pos];
+            value = code[pos+1];
+
+            //fix the current count
+            curCount -= n;
+            if(curCount <= 0) {
+                n -= code[pos];
+                curCount = 0;
+            } else n = 0;
+            code[pos] = curCount;
+            //cout << code[pos] << " -> " << value << endl;
+            
+            //Once we run out of numbers increment our position
+            if(code[pos] == 0) pos+=2;
+        }
+        return n ? -1 : value;
+    }
+};
+
+/**
+ * Your RLEIterator object will be instantiated and called as such:
+ * RLEIterator* obj = new RLEIterator(encoding);
+ * int param_1 = obj->next(n);
+ */
