@@ -1,0 +1,43 @@
+//Run Time: 35ms - 33.28%
+//Memory Usage: 21.1MB - 36.42%
+//Solved =)
+//Time O(n) Memory O(n)
+
+class Solution {
+public:
+    int minFlipsMonoIncr(string s) {
+        //Two Pass Math
+        //count 0s backward
+        int count = 0;
+        vector<int> zeroCount(s.size(), 0);
+        for(int i = s.size()-1; i >= 0; --i) {
+            if(s[i] == '0') ++count;
+            zeroCount[i] = count;
+        }
+        //count 1s forward
+        count = 0;
+        vector<int> oneCount(s.size(), 0);
+        for(int i = 0; i < s.size(); ++i) {
+            if(s[i] == '1') ++count;
+            oneCount[i] = count;
+        }
+
+        //forward pass 0->1
+        int minFlips = INT_MAX, curFlips = 0;
+        for(int i = 0; i < s.size(); ++i) {
+            //flip remaining 0's to 1s
+            minFlips = min(minFlips, curFlips + zeroCount[i]);
+            //if this is a 1 we must flip it to keep monotone
+            if(s[i] == '1') ++curFlips;
+        }
+        //backward pass 1->0
+        curFlips = 0;
+        for(int i = s.size()-1; i >= 0; --i) {
+            //flip remaining 1's to 0s
+            minFlips = min(minFlips, curFlips + oneCount[i]);
+            //if this is a 0 we must flip it to keep monotone
+            if(s[i] == '0') ++curFlips;
+        }
+        return minFlips;
+    }
+};
