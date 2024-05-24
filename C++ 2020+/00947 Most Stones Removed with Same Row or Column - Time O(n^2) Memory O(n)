@@ -1,0 +1,60 @@
+//Run Time: 43ms - 51.33%
+//Memory Usage: 58.11MB - 5.27%
+//Solved =)
+//Time O(n^2) Memory O(n)
+
+class DisjointSet {
+    int numGroups;
+    vector<int> nodes;
+public:
+    DisjointSet(int numStones) {
+        numGroups = numStones;
+        for(int i = 0; i < numStones; ++i) nodes.push_back(i);
+    }
+    int getRoot(int node) {
+        int root = node;
+        while(nodes[root] != root) root = nodes[root];
+        //path compression
+        while(nodes[node] != node) {
+            int next = nodes[node];
+            nodes[node] = root;
+            node = next;
+        }
+        return root;
+    }
+    void unite(int node1, int node2) {
+        int root1 = getRoot(node1);
+        int root2 = getRoot(node2);
+        if(root1 == root2) return;
+        nodes[root2] = root1;
+        --numGroups;
+    }
+    int getNumGroups() { return numGroups; }
+};
+
+class Solution {
+public:
+    int removeStones(vector<vector<int>>& stones) {
+        //Union Find - Disjoint Set
+        //Each group will always have at least 1 leftover stone
+        //Answer is number of stones - number of groups
+        DisjointSet disjointSet(stones.size());
+        vector<vector<int>> rowToStone(10001, vector<int>()), colToStone(10001, vector<int>());
+        //unordered_map<int, unordered_map<int, int>> posToStone;
+        for(int i = 0; i < stones.size(); ++i) {
+            rowToStone[stones[i][0]].push_back(i);
+            colToStone[stones[i][1]].push_back(i);
+        }
+        for(int i = 0; i < stones.size(); ++i) {
+            //check row
+            for(int r = 0; r < rowToStone[stones[i][0]].size(); ++r) {
+                disjointSet.unite(i, rowToStone[stones[i][0]][r]);
+            }
+            //check column
+            for(int c = 0; c < colToStone[stones[i][1]].size(); ++c) {
+                disjointSet.unite(i, colToStone[stones[i][1]][c]);
+            }
+        }
+        return stones.size() - disjointSet.getNumGroups();
+    }
+};
