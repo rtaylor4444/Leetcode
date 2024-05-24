@@ -1,0 +1,35 @@
+//Run Time: 69ms - 89.16%
+//Memory Usage: 46MB - 91.27%
+//Solved =)
+//Time O(v+e) Memory O(v+e)
+
+class Solution {
+public:
+    int findLoudest(vector<vector<int>>& adjList, int curNode, vector<int>& quiet, vector<int>& ans) {
+        int minQuiet = quiet[curNode], loudestNode = curNode;
+        if(ans[curNode] != -1) return ans[curNode];
+        for(int i = 0; i < adjList[curNode].size(); ++i) {
+            int tempLoudest = findLoudest(adjList, adjList[curNode][i], quiet, ans);
+            if(quiet[tempLoudest] < minQuiet) {
+                minQuiet = quiet[tempLoudest];
+                loudestNode = tempLoudest;
+            }
+        }
+        ans[curNode] = loudestNode;
+        return loudestNode;
+    }
+    vector<int> loudAndRich(vector<vector<int>>& richer, vector<int>& quiet) {
+        vector<vector<int>> adjList(quiet.size()+1, vector<int>());
+        for(int i = 0; i < richer.size(); ++i) {
+            //richer[i] = [ai, bi]
+            //a has more money than b
+            adjList[richer[i][1]].push_back(richer[i][0]);
+        }
+        //get the loudest person richer than i
+        vector<int> ans(quiet.size(), -1);
+        for(int i = 0; i < quiet.size(); ++i) {
+            ans[i] = findLoudest(adjList, i, quiet, ans);
+        }
+        return ans;
+    }
+};
